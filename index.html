@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es-UY">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guillermo te pregunta</title>
+  <meta name="description" content="Juego de preguntas y respuestas con Guillermo, proyecto estudiantil de UTU.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#panel">Saltar al juego</a>
+
+  <header class="topbar">
+    <button class="logo" type="button" data-action="home" aria-label="Guillermo te pregunta: volver al inicio">
+      <span class="logo-small">GUILLERMO</span>
+      <span class="logo-big">TE PREGUNTA</span>
+    </button>
+    <div class="topbar-right">
+      <span class="records" aria-label="Récords guardados">
+        <span title="Mejor puntaje en Preguntas">🏆 <span id="best-quiz">0</span></span>
+        <span title="Récord en El desafío de Guillermo">⏱ <span id="best-challenge">0</span></span>
+      </span>
+      <button id="sound-toggle" class="icon-btn" type="button" aria-pressed="true">
+        <span aria-hidden="true" id="sound-icon">🔊</span>
+        <span class="icon-btn-label" id="sound-label">Sonido: sí</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <!-- GUILLERMO: la mascota acompaña todas las pantallas -->
+    <aside class="host" aria-label="Guillermo, la mascota del juego">
+      <div class="bubble" id="bubble" role="status" aria-live="polite">
+        <p id="bubble-text">¡Soy Guillermo! ¿Te animás a poner a prueba lo que sabés?</p>
+      </div>
+      <div class="mascot-wrap">
+        <div class="mascot" id="mascot" role="img" aria-label="Guillermo, sonriendo y esperando"></div>
+        <div class="mascot-floor" aria-hidden="true"></div>
+      </div>
+      <p class="nametag"><span aria-hidden="true">★</span> GUILLERMO <span aria-hidden="true">★</span></p>
+    </aside>
+
+    <section class="panel" id="panel" tabindex="-1">
+
+      <!-- INICIO -->
+      <div class="screen" id="screen-start" data-screen>
+        <p class="demo-badge">Preguntas de demostración</p>
+        <h1 class="title">Guillermo<br><span>te pregunta</span></h1>
+        <p class="lead">Guillermo, nuestra mascota, te va a hacer preguntas de cultura general, ciencia, informática y matemática. Respondé, sumá puntos y armá la racha más larga.</p>
+        <div class="menu">
+          <button class="btn btn-yellow btn-big" type="button" data-action="start-quiz">▶ Jugar</button>
+          <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ El desafío de Guillermo</button>
+          <button class="btn btn-violet" type="button" data-action="instructions">? Instrucciones</button>
+        </div>
+        <p class="note">Las preguntas son de prueba: después se van a reemplazar por las del proyecto.</p>
+      </div>
+
+      <!-- INSTRUCCIONES -->
+      <div class="screen" id="screen-instructions" data-screen hidden>
+        <h2 class="h2">Cómo se juega</h2>
+        <div class="rules">
+          <div class="rule-card">
+            <h3>▶ Preguntas</h3>
+            <ul>
+              <li>Son <strong>10 preguntas</strong> por partida, sin repetir.</li>
+              <li>Cada una tiene 4 opciones y <strong>una sola</strong> es correcta.</li>
+              <li>Acierto: <strong>+100</strong>. Con racha, sumás un extra de +10 por cada acierto seguido (máximo +50).</li>
+              <li>Podés pedir <strong>una pista</strong> por pregunta: si acertás, esa pregunta te da <strong>25 puntos menos</strong>.</li>
+              <li>Atajos: teclas <kbd>1</kbd>–<kbd>4</kbd> para responder, <kbd>P</kbd> para la pista y <kbd>Enter</kbd> para seguir.</li>
+            </ul>
+          </div>
+          <div class="rule-card">
+            <h3>⏱ El desafío de Guillermo</h3>
+            <ul>
+              <li>Tenés <strong>60 segundos</strong> para decir si cada afirmación es verdadera o falsa.</li>
+              <li>Acierto: <strong>+10</strong>, más +5 por cada acierto seguido (máximo +25).</li>
+              <li>Si te equivocás se corta la racha y Guillermo te muestra la respuesta.</li>
+              <li>Atajos: <kbd>V</kbd> o <kbd>←</kbd> para Verdadero, <kbd>F</kbd> o <kbd>→</kbd> para Falso.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="menu menu-row">
+          <button class="btn btn-yellow" type="button" data-action="start-quiz">▶ Jugar</button>
+          <button class="btn btn-ghost" type="button" data-action="home">← Volver</button>
+        </div>
+      </div>
+
+      <!-- PREGUNTAS -->
+      <div class="screen" id="screen-quiz" data-screen hidden>
+        <div class="hud" aria-label="Estado de la partida">
+          <div class="hud-item"><span class="hud-label">Pregunta</span><span class="hud-value" id="q-progress">1/10</span></div>
+          <div class="hud-item"><span class="hud-label">Puntos</span><span class="hud-value" id="q-score">0</span></div>
+          <div class="hud-item"><span class="hud-label">Racha</span><span class="hud-value" id="q-streak">0</span></div>
+        </div>
+        <div class="progress" aria-hidden="true"><div class="progress-fill" id="q-bar"></div></div>
+
+        <div class="question-card">
+          <div class="q-meta">
+            <span class="chip" id="q-category">Ciencia</span>
+            <span class="chip chip-demo">Demo</span>
+          </div>
+          <h2 class="question" id="q-text" tabindex="-1">Pregunta</h2>
+          <div class="options" id="q-options" role="group" aria-label="Opciones de respuesta"></div>
+        </div>
+
+        <div class="feedback" id="q-feedback" hidden>
+          <p class="feedback-title" id="q-feedback-title"></p>
+          <p class="feedback-answer" id="q-feedback-answer"></p>
+          <p class="feedback-expl" id="q-feedback-expl"></p>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-violet" type="button" id="hint-btn" data-action="hint">💡 Pista (−25)</button>
+          <button class="btn btn-yellow" type="button" id="next-btn" data-action="next" hidden>Siguiente ▶</button>
+          <button class="btn btn-ghost btn-small" type="button" data-action="home">Salir</button>
+        </div>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div class="screen" id="screen-results" data-screen hidden>
+        <h2 class="h2">¡Partida terminada!</h2>
+        <div class="score-board">
+          <div class="score-box"><span class="hud-label">Puntaje</span><span class="score-big" id="r-score">0</span></div>
+          <div class="score-box"><span class="hud-label">Aciertos</span><span class="score-big" id="r-correct">0/10</span></div>
+          <div class="score-box"><span class="hud-label">Mejor racha</span><span class="score-big" id="r-streak">0</span></div>
+        </div>
+        <p class="record-msg" id="r-record" hidden>★ ¡Nuevo récord! ★</p>
+        <div class="review" id="r-review-wrap">
+          <h3 class="h3">Para repasar</h3>
+          <ol class="review-list" id="r-review"></ol>
+        </div>
+        <div class="menu menu-row">
+          <button class="btn btn-yellow" type="button" data-action="start-quiz">↻ Jugar de nuevo</button>
+          <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ Ir al desafío</button>
+          <button class="btn btn-ghost" type="button" data-action="home">Inicio</button>
+        </div>
+      </div>
+
+      <!-- DESAFÍO: INTRO -->
+      <div class="screen" id="screen-challenge-intro" data-screen hidden>
+        <p class="demo-badge demo-teal">Minijuego</p>
+        <h2 class="title title-sm">El desafío<br><span>de Guillermo</span></h2>
+        <p class="lead">Verdadero o falso contrarreloj: tenés <strong>60 segundos</strong>. Cada acierto suma y los aciertos seguidos dan bonus. El reloj arranca solo cuando apretás «Empezar».</p>
+        <p class="lead small">Tu récord: <strong id="c-best-intro">0</strong> puntos</p>
+        <div class="menu menu-row">
+          <button class="btn btn-yellow btn-big" type="button" data-action="start-challenge">▶ Empezar</button>
+          <button class="btn btn-ghost" type="button" data-action="home">← Volver</button>
+        </div>
+      </div>
+
+      <!-- DESAFÍO: JUEGO -->
+      <div class="screen" id="screen-challenge" data-screen hidden>
+        <div class="hud" aria-label="Estado del desafío">
+          <div class="hud-item"><span class="hud-label">Tiempo</span><span class="hud-value" id="c-time">60</span></div>
+          <div class="hud-item"><span class="hud-label">Puntos</span><span class="hud-value" id="c-score">0</span></div>
+          <div class="hud-item"><span class="hud-label">Racha</span><span class="hud-value" id="c-streak">0</span></div>
+        </div>
+        <div class="progress progress-time" aria-hidden="true"><div class="progress-fill" id="c-bar"></div></div>
+
+        <div class="question-card statement-card" id="c-card">
+          <div class="q-meta"><span class="chip chip-teal">¿Verdadero o falso?</span><span class="chip chip-demo">Demo</span></div>
+          <p class="question" id="c-text">Afirmación</p>
+          <p class="c-flash" id="c-flash" aria-live="assertive"></p>
+        </div>
+
+        <div class="tf-buttons">
+          <button class="btn btn-tf btn-true" type="button" data-action="answer-true"><span aria-hidden="true">✔</span> Verdadero <kbd>V</kbd></button>
+          <button class="btn btn-tf btn-false" type="button" data-action="answer-false"><span aria-hidden="true">✘</span> Falso <kbd>F</kbd></button>
+        </div>
+        <div class="actions">
+          <button class="btn btn-ghost btn-small" type="button" data-action="quit-challenge">Abandonar</button>
+        </div>
+      </div>
+
+      <!-- DESAFÍO: RESULTADO -->
+      <div class="screen" id="screen-challenge-results" data-screen hidden>
+        <h2 class="h2">¡Se terminó el tiempo!</h2>
+        <div class="score-board">
+          <div class="score-box"><span class="hud-label">Puntaje</span><span class="score-big" id="cr-score">0</span></div>
+          <div class="score-box"><span class="hud-label">Aciertos</span><span class="score-big" id="cr-correct">0</span></div>
+          <div class="score-box"><span class="hud-label">Récord</span><span class="score-big" id="cr-best">0</span></div>
+        </div>
+        <p class="record-msg" id="cr-record" hidden>★ ¡Nuevo récord personal! ★</p>
+        <p class="lead small center" id="cr-detail"></p>
+        <div class="menu menu-row">
+          <button class="btn btn-yellow" type="button" data-action="start-challenge">↻ Otra vez</button>
+          <button class="btn btn-violet" type="button" data-action="start-quiz">▶ Modo preguntas</button>
+          <button class="btn btn-ghost" type="button" data-action="home">Inicio</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Proyecto estudiantil de UTU · Prototipo con preguntas de prueba</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
