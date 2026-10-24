@@ -692,7 +692,7 @@ kbd {
   left: 0;
   top: 0;
   width: 176px;
-  aspect-ratio: 52 / 34;
+  aspect-ratio: 52 / 43;
   z-index: 5;
   pointer-events: none;
   filter: drop-shadow(0 4px 0 #00000088);
@@ -751,7 +751,7 @@ kbd {
   background: #3a1f14;
   box-shadow: inset 0 0 0 3px var(--orange);
 }
-.rappi-portrait { width: 200px; max-width: 100%; aspect-ratio: 52 / 34; flex: none; }
+.rappi-portrait { width: 200px; max-width: 100%; aspect-ratio: 52 / 43; flex: none; }
 .rappi-text { flex: 1 1 240px; min-width: 0; }
 .rappi-text ul { margin: 0; padding-left: 20px; }
 .rappi-text li { margin-bottom: 6px; }

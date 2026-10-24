@@ -1171,7 +1171,7 @@ function spriteSVG(mood) {
 
 /* =========================================================
    RAPPI EN PIXEL ART (comodín de la evaluación)
-   Cuadrícula de 52 × 34: repartidor con campera naranja y caja
+   Cuadrícula de 52 × 43: repartidor con campera naranja y caja
    de reparto, en su moto, mirando a la derecha.
    ========================================================= */
 const RAPPI_PALETA = {
@@ -1199,16 +1199,25 @@ const RAPPI_PALETA = {
 };
 
 const RAPPI_SPRITE = [
-  "..................KHHHHHHhHHHHHK....................",
-  "..................KHHhHHHHHHhHHHK...................",
-  "...KKKKKKKKKKKKK..KHHHHHHHHHHHHK....................",
-  "..KOOOOOOOOOOOOOKKHHHHHHHSSSSHSK....................",
-  "..KOOOOOOOOOOOOooKKHhHHHSSSSEESK....................",
-  "..KOOWWWWWWWWWOooKHHHHHHsSSSEWSSK...................",
-  "..KOOWWWWWWWWWOooKKHHHHHsSSSSSsSK...................",
-  "..KOOOOOOOOOOOOooK.KsssSSSSMMMSK....................",
-  "..KOOOOOOOOOOOOooKKKsssSSSSSSSSK....................",
-  "..KOOOOOOOOOOOOooooOOOssssOOKKK..KKKKK..............",
+  "...................KHHKHhHHKHHhK....................",
+  "..................KHHHHHHHHHHHHHK...................",
+  ".................KHHhHHHHHhHHHHhHK..................",
+  ".................KHHHHHhHHHHHhHHHK..................",
+  ".................KHhHHHHHHHHHHHHHK..................",
+  ".................KHHHHhHHHhHHHHhHK..................",
+  ".................KHHHSHHSHHHSHSHHK..................",
+  "..................KHSSSSSSSSSSSHK...................",
+  "..................KHSEEESSSEEESHK...................",
+  "..................KsSSSSSSSSSSSsK...................",
+  "..................KsSWEESSSSEEWsK...................",
+  "...KKKKKKKKKKKKK...KSSEESsSSEESSK...................",
+  "..KOOOOOOOOOOOOOK..KSSSSSsSSSSSSK...................",
+  "..KOOOOOOOOOOOOooK.KSSSSsssSSSSSK...................",
+  "..KOOWWWWWWWWWOooK.KsSSSSSSSSSSsK...................",
+  "..KOOWWWWWWWWWOooK..KsSMMMMMSSsK....................",
+  "..KOOOOOOOOOOOOooK...KsSSSSSSsK.....................",
+  "..KOOOOOOOOOOOOooKKKKKKssssssK......................",
+  "..KOOOOOOOOOOOOooooOOOOWWWWWK....KKKKK..............",
   "..KOOOOOOOOOOOOooooOOOOOOOOOKKK.KNNNNbK.............",
   "..KOOYYYYYYYYYOooooOOOOOOOOOOOOKKSSSbbKKKK..........",
   "..KOOOOOOOOOOOOooooWWWWWOOOOOOOOOSSSOOOOOOK.........",
