@@ -240,6 +240,7 @@ kbd {
     0 10px 0 4px #00000066;
   min-height: 440px;
   outline: none;
+  position: relative;
 }
 
 .screen.enter { animation: slide-in 0.25s ease-out both; }
@@ -777,6 +778,48 @@ kbd {
 @keyframes rumble { 50% { transform: translateY(-1px); } }
 @keyframes squash { 0% { transform: scaleY(1); } 40% { transform: scaleY(0.6) translateY(4px); } 100% { transform: scaleY(1); } }
 
+/* ---------- enojo de Guillermo: mordiscones a la página ---------- */
+.bites { position: absolute; inset: -14px; overflow: hidden; pointer-events: none; z-index: 20; }
+.bite {
+  position: absolute;
+  width: var(--s, 64px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  animation: bite-in 0.35s steps(3) both;
+}
+.bite svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; filter: drop-shadow(0 0 0 #000) drop-shadow(3px 3px 0 #00000088); }
+.bite .hole { fill: var(--bg); }
+.bite .edge { fill: var(--bad-d); }
+@keyframes bite-in {
+  0% { transform: translate(-50%, -50%) scale(0.2); }
+  60% { transform: translate(-50%, -50%) scale(1.2); }
+  100% { transform: translate(-50%, -50%) scale(1); }
+}
+.panel.chomp { animation: shake 0.3s steps(3) both; }
+
+/* el fondo se pone rojo a medida que se enoja */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  opacity: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, #ff2a3a 140%);
+  transition: opacity 0.4s;
+}
+body[data-rabia="2"]::after { opacity: 0.35; }
+body[data-rabia="3"]::after { opacity: 0.7; animation: rabia 1s steps(2) infinite; }
+@keyframes rabia { 50% { opacity: 0.45; } }
+body[data-rabia="3"] .mascot-wrap::before {
+  content: "💢";
+  position: absolute;
+  top: -6px;
+  right: 14%;
+  font-size: 34px;
+  z-index: 2;
+}
+
 /* ---------- pie ---------- */
 .footer {
   padding: 18px 16px 24px;
@@ -805,6 +848,8 @@ kbd {
   .rappi-rider svg { animation-duration: 0.12s !important; animation-iteration-count: infinite !important; }
   .option.run-over { animation-duration: 0.3s !important; }
   .option .skid { animation-duration: var(--skid-d, 0.4s) !important; }
+  /* los mordiscones también se ven: son la mecánica del enojo */
+  .bite { animation-duration: 0.35s !important; }
 }
 
 /* ---------- responsive ---------- */

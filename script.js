@@ -958,6 +958,13 @@ const FRASES = {
   racha: ["¡Estás on fire! Racha de {n}.", "¡{n} seguidas! No te para nadie."],
   error: ["¡Casi! Probá de nuevo en la que viene.", "No pasa nada, así se aprende.", "Uh, esa era difícil. ¡Vamos que la próxima sale!", "Tranqui, ahora ya te la sabés."],
   pistaUsada: "Ya te di la pista de esta: {p}",
+  enojo: {
+    1: ["Mmm… esa no era. Me estoy poniendo de mal humor. ¡Ñam!", "Ojo, que cuando me equivocan me da hambre de página… ¡Ñam!"],
+    2: ["¡Otra vez mal! Ya me estoy enojando. ¡ÑAM!", "¡Grrr! Me comí otro pedazo de la página."],
+    3: ["¡ESTOY FURIOSO! ¡Me voy a comer toda la página! ¡ÑAM ÑAM!", "¡GRRR! Si seguís errando no queda nada de la página."]
+  },
+  amenaza: ["A ver esta… que tengo hambre.", "Pensala bien, que todavía me queda lugar para otro mordiscón.", "Esta sacala bien, ¿eh? Te estoy mirando."],
+  calma: ["Bueno… esa sí. Pero sigo con hambre.", "Mmm, bien. Se me está pasando un poquito el enojo."],
   desafioIntro: "¡Este es mi desafío! 60 segundos de verdadero o falso. ¿Estás pronto?",
   desafioArranque: "¡Ya! ¿Verdadero o falso?",
   desafioAcierto: ["¡Bien!", "¡Eso!", "¡Sí!", "¡Joya!"],
@@ -1035,7 +1042,8 @@ const sound = {
       start: [[523, 0, 0.1], [659, 0.1, 0.1], [784, 0.2, 0.1], [1047, 0.3, 0.2]],
       end: [[784, 0, 0.12], [659, 0.12, 0.12], [523, 0.24, 0.12], [1047, 0.4, 0.3]],
       moto: [[90, 0, 0.35, "sawtooth", 0.07], [110, 0.3, 0.35, "sawtooth", 0.07], [130, 0.6, 0.4, "sawtooth", 0.07], [120, 1.0, 0.6, "sawtooth", 0.05]],
-      crash: [[180, 0, 0.08, "square", 0.09], [70, 0.06, 0.18, "triangle", 0.12]]
+      crash: [[180, 0, 0.08, "square", 0.09], [70, 0.06, 0.18, "triangle", 0.12]],
+      chomp: [[150, 0.12, 0.06, "square", 0.12], [90, 0.19, 0.08, "square", 0.12], [160, 0.32, 0.06, "square", 0.1], [80, 0.39, 0.12, "square", 0.1]]
     }[name];
     if (seq) seq.forEach(([f, s, d, t, v]) => this.tone(f, s, d, t, v));
   }
@@ -1145,10 +1153,60 @@ const EXPRESIONES = {
       17: "SSSSSSSSSmmSSSSSSSSS",
       18: "SSSSSSSSSmmSSSSSSSSS"
     }
+  },
+  // caras de enojo: las cejas bajan hacia el centro y la boca se da vuelta
+  molesto: {
+    label: "Guillermo, molesto con las cejas fruncidas",
+    rows: {
+      9: "HSSSSSSSSSSSSSSSSSSH",
+      10: "SSSBBBBBBSSBBBBBBSSS",
+      11: "SSSSSSSBBSSBBSSSSSSS",
+      17: "SSSSSSSSSSSSSSSSSSSS",
+      18: "SSSSSSSMMMMMMSSSSSSS"
+    }
+  },
+  enojado: {
+    label: "Guillermo, enojado con el ceño fruncido",
+    rows: {
+      9: "HSBBSSSSSSSSSSSSBBSH",
+      10: "SSSSBBBBSSSSBBBBSSSS",
+      11: "SSSSSSBBBSSBBBSSSSSS",
+      15: "SPPFSSSSSssSSSSSFPPS",
+      17: "SSSSSSSMMMMMMSSSSSSS",
+      18: "SSSSSSMSSSSSSMSSSSSS"
+    }
+  },
+  furioso: {
+    label: "Guillermo, furioso y rojo, apretando los dientes",
+    rows: {
+      9: "HSBBSSSSSSSSSSSSBBSH",
+      10: "SSSSBBBBSSSSBBBBSSSS",
+      11: "SSSSSSBBBSSBBBSSSSSS",
+      15: "SPPFSSSSSssSSSSSFPPS",
+      16: "SSSSSmmmmmmmmmmSSSSS",
+      17: "SSSSSmWWWWWWWWmSSSSS",
+      18: "SSSSSmmmmmmmmmmSSSSS"
+    }
+  },
+  mordida: {
+    label: "Guillermo, mordiendo la página con la boca bien abierta",
+    rows: {
+      9: "HSBBSSSSSSSSSSSSBBSH",
+      10: "SSSSBBBBSSSSBBBBSSSS",
+      11: "SSSSSSBBBSSBBBSSSSSS",
+      15: "SPPFSmmmmmmmmmmSFPPS",
+      16: "SSSSSmWWWWWWWWmSSSSS",
+      17: "SSSSSmmmmmmmmmmSSSSS",
+      18: "SSSSSmWWWWWWWWmSSSSS"
+    }
   }
 };
 
-function spriteSVG(mood) {
+// con mucha rabia se pone colorado
+const PALETA_ROJA = { ...PALETA, S: "#f4a08a", s: "#de7765", P: "#e8505a" };
+
+function spriteSVG(mood, rojo) {
+  const pal = rojo ? PALETA_ROJA : PALETA;
   const rows = SPRITE_BASE.slice();
   const over = EXPRESIONES[mood].rows;
   Object.keys(over).forEach((r) => {
@@ -1162,7 +1220,7 @@ function spriteSVG(mood) {
       const ch = row[x];
       let run = 1;
       while (row[x + run] === ch) run++;
-      if (ch !== ".") rects += `<rect x="${x}" y="${y}" width="${run}" height="1" fill="${PALETA[ch]}"/>`;
+      if (ch !== ".") rects += `<rect x="${x}" y="${y}" width="${run}" height="1" fill="${pal[ch]}"/>`;
       x += run;
     }
   });
@@ -1264,10 +1322,12 @@ const guillermo = {
   bubble: $("#bubble"),
   text: $("#bubble-text"),
   mood: "espera",
+  rojo: false,
   cache: {},
   draw(mood) {
-    if (!this.cache[mood]) this.cache[mood] = spriteSVG(mood);
-    this.el.innerHTML = this.cache[mood];
+    const key = mood + (this.rojo ? "-rojo" : "");
+    if (!this.cache[key]) this.cache[key] = spriteSVG(mood, this.rojo);
+    this.el.innerHTML = this.cache[key];
   },
   set(mood, animate) {
     this.mood = mood;
@@ -1302,7 +1362,74 @@ const guillermo = {
    ========================================================= */
 let current = "start";
 
+/* =========================================================
+   ENOJO DE GUILLERMO
+   Cada error lo enoja un poco más y le pega un mordiscón a la página.
+   ========================================================= */
+const ENOJO = {
+  caras: ["espera", "molesto", "enojado", "furioso"],
+  // dónde muerde, en orden: [borde del panel, posición a lo largo del borde en %]
+  mordidas: [["top", 88], ["left", 35], ["bottom", 70], ["right", 55], ["top", 30], ["bottom", 18],
+    ["left", 78], ["right", 15], ["top", 60], ["bottom", 45], ["left", 8], ["right", 85]]
+};
+const enojo = { errores: 0 };
+const nivelEnojo = () => (enojo.errores >= 4 ? 3 : enojo.errores >= 2 ? 2 : enojo.errores);
+const caraBase = () => ENOJO.caras[nivelEnojo()];
+
+// marca de mordida pixelada: un círculo con el borde ondulado de los dientes
+function mordidaSVG(giro) {
+  const N = 15, c = 7.5;
+  const blobs = [[c, c, 5.2]];
+  for (let k = 0; k < 6; k++) {
+    const a = giro + (k * Math.PI) / 3;
+    blobs.push([c + Math.cos(a) * 4.3, c + Math.sin(a) * 4.3, 2.6]);
+  }
+  const dentro = (x, y, extra) => blobs.some(([bx, by, r]) => (x + 0.5 - bx) ** 2 + (y + 0.5 - by) ** 2 <= (r + extra) ** 2);
+  let rects = "";
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const cls = dentro(x, y, 0) ? "hole" : dentro(x, y, 1) ? "edge" : "";
+      if (cls) rects += `<rect x="${x}" y="${y}" width="1" height="1" class="${cls}"/>`;
+    }
+  }
+  return `<svg viewBox="0 0 ${N} ${N}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${rects}</svg>`;
+}
+
+function morder() {
+  enojo.errores++;
+  const n = nivelEnojo();
+  guillermo.rojo = n >= 3;
+  document.body.dataset.rabia = n;
+  guillermo.say(pick(FRASES.enojo[n]), "mordida");
+  sound.play("chomp");
+
+  const [lado, pos] = ENOJO.mordidas[(enojo.errores - 1) % ENOJO.mordidas.length];
+  const b = document.createElement("span");
+  b.className = "bite";
+  b.style.setProperty("--s", `${84 + n * 26}px`);
+  const horizontal = lado === "top" || lado === "bottom";
+  // el centro queda sobre el borde del panel (la capa sobresale 14px), así el mordiscón entra bien
+  b.style.left = horizontal ? `${pos}%` : lado === "left" ? "14px" : "calc(100% - 14px)";
+  b.style.top = horizontal ? (lado === "top" ? "14px" : "calc(100% - 14px)") : `${pos}%`;
+  b.innerHTML = mordidaSVG(enojo.errores * 1.7);
+  $("#bites").appendChild(b);
+
+  const panel = $("#panel");
+  panel.classList.remove("chomp");
+  void panel.offsetWidth;
+  panel.classList.add("chomp");
+  setTimeout(() => { if (guillermo.mood === "mordida") guillermo.set(caraBase(), "shake"); }, 700);
+}
+
+function resetEnojo() {
+  enojo.errores = 0;
+  guillermo.rojo = false;
+  delete document.body.dataset.rabia;
+  $("#bites").innerHTML = "";
+}
+
 function show(name, focusEl) {
+  if (name !== "quiz" && name !== "results") resetEnojo(); // la página se "arregla" al salir de la partida
   document.querySelectorAll("[data-screen]").forEach((s) => { s.hidden = true; s.classList.remove("enter"); });
   const screen = $("#screen-" + name);
   screen.hidden = false;
@@ -1359,6 +1486,7 @@ function startQuiz(lesson = null) {
   quiz.reserve = lesson === "eval" ? mixed.slice(total) : [];
   quiz.comodines = { rappi: true, pista: true, cambio: true };
   Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {}, busy: false });
+  resetEnojo();
   $("#hint-btn").hidden = lesson === "eval";
   $("#q-card .chip-demo").hidden = lesson === "eval";
   $("#q-score").textContent = "0";
@@ -1403,7 +1531,7 @@ function renderQuestion(intro) {
   quiz.busy = false;
   $("#rappi-rider").hidden = true;
   renderLifelines();
-  guillermo.say(intro || pick(FRASES.pregunta), "espera");
+  guillermo.say(intro || pick(nivelEnojo() >= 2 ? FRASES.amenaza : FRASES.pregunta), caraBase());
   $("#q-text").focus({ preventScroll: true });
 }
 
@@ -1449,7 +1577,7 @@ function answerQuestion(i) {
     $("#q-feedback-title").textContent = `✔ ¡Correcto! +${earned}` + (extras.length ? ` (${extras.join(", ")})` : "");
     $("#q-feedback-answer").textContent = `La respuesta es: ${right.texto}`;
     sound.play("good");
-    const msg = quiz.streak >= 3 ? fill(pick(FRASES.racha), { n: quiz.streak }) : pick(FRASES.acierto);
+    const msg = nivelEnojo() >= 2 ? pick(FRASES.calma) : quiz.streak >= 3 ? fill(pick(FRASES.racha), { n: quiz.streak }) : pick(FRASES.acierto);
     guillermo.say(msg, "alegria", "jump");
   } else {
     quiz.streak = 0;
@@ -1458,7 +1586,7 @@ function answerQuestion(i) {
     $("#q-feedback-title").textContent = "✘ Esta no era";
     $("#q-feedback-answer").textContent = `La respuesta correcta es: ${right.texto}`;
     sound.play("bad");
-    guillermo.say(pick(FRASES.error), "animo", "shake");
+    morder();
   }
   $("#q-feedback-expl").textContent = q.explicacion;
   bump($("#q-score"), quiz.score);
@@ -1542,9 +1670,10 @@ function showResults() {
   else if (ratio >= 0.4) msg = `${quiz.correct} de ${total}. ¡Vas bien! Mirá el repaso y probá de nuevo.`;
   else msg = `${quiz.correct} de ${total}. ¡Tranqui! Leé las explicaciones y la próxima sale mejor.`;
 
+  if (enojo.errores >= 2) msg += ` Por cierto: me comí ${enojo.errores} pedazos de la página.`;
   sound.play("end");
   show("results");
-  guillermo.say(isRecord ? msg + " ¡Y es nuevo récord!" : msg, ratio >= 0.4 ? "alegria" : "animo", "jump");
+  guillermo.say(isRecord ? msg + " ¡Y es nuevo récord!" : msg, nivelEnojo() >= 3 ? "furioso" : ratio >= 0.4 ? "alegria" : "animo", "jump");
 }
 
 /* =========================================================
