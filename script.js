@@ -759,6 +759,153 @@ const EXAMEN = {
   ]
 };
 
+/* ---------------------------------------------------------
+   3c) EVALUACIÓN PARA LOS ALUMNOS
+   Se toman «cantidad» preguntas al azar; las que sobran se usan
+   para el comodín «Cambiar pregunta».
+   tema → posición del tema en CLASE.temas (0 a 3).
+   --------------------------------------------------------- */
+const EVALUACION = {
+  cantidad: 12,
+  preguntas: [
+    // Tema 0: ¿Qué es un grafo?
+    {
+      tema: 0,
+      pregunta: "¿Cuál es la idea principal de un grafo?",
+      opciones: ["Representar elementos y las conexiones entre ellos", "Mostrar porcentajes en una torta", "Ordenar números de menor a mayor", "Calcular el área de una figura"],
+      correcta: 0,
+      pista: "Pensá en puntos unidos por líneas.",
+      explicacion: "Un grafo representa elementos (vértices) y cómo están conectados (aristas)."
+    },
+    {
+      tema: 0,
+      pregunta: "En la notación G = (V, E), ¿qué letra representa a los puntos del grafo?",
+      opciones: ["V", "E", "G", "δ"],
+      correcta: 0,
+      pista: "Es la inicial de «vértices».",
+      explicacion: "V es el conjunto de vértices (los puntos) y E el de aristas (las conexiones)."
+    },
+    {
+      tema: 0,
+      pregunta: "¿Qué problema famoso resolvió Euler usando grafos?",
+      opciones: ["Los puentes de Königsberg", "El teorema de Pitágoras", "La ley de gravedad", "El valor de pi"],
+      correcta: 0,
+      pista: "Tiene que ver con cruzar puentes de una ciudad.",
+      explicacion: "Euler usó grafos en el siglo XVIII para estudiar si se podían cruzar los puentes de Königsberg una sola vez cada uno."
+    },
+    {
+      tema: 0,
+      pregunta: "Se modela la red de ómnibus de una ciudad con un grafo. ¿Qué serían las paradas?",
+      opciones: ["Los vértices", "Las aristas", "Los grados", "Los lazos"],
+      correcta: 0,
+      pista: "Los tramos entre paradas son las conexiones.",
+      explicacion: "Cada parada es un vértice y cada tramo que une dos paradas es una arista."
+    },
+
+    // Tema 1: Vértices
+    {
+      tema: 1,
+      pregunta: "¿Qué otro nombre reciben los vértices?",
+      opciones: ["Nodos", "Enlaces", "Lazos", "Grados"],
+      correcta: 0,
+      pista: "Se usa mucho en redes de computadoras.",
+      explicacion: "Vértices y nodos son lo mismo: los puntos de la red."
+    },
+    {
+      tema: 1,
+      pregunta: "Si V = {p, q, r, s}, ¿cuánto vale |V|?",
+      opciones: ["4", "3", "8", "1"],
+      correcta: 0,
+      pista: "Contá los elementos del conjunto.",
+      explicacion: "V tiene 4 elementos (p, q, r y s), así que |V| = 4."
+    },
+    {
+      tema: 1,
+      pregunta: "Si E = {{p, q}, {q, r}}, ¿cuáles son los vecinos de q?",
+      opciones: ["p y r", "Solo p", "Solo r", "No tiene vecinos"],
+      correcta: 0,
+      pista: "Buscá las aristas donde aparece q.",
+      explicacion: "Las aristas {p, q} y {q, r} hacen que p y r sean adyacentes a q."
+    },
+    {
+      tema: 1,
+      pregunta: "¿Cómo se llama un vértice que no tiene ninguna arista?",
+      opciones: ["Aislado", "Hoja", "Adyacente", "Extremo"],
+      correcta: 0,
+      pista: "Está solo, sin vecinos.",
+      explicacion: "Un vértice sin aristas es aislado y su grado es 0."
+    },
+
+    // Tema 2: Aristas
+    {
+      tema: 2,
+      pregunta: "¿Qué otro nombre reciben las aristas?",
+      opciones: ["Enlaces", "Nodos", "Vértices", "Hojas"],
+      correcta: 0,
+      pista: "Son las conexiones entre los puntos.",
+      explicacion: "Aristas y enlaces son lo mismo: las conexiones entre vértices."
+    },
+    {
+      tema: 2,
+      pregunta: "¿Cuántos extremos tiene una arista?",
+      opciones: ["2", "1", "3", "Depende del grafo"],
+      correcta: 0,
+      pista: "Una arista se escribe {u, v}.",
+      explicacion: "Toda arista tiene dos extremos. En un lazo los dos extremos son el mismo vértice."
+    },
+    {
+      tema: 2,
+      pregunta: "Si V = {1, 2, 3, 4} y E = {{1, 2}, {3, 4}}, ¿cuántas aristas tiene el grafo?",
+      opciones: ["2", "4", "6", "8"],
+      correcta: 0,
+      pista: "Contá los pares dentro de E, no los números.",
+      explicacion: "E tiene dos pares, {1, 2} y {3, 4}, así que hay 2 aristas."
+    },
+    {
+      tema: 2,
+      pregunta: "Según el libro, ¿cómo se llama un grafo que admite lazos?",
+      opciones: ["Pseudografo", "Grafo vacío", "Vértice aislado", "Hoja"],
+      correcta: 0,
+      pista: "Empieza con «pseudo».",
+      explicacion: "Un grafo con lazos (aristas de un vértice a sí mismo) es un pseudografo."
+    },
+
+    // Tema 3: Grado de un vértice
+    {
+      tema: 3,
+      pregunta: "Si V = {a, b, c} y E = {{a, b}, {a, c}}, ¿cuánto vale δ(a)?",
+      opciones: ["2", "1", "3", "0"],
+      correcta: 0,
+      pista: "Contá las aristas donde aparece a.",
+      explicacion: "a aparece en {a, b} y en {a, c}: δ(a) = 2."
+    },
+    {
+      tema: 3,
+      pregunta: "Un vértice tiene un lazo y ninguna otra arista. ¿Cuál es su grado?",
+      opciones: ["2", "1", "0", "3"],
+      correcta: 0,
+      pista: "Un lazo cuenta doble.",
+      explicacion: "Los dos extremos del lazo están en el mismo vértice, así que suma 2 al grado."
+    },
+    {
+      tema: 3,
+      pregunta: "Un grafo tiene 5 aristas. ¿Cuánto da la suma de los grados de todos sus vértices?",
+      opciones: ["10", "5", "25", "No se puede saber"],
+      correcta: 0,
+      pista: "Teorema de los apretones de manos.",
+      explicacion: "La suma de los grados es 2e = 2 · 5 = 10."
+    },
+    {
+      tema: 3,
+      pregunta: "Un grafo tiene 4 vértices y todos tienen grado 2. ¿Cuántas aristas tiene?",
+      opciones: ["4", "8", "2", "6"],
+      correcta: 0,
+      pista: "Sumá los grados y dividí entre 2.",
+      explicacion: "2 + 2 + 2 + 2 = 8 = 2e, entonces e = 4."
+    }
+  ]
+};
+
 /* Grafos de ejemplo para la clase. Las posiciones van de 0 a 100 (x) y de 0 a 60 (y).
    Una arista repetida es una arista múltiple; una arista [v, v] es un lazo. */
 const GRAFOS_EJEMPLO = {
@@ -886,7 +1033,9 @@ const sound = {
       hint: [[990, 0, 0.06], [740, 0.07, 0.1]],
       tick: [[1200, 0, 0.03, "square", 0.03]],
       start: [[523, 0, 0.1], [659, 0.1, 0.1], [784, 0.2, 0.1], [1047, 0.3, 0.2]],
-      end: [[784, 0, 0.12], [659, 0.12, 0.12], [523, 0.24, 0.12], [1047, 0.4, 0.3]]
+      end: [[784, 0, 0.12], [659, 0.12, 0.12], [523, 0.24, 0.12], [1047, 0.4, 0.3]],
+      moto: [[90, 0, 0.35, "sawtooth", 0.07], [110, 0.3, 0.35, "sawtooth", 0.07], [130, 0.6, 0.4, "sawtooth", 0.07], [120, 1.0, 0.6, "sawtooth", 0.05]],
+      crash: [[180, 0, 0.08, "square", 0.09], [70, 0.06, 0.18, "triangle", 0.12]]
     }[name];
     if (seq) seq.forEach(([f, s, d, t, v]) => this.tone(f, s, d, t, v));
   }
@@ -1020,6 +1169,74 @@ function spriteSVG(mood) {
   return `<svg viewBox="0 0 24 29" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${rects}</svg>`;
 }
 
+/* =========================================================
+   RAPPI EN PIXEL ART (comodín de la evaluación)
+   Cuadrícula de 32 × 25, mirando a la derecha, en su moto.
+   ========================================================= */
+const RAPPI_PALETA = {
+  K: "#140d1c", // contorno
+  H: "#17110d", // pelo enrulado oscuro
+  h: "#3a2a20", // brillo del pelo
+  S: "#c98f62", // piel
+  s: "#a8714a", // sombra de piel
+  E: "#140d0a", // ojo
+  M: "#8a4b3b", // boca
+  T: "#f2f2f2", // remera blanca
+  t: "#c9ccd6", // sombra de remera
+  O: "#ff5a1f", // caja de reparto naranja
+  o: "#c23c0e", // sombra de la caja
+  W: "#ffffff", // franjas de la caja
+  P: "#2a3f7a", // pantalón
+  B: "#2b2f3a", // moto
+  b: "#4a5060", // detalle de la moto
+  L: "#ffe066", // farol
+  R: "#0d0d12", // rueda
+  G: "#9aa3b5"  // llanta
+};
+
+const RAPPI_SPRITE = [
+  "...........KKKKKKK..............",
+  "..........KHHhHHhHK.............",
+  ".........KHHHHHHHHHK............",
+  ".........KHhHHHHhHHK............",
+  ".KKKKKKKKKHHHHHHHHHK............",
+  ".KOOOOOOKKHHHSSSSSSK............",
+  ".KOWWWWOK.KHSSSSSESK............",
+  ".KOOOOOOK.KHSSSSSSSSK...........",
+  ".KOOOOOOK.KsSSSSSMSK............",
+  ".KOWWWWOK..KsSSSSSK.............",
+  ".KOOOOOOKKKTTTTTTTK.............",
+  ".KOOOOOOKTTTTTTTTTTK............",
+  ".KoooooooKTTTTTTTTTTSK..........",
+  "..KKKKKKKKtTTTTTTTTSSSK.........",
+  "........KPPPPPPPPKKKKKSSK.......",
+  ".......KPPPPPPPPPPBBBBBKBK......",
+  "......KBBBBBBBBBBBBBBBBBKBK.....",
+  "....KKKBBBBBBBBBBBBBBBBBBBLLK...",
+  "...KRRRRKbbbbbbbbbbbbbbKRRRRK...",
+  "..KRRGGRRKbbbbbbbbbbbbKRRGGRRK..",
+  "..KRGKKGRK............KRGKKGRK..",
+  "..KRGKKGRK............KRGKKGRK..",
+  "..KRRGGRRK............KRRGGRRK..",
+  "...KRRRRK..............KRRRRK...",
+  "....KKKK................KKKK...."
+];
+
+function pixelSVG(rows, palette) {
+  let rects = "";
+  rows.forEach((row, y) => {
+    let x = 0;
+    while (x < row.length) {
+      const c = row[x];
+      let run = 1;
+      while (row[x + run] === c) run++;
+      if (c !== ".") rects += `<rect x="${x}" y="${y}" width="${run}" height="1" fill="${palette[c]}"/>`;
+      x += run;
+    }
+  });
+  return `<svg viewBox="0 0 ${rows[0].length} ${rows.length}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" shape-rendering="crispEdges">${rects}</svg>`;
+}
+
 const guillermo = {
   el: $("#mascot"),
   bubble: $("#bubble"),
@@ -1097,10 +1314,13 @@ function goHome() {
 /* =========================================================
    MODO PRINCIPAL: PREGUNTAS
    ========================================================= */
-const quiz = { deck: [], index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, answered: false, hintUsed: false, mistakes: [], lesson: null, porTema: {} };
+const quiz = { deck: [], index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, answered: false, hintUsed: false, mistakes: [], lesson: null, porTema: {},
+  reserve: [], comodines: {}, busy: false, alumno: "" };
+
+const prepareQuestion = (q) => ({ ...q, mezcla: shuffle(q.opciones.map((texto, i) => ({ texto, ok: i === q.correcta }))) });
 
 // lesson: null = partida normal; un número = preguntas de ese tema de la clase;
-// "todo" = repaso de toda la clase; "examen" = ¿estoy listo para dar la clase?
+// "todo" = repaso de toda la clase; "examen" = ¿estoy listo para dar la clase?; "eval" = evaluación con comodines
 function startQuiz(lesson = null) {
   stopChallenge();
   quiz.lesson = lesson;
@@ -1108,17 +1328,21 @@ function startQuiz(lesson = null) {
   let total = AJUSTES.preguntasPorPartida;
   if (lesson === "todo") pool = CLASE.temas.flatMap((t) => t.preguntas);
   else if (lesson === "examen") { pool = EXAMEN.preguntas; total = pool.length; }
+  else if (lesson === "eval") { pool = EVALUACION.preguntas; total = EVALUACION.cantidad; }
   else if (lesson !== null) { pool = CLASE.temas[lesson].preguntas; total = pool.length; }
-  quiz.deck = shuffle(pool).slice(0, Math.min(total, pool.length)).map((q) => ({
-    ...q,
-    mezcla: shuffle(q.opciones.map((texto, i) => ({ texto, ok: i === q.correcta })))
-  }));
-  Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {} });
+  const mixed = shuffle(pool);
+  quiz.deck = mixed.slice(0, Math.min(total, pool.length)).map(prepareQuestion);
+  quiz.reserve = lesson === "eval" ? mixed.slice(total) : [];
+  quiz.comodines = { rappi: true, pista: true, cambio: true };
+  Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {}, busy: false });
+  $("#hint-btn").hidden = lesson === "eval";
   $("#q-score").textContent = "0";
   $("#q-streak").textContent = "0";
   sound.play("start");
   show("quiz", $("#q-text"));
-  renderQuestion(pick(FRASES.arranque));
+  renderQuestion(lesson === "eval"
+    ? `¡Arranca la evaluación${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 3 comodines: Rappi, Pista y Cambio. Usalos bien.`
+    : pick(FRASES.arranque));
 }
 
 function renderQuestion(intro) {
@@ -1151,12 +1375,17 @@ function renderQuestion(intro) {
     box.appendChild(b);
   });
 
+  quiz.busy = false;
+  $("#rappi-rider").hidden = true;
+  renderLifelines();
   guillermo.say(intro || pick(FRASES.pregunta), "espera");
   $("#q-text").focus({ preventScroll: true });
 }
 
 function answerQuestion(i) {
-  if (quiz.answered || current !== "quiz") return; // bloqueo: una sola respuesta por pregunta
+  if (quiz.answered || quiz.busy || current !== "quiz") return; // bloqueo: una sola respuesta por pregunta
+  const opt = quiz.deck[quiz.index].mezcla[i];
+  if (!opt || opt.eliminada) return; // las opciones que arrolló Rappi no se pueden elegir
   quiz.answered = true;
 
   const q = quiz.deck[quiz.index];
@@ -1172,6 +1401,7 @@ function answerQuestion(i) {
     else b.classList.add("dim");
   });
   $("#hint-btn").disabled = true;
+  renderLifelines();
 
   if (q.tema !== undefined) {
     const t = (quiz.porTema[q.tema] = quiz.porTema[q.tema] || { ok: 0, total: 0 });
@@ -1217,6 +1447,7 @@ function answerQuestion(i) {
 }
 
 function useHint() {
+  if (quiz.lesson === "eval") return usarPista();
   if (quiz.answered || quiz.hintUsed || current !== "quiz") return;
   quiz.hintUsed = true; // el costo se descuenta de los puntos de esta pregunta si la acertás
   const hint = $("#hint-btn");
@@ -1240,7 +1471,7 @@ function showResults() {
   const isRecord = quiz.lesson === null && quiz.score > best; // el récord es solo de la partida normal
   if (isRecord) store.set("bestQuiz", quiz.score);
   updateRecords();
-  $("#r-back-lesson").hidden = quiz.lesson === null;
+  $("#r-back-lesson").hidden = quiz.lesson === null || quiz.lesson === "eval";
   if (typeof quiz.lesson === "number") {
     const done = store.get("claseHechos", {});
     done[quiz.lesson] = Math.max(done[quiz.lesson] || 0, Math.round((quiz.correct / total) * 100));
@@ -1251,7 +1482,8 @@ function showResults() {
   $("#r-correct").textContent = `${quiz.correct}/${total}`;
   $("#r-streak").textContent = quiz.bestStreak;
   $("#r-record").hidden = !isRecord;
-  const ready = quiz.lesson === "examen" ? renderReadiness(Math.round((quiz.correct / total) * 100)) : null;
+  const ready = quiz.lesson === "examen" ? renderReadiness(Math.round((quiz.correct / total) * 100))
+    : quiz.lesson === "eval" ? renderEval(total) : null;
   $("#r-ready").hidden = !ready;
 
   const list = $("#r-review");
@@ -1663,6 +1895,195 @@ $("#graph-example").addEventListener("change", (e) => loadGraph(e.target.value))
 $("#graph-degrees").addEventListener("change", (e) => { lesson.showDegrees = e.target.checked; drawGraph(); describeGraph(); });
 
 /* =========================================================
+   EVALUACIÓN PARA LOS ALUMNOS (con comodines)
+   ========================================================= */
+EVALUACION.preguntas.forEach((p) => { p.categoria = "Evaluación · " + CLASE.temas[p.tema].titulo; });
+
+const COMODINES = {
+  rappi: { label: "🛵 Llamar a Rappi", usado: "🛵 Rappi ya pasó" },
+  pista: { label: "💡 Pista de Guillermo", usado: "💡 Pista usada" },
+  cambio: { label: "🔄 Cambiar pregunta", usado: "🔄 Cambio usado" }
+};
+
+function evalIntro() {
+  stopChallenge();
+  renderEvalHistory();
+  show("eval-intro");
+  guillermo.say("¡Evaluación! Son 12 preguntas de la clase y tenés 3 comodines. Uno es llamar a Rappi… ¡cuidado que viene rápido!", "espera");
+}
+
+function renderEvalHistory() {
+  const items = store.get("evaluaciones", []);
+  const list = $("#eval-history");
+  list.innerHTML = "";
+  $("#eval-history-wrap").hidden = !items.length;
+  const clear = $("#eval-clear");
+  clear.dataset.confirm = "";
+  clear.textContent = "Borrar historial";
+  items.slice(-10).reverse().forEach((it) => {
+    const li = document.createElement("li");
+    li.innerHTML = `<span class="hn"></span><span class="hs"></span>`;
+    li.querySelector(".hn").textContent = it.nombre || "Sin nombre";
+    li.querySelector(".hs").textContent = `Nota ${it.nota} · ${it.correctas} de ${it.total} bien · ${it.fecha}`;
+    li.className = it.nota >= 6 ? "good" : "bad";
+    list.appendChild(li);
+  });
+}
+
+function clearEvalHistory() {
+  const btn = $("#eval-clear");
+  if (!btn.dataset.confirm) { // paso de confirmación dentro de la página
+    btn.dataset.confirm = "1";
+    btn.textContent = "¿Seguro? Tocá de nuevo para borrar";
+    return;
+  }
+  store.set("evaluaciones", []);
+  renderEvalHistory();
+  guillermo.say("Listo, borré el historial de este dispositivo.", "espera");
+}
+
+function startEval() {
+  quiz.alumno = ($("#eval-name").value || "").trim().slice(0, 40);
+  startQuiz("eval");
+}
+
+function renderLifelines() {
+  const box = $("#lifelines");
+  box.hidden = quiz.lesson !== "eval";
+  if (box.hidden) return;
+  Object.keys(COMODINES).forEach((k) => {
+    const b = $("#life-" + k);
+    const used = !quiz.comodines[k];
+    b.textContent = used ? COMODINES[k].usado : COMODINES[k].label;
+    b.classList.toggle("used", used);
+    b.disabled = used || quiz.answered || quiz.busy || (k === "cambio" && !quiz.reserve.length);
+  });
+}
+
+function usarPista() {
+  if (quiz.lesson !== "eval" || !quiz.comodines.pista || quiz.answered || quiz.busy) return;
+  quiz.comodines.pista = false;
+  quiz.hintUsed = true;
+  sound.play("hint");
+  guillermo.say("Pista: " + quiz.deck[quiz.index].pista, "pensando");
+  renderLifelines();
+}
+
+function cambiarPregunta() {
+  if (quiz.lesson !== "eval" || !quiz.comodines.cambio || quiz.answered || quiz.busy || !quiz.reserve.length) return;
+  quiz.comodines.cambio = false;
+  quiz.deck[quiz.index] = prepareQuestion(quiz.reserve.pop());
+  sound.play("click");
+  renderQuestion("¡Cambiamos la pregunta! Vamos con esta.");
+}
+
+function runOver(i) {
+  const q = quiz.deck[quiz.index];
+  if (q.mezcla[i].eliminada) return;
+  q.mezcla[i].eliminada = true;
+  const b = $("#q-options").children[i];
+  b.disabled = true;
+  b.classList.add("run-over");
+  b.querySelector(".mark").textContent = "🛵 Arrollada por Rappi";
+  sound.play("crash");
+}
+
+function llamarRappi() {
+  if (quiz.lesson !== "eval" || !quiz.comodines.rappi || quiz.answered || quiz.busy) return;
+  quiz.comodines.rappi = false;
+  quiz.busy = true;
+  renderLifelines();
+
+  const q = quiz.deck[quiz.index];
+  const wrong = shuffle(q.mezcla.map((o, i) => (o.ok || o.eliminada ? -1 : i)).filter((i) => i >= 0)).slice(0, 2);
+  const card = $("#q-card");
+  const rider = $("#rappi-rider");
+  const buttons = $("#q-options").children;
+  const cardBox = card.getBoundingClientRect();
+  // de izquierda a derecha (y de arriba a abajo) para que la moto nunca vaya marcha atrás
+  const targets = wrong.map((i) => {
+    const r = buttons[i].getBoundingClientRect();
+    return { i, x: r.left - cardBox.left + r.width / 2, y: r.top - cardBox.top + r.height / 2 };
+  }).sort((a, b) => a.x - b.x || a.y - b.y);
+
+  guillermo.say("¡Llamaste a Rappi! ¡Ahí viene a toda velocidad, cuidado!", "sorpresa");
+  sound.play("moto");
+
+  let done = false;
+  const finish = () => {
+    if (done) return;
+    done = true;
+    targets.forEach((t) => runOver(t.i));
+    rider.hidden = true;
+    quiz.busy = false;
+    guillermo.say("¡Rappi arrolló dos opciones incorrectas! Quedan dos: elegí bien.", "alegria", "jump");
+    renderLifelines();
+  };
+
+  if (reduceMotion.matches || !rider.animate) {
+    targets.forEach((t) => runOver(t.i));
+    finish();
+    return;
+  }
+
+  rider.hidden = false;
+  const w = rider.offsetWidth;
+  const h = rider.offsetHeight;
+  const pts = [
+    { x: -w - 10, y: targets[0].y },
+    ...targets,
+    { x: cardBox.width + 10, y: targets[targets.length - 1].y }
+  ].map((p) => ({ ...p, x: p.x - w / 2 + (p.i === undefined ? w / 2 : 0), y: p.y - h * 0.8 }));
+  // velocidad constante: cada tramo dura según su largo
+  const seg = pts.slice(1).map((p, k) => Math.hypot(p.x - pts[k].x, p.y - pts[k].y));
+  const totalLen = seg.reduce((a, b) => a + b, 0) || 1;
+  let acc = 0;
+  const offsets = [0, ...seg.map((d) => (acc += d) / totalLen)];
+  const duration = 2200;
+  const anim = rider.animate(
+    pts.map((p, k) => ({ transform: `translate(${p.x}px, ${p.y}px)`, offset: offsets[k] })),
+    { duration, easing: "linear", fill: "forwards" }
+  );
+  targets.forEach((t, k) => setTimeout(() => runOver(t.i), offsets[k + 1] * duration));
+  anim.onfinish = () => { anim.cancel(); finish(); };
+  setTimeout(() => { anim.cancel(); finish(); }, duration + 400); // por si la pestaña no anima (segundo plano)
+}
+
+function renderEval(total) {
+  const nota = Math.max(1, Math.round((quiz.correct / total) * 12));
+  const aprobado = nota >= 6;
+  const usados = Object.keys(COMODINES).filter((k) => !quiz.comodines[k]).map((k) => COMODINES[k].label.replace(/^\S+\s/, ""));
+  const fecha = new Date().toLocaleString("es-UY", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+  const hist = store.get("evaluaciones", []);
+  hist.push({ nombre: quiz.alumno, nota, correctas: quiz.correct, total, fecha });
+  store.set("evaluaciones", hist.slice(-50));
+
+  $("#r-ready").className = "ready " + (aprobado ? "ready-ok" : "ready-no");
+  $("#r-ready-title").textContent = `${quiz.alumno ? quiz.alumno + " · " : ""}Nota orientativa: ${nota}/12 · ${aprobado ? "✔ Aprobado" : "✘ A reforzar"}`;
+  const list = $("#r-ready-list");
+  list.innerHTML = "";
+  const rows = CLASE.temas.map((t, i) => {
+    const r = quiz.porTema[i] || { ok: 0, total: 0 };
+    return [t.titulo, r.total ? `${r.ok}/${r.total}` : "—", !r.total || r.ok / r.total >= 0.5];
+  });
+  rows.push(["Comodines usados", usados.length ? usados.join(", ") : "Ninguno", true]);
+  rows.forEach(([a, b, good]) => {
+    const li = document.createElement("li");
+    li.className = good ? "good" : "bad";
+    li.innerHTML = `<span class="rt"></span><span class="rs"></span>`;
+    li.querySelector(".rt").textContent = a;
+    li.querySelector(".rs").textContent = b;
+    list.appendChild(li);
+  });
+  return {
+    aprobado,
+    mensaje: aprobado
+      ? `¡Bien ahí${quiz.alumno ? ", " + quiz.alumno : ""}! Sacaste ${nota} de 12 en la evaluación.`
+      : `Sacaste ${nota} de 12${quiz.alumno ? ", " + quiz.alumno : ""}. Mirá el repaso de abajo: con eso la próxima sale mejor.`
+  };
+}
+
+/* =========================================================
    CONTROLES
    ========================================================= */
 const actions = {
@@ -1670,7 +2091,13 @@ const actions = {
   instructions: () => { show("instructions"); guillermo.say(FRASES.instrucciones, "pensando"); },
   "start-quiz": () => startQuiz(),
   "retry-quiz": () => startQuiz(quiz.lesson),
-  "quit-quiz": () => (quiz.lesson === null ? goHome() : typeof quiz.lesson === "number" ? openLesson(quiz.lesson) : showLearn()),
+  "quit-quiz": () => (quiz.lesson === null ? goHome() : quiz.lesson === "eval" ? evalIntro() : typeof quiz.lesson === "number" ? openLesson(quiz.lesson) : showLearn()),
+  "eval-intro": evalIntro,
+  "start-eval": startEval,
+  "eval-clear": clearEvalHistory,
+  "life-rappi": llamarRappi,
+  "life-pista": usarPista,
+  "life-cambio": cambiarPregunta,
   "lesson-exam": () => startQuiz("examen"),
   learn: showLearn,
   "lesson-quiz": () => startQuiz(lesson.index),
@@ -1691,7 +2118,7 @@ document.addEventListener("click", (e) => {
   if (!btn || btn.disabled) return;
   const fn = actions[btn.dataset.action];
   if (!fn) return;
-  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge"].includes(btn.dataset.action)) sound.play("click");
+  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-pista", "life-cambio"].includes(btn.dataset.action)) sound.play("click");
   fn();
 });
 
@@ -1735,3 +2162,5 @@ renderSoundButton();
 updateRecords();
 guillermo.set("espera");
 guillermo.startBlinking();
+$("#rappi-portrait").innerHTML = pixelSVG(RAPPI_SPRITE, RAPPI_PALETA);
+$("#rappi-rider").innerHTML = pixelSVG(RAPPI_SPRITE, RAPPI_PALETA);

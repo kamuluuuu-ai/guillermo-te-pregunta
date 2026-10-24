@@ -676,6 +676,89 @@ kbd {
 .ready-list li.good .rs { color: var(--good); }
 .ready-list li.bad .rs { color: var(--bad); }
 
+/* ---------- evaluación y comodín de Rappi ---------- */
+:root { --orange: #ff7a2f; --orange-d: #c24b0e; }
+.btn-orange { --c: var(--orange); --cd: var(--orange-d); --fg: var(--ink); }
+.demo-orange { background: var(--orange); }
+
+.lifelines { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.lifelines .btn { flex: 1 1 180px; }
+.lifelines .btn.used { text-decoration: line-through; }
+
+.question-card { position: relative; overflow: hidden; }
+.rappi-rider {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 128px;
+  aspect-ratio: 32 / 25;
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 0 #00000088);
+}
+.rappi-rider svg, .rappi-portrait svg { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.rappi-rider::before {
+  content: "¡RAPPI!";
+  position: absolute;
+  left: 50%;
+  top: -18px;
+  transform: translateX(-50%);
+  padding: 2px 6px;
+  font-family: var(--font-retro);
+  font-size: 9px;
+  color: var(--ink);
+  background: var(--orange);
+  white-space: nowrap;
+}
+.rappi-rider svg { animation: rumble 0.12s steps(2) infinite; }
+
+.option.run-over {
+  background: repeating-linear-gradient(90deg, #2a2230 0 10px, #1b1622 10px 16px);
+  box-shadow: inset 0 0 0 3px #55475e;
+  color: #9b8fa8;
+  opacity: 1;
+  animation: squash 0.3s steps(3) both;
+}
+.option.run-over .label { text-decoration: line-through; }
+.option.run-over .key { background: #55475e; box-shadow: none; }
+.option.run-over .mark { color: var(--orange); }
+
+.rappi-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin: 0 0 18px;
+  padding: 14px 16px;
+  background: #3a1f14;
+  box-shadow: inset 0 0 0 3px var(--orange);
+}
+.rappi-portrait { width: 180px; max-width: 100%; aspect-ratio: 32 / 25; flex: none; }
+.rappi-text { flex: 1 1 240px; min-width: 0; }
+.rappi-text ul { margin: 0; padding-left: 20px; }
+.rappi-text li { margin-bottom: 6px; }
+
+.field { display: flex; flex-direction: column; gap: 6px; max-width: 380px; }
+.field label { font-weight: 800; }
+.field input {
+  min-height: 48px;
+  padding: 10px 12px;
+  font-family: var(--font-read);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  background: var(--ink);
+  border: 3px solid var(--line);
+}
+.field input:focus-visible { border-color: var(--yellow); outline: none; }
+
+.eval-history { margin-top: 24px; display: grid; gap: 10px; justify-items: start; }
+.eval-history .ready-list { width: 100%; }
+.eval-history .hs { font-variant-numeric: tabular-nums; }
+
+@keyframes rumble { 50% { transform: translateY(-1px); } }
+@keyframes squash { 0% { transform: scaleY(1); } 40% { transform: scaleY(0.6) translateY(4px); } 100% { transform: scaleY(1); } }
+
 /* ---------- pie ---------- */
 .footer {
   padding: 18px 16px 24px;
