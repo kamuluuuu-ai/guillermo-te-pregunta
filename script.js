@@ -472,7 +472,7 @@ const CLASE = {
         },
         {
           pregunta: "¿Qué es un lazo (o bucle)?",
-          opciones: ["Una arista que une un vértice consigo mismo", "Dos aristas entre los mismos vértices", "Un vértice sin aristas", "Una arista con flecha"],
+          opciones: ["Una arista que une un vértice consigo mismo", "Dos aristas entre los mismos vértices", "Un vértice sin aristas", "Una arista muy larga"],
           correcta: 0,
           pista: "Sale de un vértice y vuelve al mismo.",
           explicacion: "Un lazo conecta un vértice consigo mismo. Los grafos que los admiten se llaman pseudografos."
