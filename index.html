@@ -53,6 +53,7 @@
         <div class="menu">
           <button class="btn btn-yellow btn-big" type="button" data-action="start-quiz">▶ Jugar</button>
           <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ El desafío de Guillermo</button>
+          <button class="btn btn-green" type="button" data-action="learn">◆ Clase: Teoría de grafos</button>
           <button class="btn btn-violet" type="button" data-action="instructions">? Instrucciones</button>
         </div>
         <p class="note">Las preguntas son de prueba: después se van a reemplazar por las del proyecto.</p>
@@ -115,7 +116,7 @@
         <div class="actions">
           <button class="btn btn-violet" type="button" id="hint-btn" data-action="hint">💡 Pista (−25)</button>
           <button class="btn btn-yellow" type="button" id="next-btn" data-action="next" hidden>Siguiente ▶</button>
-          <button class="btn btn-ghost btn-small" type="button" data-action="home">Salir</button>
+          <button class="btn btn-ghost btn-small" type="button" data-action="quit-quiz">Salir</button>
         </div>
       </div>
 
@@ -133,7 +134,8 @@
           <ol class="review-list" id="r-review"></ol>
         </div>
         <div class="menu menu-row">
-          <button class="btn btn-yellow" type="button" data-action="start-quiz">↻ Jugar de nuevo</button>
+          <button class="btn btn-yellow" type="button" data-action="retry-quiz">↻ Jugar de nuevo</button>
+          <button class="btn btn-green" type="button" id="r-back-lesson" data-action="learn" hidden>◆ Volver a la clase</button>
           <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ Ir al desafío</button>
           <button class="btn btn-ghost" type="button" data-action="home">Inicio</button>
         </div>
@@ -189,6 +191,48 @@
           <button class="btn btn-yellow" type="button" data-action="start-challenge">↻ Otra vez</button>
           <button class="btn btn-violet" type="button" data-action="start-quiz">▶ Modo preguntas</button>
           <button class="btn btn-ghost" type="button" data-action="home">Inicio</button>
+        </div>
+      </div>
+
+      <!-- CLASE: LISTA DE TEMAS -->
+      <div class="screen" id="screen-learn" data-screen hidden>
+        <p class="demo-badge demo-green">Clase del 26/10/26</p>
+        <h2 class="title title-sm">Teoría<br><span>de grafos</span></h2>
+        <p class="lead">Leé cada tema, jugá con el grafo de ejemplo y después dejá que Guillermo te pregunte para ver si lo entendiste. Al final hay un repaso con todo.</p>
+        <p class="team">Equipo: Velazco · Bueno · Kasmenko</p>
+        <ol class="topic-list" id="topic-list"></ol>
+        <div class="menu menu-row">
+          <button class="btn btn-yellow" type="button" data-action="lesson-review">★ Repaso de toda la clase</button>
+          <button class="btn btn-ghost" type="button" data-action="home">← Inicio</button>
+        </div>
+        <p class="note" id="clase-fuente"></p>
+      </div>
+
+      <!-- CLASE: UN TEMA -->
+      <div class="screen" id="screen-lesson" data-screen hidden>
+        <nav class="lesson-nav" aria-label="Temas de la clase">
+          <button class="btn btn-ghost btn-small" type="button" data-action="learn">☰ Temas</button>
+          <span class="lesson-step" id="lesson-step">Tema 1 de 4</span>
+        </nav>
+        <h2 class="h2 lesson-title" id="lesson-title" tabindex="-1">Tema</h2>
+        <div class="lesson-body" id="lesson-body"></div>
+
+        <figure class="graph-lab" id="graph-lab">
+          <div class="graph-lab-head">
+            <label for="graph-example" class="hud-label">Ejemplo</label>
+            <select id="graph-example"></select>
+            <label class="check"><input type="checkbox" id="graph-degrees"> Mostrar grados</label>
+          </div>
+          <div class="graph-canvas" id="graph-canvas"></div>
+          <figcaption class="graph-info" id="graph-info" aria-live="polite"></figcaption>
+        </figure>
+
+        <aside class="teach-box" id="lesson-teach"></aside>
+
+        <div class="actions">
+          <button class="btn btn-yellow" type="button" data-action="lesson-quiz" id="lesson-quiz-btn">✔ ¿Lo entendí? Preguntame</button>
+          <button class="btn btn-ghost btn-small" type="button" data-action="lesson-prev" id="lesson-prev">◀ Anterior</button>
+          <button class="btn btn-ghost btn-small" type="button" data-action="lesson-next" id="lesson-next">Siguiente ▶</button>
         </div>
       </div>
 

@@ -522,6 +522,129 @@ kbd {
 .btn-true { --c: var(--good); --cd: var(--good-d); --fg: var(--ink); }
 .btn-false { --c: var(--bad); --cd: var(--bad-d); --fg: var(--ink); }
 
+/* ---------- clase: teoría de grafos ---------- */
+.btn-green { --c: var(--good); --cd: var(--good-d); --fg: var(--ink); }
+.demo-green { background: var(--good); }
+.team { margin: -6px 0 18px; font-weight: 800; color: var(--teal); }
+
+.topic-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.topic {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 16px;
+  text-align: left;
+  border: 0;
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-read);
+  cursor: pointer;
+  box-shadow: inset 0 0 0 3px var(--line), inset 0 -6px 0 #0d1440, 0 6px 0 #00000066;
+}
+.topic:hover { box-shadow: inset 0 0 0 3px var(--good), inset 0 -6px 0 #0d1440, 0 6px 0 #00000066; }
+.topic:active { transform: translateY(3px); }
+.topic-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  font-family: var(--font-retro);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--good);
+  box-shadow: inset 0 -4px 0 var(--good-d);
+}
+.topic-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.topic-title { font-size: 18px; font-weight: 900; }
+.topic-sum { font-size: 15px; color: var(--muted); }
+.topic-state { flex: none; font-size: 13px; font-weight: 900; color: var(--muted); text-transform: uppercase; }
+.topic-state.done { color: var(--good); }
+
+.lesson-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.lesson-step { font-family: var(--font-retro); font-size: 10px; color: var(--teal); }
+.lesson-title { outline: none; color: var(--good); }
+
+.lesson-body { max-width: 68ch; }
+.lesson-body p, .lesson-body ul { margin: 0 0 14px; }
+.lesson-body ul { padding-left: 22px; }
+.lesson-body li { margin-bottom: 6px; }
+.lesson-body h3 { margin: 22px 0 10px; font-family: var(--font-retro); font-size: 12px; line-height: 1.6; color: var(--teal); }
+.lesson-body strong { color: #fff; }
+.def {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  background: var(--ink);
+  box-shadow: inset 4px 0 0 var(--violet), inset 0 0 0 2px var(--line);
+}
+.def-yellow { box-shadow: inset 4px 0 0 var(--yellow), inset 0 0 0 2px var(--line); }
+.def-tag {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: var(--violet);
+}
+.def-yellow .def-tag { background: var(--yellow); color: var(--ink); }
+.table-wrap { overflow-x: auto; margin-bottom: 16px; }
+.lesson-body table { border-collapse: collapse; min-width: 440px; width: 100%; font-size: 15px; }
+.lesson-body th, .lesson-body td { padding: 8px 10px; text-align: left; border: 2px solid var(--line); }
+.lesson-body th { background: var(--ink); color: var(--yellow); font-weight: 900; }
+
+.graph-lab {
+  margin: 20px 0 0;
+  padding: 14px;
+  background: #0f1640;
+  box-shadow: inset 0 0 0 3px var(--line);
+}
+.graph-lab-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.graph-lab select {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 8px 10px;
+  font-family: var(--font-read);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 3px solid var(--line);
+}
+.check { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 800; cursor: pointer; }
+.check input { width: 20px; height: 20px; accent-color: var(--yellow); }
+
+.graph-canvas { margin-top: 10px; background: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+.graph-canvas svg { display: block; width: 100%; height: auto; max-height: 360px; }
+.g-edge { cursor: pointer; outline: none; }
+.g-edge .hit { fill: none; stroke: transparent; stroke-width: 5; }
+.g-edge .line { fill: none; stroke: #7f8bd6; stroke-width: 1.1; }
+.g-edge:hover .line, .g-edge:focus-visible .line { stroke: var(--teal); stroke-width: 1.6; }
+.g-edge.on .line { stroke: var(--yellow); stroke-width: 1.8; }
+.g-vertex { cursor: pointer; outline: none; }
+.g-vertex rect { fill: var(--teal); stroke: var(--ink); stroke-width: 0.8; }
+.g-vertex.near rect { fill: var(--violet); }
+.g-vertex.on rect { fill: var(--yellow); }
+.g-vertex:hover rect, .g-vertex:focus-visible rect { stroke: #fff; stroke-width: 1; }
+.g-label { fill: var(--text); font-family: var(--font-read); font-size: 4px; font-weight: 800; text-anchor: middle; paint-order: stroke; stroke: var(--ink); stroke-width: 1.4px; stroke-linejoin: round; }
+.g-degree { fill: var(--ink); font-family: var(--font-read); font-size: 4px; font-weight: 900; text-anchor: middle; pointer-events: none; }
+.graph-info { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; font-size: 15px; overflow-wrap: anywhere; }
+.graph-info em { color: var(--muted); }
+
+.teach-box {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: #2a1f5c;
+  box-shadow: inset 0 0 0 3px var(--violet);
+}
+.teach-box h3 { margin: 0 0 8px; font-family: var(--font-retro); font-size: 12px; line-height: 1.6; color: var(--yellow); }
+.teach-box ul { margin: 0; padding-left: 22px; }
+.teach-box li { margin-bottom: 6px; }
+
 /* ---------- pie ---------- */
 .footer {
   padding: 18px 16px 24px;
