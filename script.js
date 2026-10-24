@@ -1171,7 +1171,8 @@ function spriteSVG(mood) {
 
 /* =========================================================
    RAPPI EN PIXEL ART (comodín de la evaluación)
-   Cuadrícula de 32 × 25, mirando a la derecha, en su moto.
+   Cuadrícula de 52 × 34: repartidor con campera naranja y caja
+   de reparto, en su moto, mirando a la derecha.
    ========================================================= */
 const RAPPI_PALETA = {
   K: "#140d1c", // contorno
@@ -1179,47 +1180,59 @@ const RAPPI_PALETA = {
   h: "#3a2a20", // brillo del pelo
   S: "#c98f62", // piel
   s: "#a8714a", // sombra de piel
-  E: "#140d0a", // ojo
+  E: "#140d0a", // ojo y ceja
   M: "#8a4b3b", // boca
-  T: "#f2f2f2", // remera blanca
-  t: "#c9ccd6", // sombra de remera
-  O: "#ff5a1f", // caja de reparto naranja
-  o: "#c23c0e", // sombra de la caja
-  W: "#ffffff", // franjas de la caja
-  P: "#2a3f7a", // pantalón
-  B: "#2b2f3a", // moto
-  b: "#4a5060", // detalle de la moto
+  W: "#ffffff", // franjas reflectivas
+  O: "#ff5a1f", // naranja del uniforme, la caja y la moto
+  o: "#c23c0e", // sombra naranja
+  Y: "#ff9a5c", // brillo naranja
+  P: "#23314f", // pantalón
+  N: "#111116", // asiento, puños y zapatillas
+  B: "#2b2f3a", // chasis
+  b: "#4a5060", // motor y manubrio
   L: "#ffe066", // farol
-  R: "#0d0d12", // rueda
-  G: "#9aa3b5"  // llanta
+  R: "#0d0d12", // cubierta
+  G: "#9aa3b5", // llanta y horquilla
+  g: "#5c6475", // centro de la rueda
+  X: "#8b93a3", // caño de escape
+  x: "#5c6475"  // punta del escape
 };
 
 const RAPPI_SPRITE = [
-  "...........KKKKKKK..............",
-  "..........KHHhHHhHK.............",
-  ".........KHHHHHHHHHK............",
-  ".........KHhHHHHhHHK............",
-  ".KKKKKKKKKHHHHHHHHHK............",
-  ".KOOOOOOKKHHHSSSSSSK............",
-  ".KOWWWWOK.KHSSSSSESK............",
-  ".KOOOOOOK.KHSSSSSSSSK...........",
-  ".KOOOOOOK.KsSSSSSMSK............",
-  ".KOWWWWOK..KsSSSSSK.............",
-  ".KOOOOOOKKKTTTTTTTK.............",
-  ".KOOOOOOKTTTTTTTTTTK............",
-  ".KoooooooKTTTTTTTTTTSK..........",
-  "..KKKKKKKKtTTTTTTTTSSSK.........",
-  "........KPPPPPPPPKKKKKSSK.......",
-  ".......KPPPPPPPPPPBBBBBKBK......",
-  "......KBBBBBBBBBBBBBBBBBKBK.....",
-  "....KKKBBBBBBBBBBBBBBBBBBBLLK...",
-  "...KRRRRKbbbbbbbbbbbbbbKRRRRK...",
-  "..KRRGGRRKbbbbbbbbbbbbKRRGGRRK..",
-  "..KRGKKGRK............KRGKKGRK..",
-  "..KRGKKGRK............KRGKKGRK..",
-  "..KRRGGRRK............KRRGGRRK..",
-  "...KRRRRK..............KRRRRK...",
-  "....KKKK................KKKK...."
+  "..................KHHHHHHhHHHHHK....................",
+  "..................KHHhHHHHHHhHHHK...................",
+  "...KKKKKKKKKKKKK..KHHHHHHHHHHHHK....................",
+  "..KOOOOOOOOOOOOOKKHHHHHHHSSSSHSK....................",
+  "..KOOOOOOOOOOOOooKKHhHHHSSSSEESK....................",
+  "..KOOWWWWWWWWWOooKHHHHHHsSSSEWSSK...................",
+  "..KOOWWWWWWWWWOooKKHHHHHsSSSSSsSK...................",
+  "..KOOOOOOOOOOOOooK.KsssSSSSMMMSK....................",
+  "..KOOOOOOOOOOOOooKKKsssSSSSSSSSK....................",
+  "..KOOOOOOOOOOOOooooOOOssssOOKKK..KKKKK..............",
+  "..KOOOOOOOOOOOOooooOOOOOOOOOKKK.KNNNNbK.............",
+  "..KOOYYYYYYYYYOooooOOOOOOOOOOOOKKSSSbbKKKK..........",
+  "..KOOOOOOOOOOOOooooWWWWWOOOOOOOOOSSSOOOOOOK.........",
+  "..KOOOOOOOOOOOOooooOOOOOOOOOOOOOOSSSOOOOOLLK........",
+  "..KooooooooooooooooOOOOOOOOOKOOOOOOOOOOOLLLLK.......",
+  "..KooooooooooooooooOOOOOOOOOKKKKKKKKOOOOLLLLK.......",
+  "..KoooooooooooooooooooooooooOOOOOOOOOOOOLLLLK.......",
+  "...KKKKKKKKKKKKKoooPPPPPPPPPPPPYYYYOOOOOOOKK........",
+  "....KKKKKKKKNNNNoooPPPPPPPPPPPPOOOOOOOOOOOKKKKK.....",
+  "...KOOOOOOOONNNNNNNPPPPPPPPPPPPPWWOOKOOOOOOOOOOK....",
+  "..KOOKKKKKKKKKKKKKKKKKKKOOOOPPPPOOOOKKKGGGKKKKOOK...",
+  "...KK...KKRRRKKKBBBBBBBBOoooPPPPoooOK.KGGRRRKKOOK...",
+  ".......KRRRRRRRKBBBBBBBBOOOOPPPPOOOOK.KRRRRRRRKK....",
+  "..KKKKKRRRGGGRRRBBBBBBbbbbbbPPPPBBKK.KRRRGGGRRRK....",
+  ".KxxXXRRGGRRRGGRRBBBBBbbbbbbPPPPBBK.KRRGGRRRGGRRK...",
+  ".KxxXXRRGRRGRRGRRBBBbbbbbbbbNNNNNNK.KRRGRRGRRGRRK...",
+  "..KKKRRGRRRgRRRGRRbbbbbbbbbbNNNNNNKKRRGRRRgRRRGRRK..",
+  "....KRRGRGgggGRGRRKKKKKKKKKKKKKKKK.KRRGRGgggGRGRRK..",
+  "....KRRGRRRgRRRGRRK................KRRGRRRgRRRGRRK..",
+  ".....KRRGRRGRRGRRK..................KRRGRRGRRGRRK...",
+  ".....KRRGGRRRGGRRK..................KRRGGRRRGGRRK...",
+  "......KRRRGGGRRRK....................KRRRGGGRRRK....",
+  ".......KRRRRRRRK......................KRRRRRRRK.....",
+  "........KKRRRKK........................KKRRRKK......"
 ];
 
 function pixelSVG(rows, palette) {
@@ -1291,7 +1304,8 @@ function show(name, focusEl) {
 }
 
 function updateRecords() {
-  $("#best-quiz").textContent = store.get("bestQuiz", 0);
+  const notas = store.get("evaluaciones", []).map((e) => e.nota);
+  $("#best-quiz").textContent = notas.length ? Math.max(...notas) : "–";
   $("#best-challenge").textContent = store.get("bestChallenge", 0);
   $("#c-best-intro").textContent = store.get("bestChallenge", 0);
 }
@@ -1307,6 +1321,7 @@ function bump(el, value) {
 function goHome() {
   stopChallenge();
   updateRecords();
+  renderEvalHistory();
   show("start");
   guillermo.say(FRASES.bienvenida, "espera");
 }
@@ -1336,6 +1351,7 @@ function startQuiz(lesson = null) {
   quiz.comodines = { rappi: true, pista: true, cambio: true };
   Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {}, busy: false });
   $("#hint-btn").hidden = lesson === "eval";
+  $("#q-card .chip-demo").hidden = lesson === "eval";
   $("#q-score").textContent = "0";
   $("#q-streak").textContent = "0";
   sound.play("start");
@@ -1905,13 +1921,6 @@ const COMODINES = {
   cambio: { label: "🔄 Cambiar pregunta", usado: "🔄 Cambio usado" }
 };
 
-function evalIntro() {
-  stopChallenge();
-  renderEvalHistory();
-  show("eval-intro");
-  guillermo.say("¡Evaluación! Son 12 preguntas de la clase y tenés 3 comodines. Uno es llamar a Rappi… ¡cuidado que viene rápido!", "espera");
-}
-
 function renderEvalHistory() {
   const items = store.get("evaluaciones", []);
   const list = $("#eval-history");
@@ -1977,18 +1986,102 @@ function cambiarPregunta() {
   renderQuestion("¡Cambiamos la pregunta! Vamos con esta.");
 }
 
-function runOver(i) {
+// Rappi siempre se anima (aunque el sistema pida menos movimiento): es el chiste del comodín.
+const RAPPI = { velocidad: 520, ruedaDelantera: 42 / 52, ruedaTrasera: 11 / 52 };
+
+function runOver(i, cruce = 0.4) {
   const q = quiz.deck[quiz.index];
   if (q.mezcla[i].eliminada) return;
   q.mezcla[i].eliminada = true;
   const b = $("#q-options").children[i];
   b.disabled = true;
   b.classList.add("run-over");
-  b.querySelector(".mark").textContent = "🛵 Arrollada por Rappi";
+  b.querySelector(".mark").textContent = "🛵 Atropellada";
+  b.setAttribute("aria-label", `${b.querySelector(".label").textContent}: atropellada por Rappi, descartada`);
+  const skid = document.createElement("span");
+  skid.className = "skid";
+  skid.setAttribute("aria-hidden", "true");
+  skid.style.setProperty("--skid-d", `${Math.max(0.15, cruce)}s`);
+  b.appendChild(skid);
   sound.play("crash");
 }
 
-function llamarRappi() {
+// Una pasada de izquierda a derecha por una fila de opciones: atropella las marcadas y salta las demás.
+function rappiPass(row, targets, card, rider) {
+  rider.style.transform = "translate(-9999px, 0)";
+  rider.hidden = false; // visible antes de medirla
+  const cardBox = card.getBoundingClientRect();
+  const w = rider.offsetWidth;
+  const h = rider.offsetHeight;
+  const v = RAPPI.velocidad;
+  const front = w * RAPPI.ruedaDelantera;
+  const rear = w * RAPPI.ruedaTrasera;
+  const boxes = row.map((i) => {
+    const r = $("#q-options").children[i].getBoundingClientRect();
+    return { i, left: r.left - cardBox.left, right: r.right - cardBox.left, top: r.top - cardBox.top, height: r.height };
+  });
+  const ground = Math.max(...boxes.map((o) => o.top + o.height * 0.78)) - h; // las ruedas van arriba de la opción
+  const pts = [{ x: -w - 20, y: ground, r: 0 }];
+  const hits = [];
+  let landed = -Infinity; // no atropella mientras está en el aire
+  boxes.forEach((o) => {
+    if (targets.includes(o.i)) {
+      hits.push({ i: o.i, x: Math.max(o.left - front, landed), cruce: (o.right - Math.max(o.left, landed + front)) / v });
+      return;
+    }
+    // salto por arriba de la opción correcta para no tocarla
+    const x0 = o.left - front - 14;
+    const x1 = o.right - rear + 14;
+    const lift = o.height + 18;
+    pts.push({ x: x0, y: ground, r: 0 });
+    for (let k = 1; k < 8; k++) {
+      const t = k / 8;
+      pts.push({ x: x0 + (x1 - x0) * t, y: ground - lift * 4 * t * (1 - t), r: t < 0.5 ? -12 : 10 });
+    }
+    pts.push({ x: x1, y: ground, r: 0 });
+    landed = x1;
+  });
+  pts.push({ x: cardBox.width + 20, y: ground, r: 0 });
+
+  const len = pts.slice(1).map((p, k) => Math.hypot(p.x - pts[k].x, p.y - pts[k].y));
+  const total = len.reduce((a, b) => a + b, 0) || 1;
+  const duration = (total / v) * 1000;
+  let acc = 0;
+  const frames = pts.map((p, k) => {
+    if (k) acc += len[k - 1];
+    return { transform: `translate(${p.x}px, ${p.y}px) rotate(${p.r}deg)`, offset: acc / total };
+  });
+  // en qué momento la rueda delantera llega a cada opción (el camino es una función de x)
+  const timeAt = (x) => {
+    for (let k = 1; k < pts.length; k++) {
+      if (x <= pts[k].x) {
+        const f = (x - pts[k - 1].x) / (pts[k].x - pts[k - 1].x || 1);
+        return (frames[k - 1].offset + (frames[k].offset - frames[k - 1].offset) * f) * duration;
+      }
+    }
+    return duration;
+  };
+
+  return new Promise((resolve) => {
+    rider.hidden = false;
+    const timers = hits.map((t) => setTimeout(() => runOver(t.i, t.cruce), timeAt(t.x)));
+    let done = false;
+    const end = () => {
+      if (done) return;
+      done = true;
+      timers.forEach(clearTimeout);
+      hits.forEach((t) => runOver(t.i, 0.15));
+      rider.hidden = true;
+      resolve();
+    };
+    if (!rider.animate) { end(); return; }
+    const anim = rider.animate(frames, { duration, easing: "linear", fill: "forwards" });
+    anim.onfinish = () => { anim.cancel(); end(); };
+    setTimeout(() => { anim.cancel(); end(); }, duration + 500); // por si la pestaña no anima (segundo plano)
+  });
+}
+
+async function llamarRappi() {
   if (quiz.lesson !== "eval" || !quiz.comodines.rappi || quiz.answered || quiz.busy) return;
   quiz.comodines.rappi = false;
   quiz.busy = true;
@@ -1996,57 +2089,33 @@ function llamarRappi() {
 
   const q = quiz.deck[quiz.index];
   const wrong = shuffle(q.mezcla.map((o, i) => (o.ok || o.eliminada ? -1 : i)).filter((i) => i >= 0)).slice(0, 2);
-  const card = $("#q-card");
-  const rider = $("#rappi-rider");
-  const buttons = $("#q-options").children;
-  const cardBox = card.getBoundingClientRect();
-  // de izquierda a derecha (y de arriba a abajo) para que la moto nunca vaya marcha atrás
-  const targets = wrong.map((i) => {
-    const r = buttons[i].getBoundingClientRect();
-    return { i, x: r.left - cardBox.left + r.width / 2, y: r.top - cardBox.top + r.height / 2 };
-  }).sort((a, b) => a.x - b.x || a.y - b.y);
+  const buttons = [...$("#q-options").children];
+  // agrupa las opciones por fila (2 columnas en compu, 1 en celular)
+  const rows = [];
+  buttons.forEach((b, i) => {
+    const top = Math.round(b.getBoundingClientRect().top);
+    let row = rows.find((r) => Math.abs(r.top - top) < 8);
+    if (!row) rows.push((row = { top, items: [] }));
+    row.items.push({ i, left: b.getBoundingClientRect().left });
+  });
+  rows.sort((a, b) => a.top - b.top);
+  const passes = rows
+    .map((r) => r.items.sort((a, b) => a.left - b.left).map((o) => o.i))
+    .filter((r) => r.some((i) => wrong.includes(i)));
 
   guillermo.say("¡Llamaste a Rappi! ¡Ahí viene a toda velocidad, cuidado!", "sorpresa");
-  sound.play("moto");
-
-  let done = false;
-  const finish = () => {
-    if (done) return;
-    done = true;
-    targets.forEach((t) => runOver(t.i));
-    rider.hidden = true;
-    quiz.busy = false;
-    guillermo.say("¡Rappi arrolló dos opciones incorrectas! Quedan dos: elegí bien.", "alegria", "jump");
-    renderLifelines();
-  };
-
-  if (reduceMotion.matches || !rider.animate) {
-    targets.forEach((t) => runOver(t.i));
-    finish();
-    return;
+  const card = $("#q-card");
+  const rider = $("#rappi-rider");
+  for (const row of passes) {
+    if (current !== "quiz") break;
+    sound.play("moto");
+    await rappiPass(row, wrong, card, rider);
   }
-
-  rider.hidden = false;
-  const w = rider.offsetWidth;
-  const h = rider.offsetHeight;
-  const pts = [
-    { x: -w - 10, y: targets[0].y },
-    ...targets,
-    { x: cardBox.width + 10, y: targets[targets.length - 1].y }
-  ].map((p) => ({ ...p, x: p.x - w / 2 + (p.i === undefined ? w / 2 : 0), y: p.y - h * 0.8 }));
-  // velocidad constante: cada tramo dura según su largo
-  const seg = pts.slice(1).map((p, k) => Math.hypot(p.x - pts[k].x, p.y - pts[k].y));
-  const totalLen = seg.reduce((a, b) => a + b, 0) || 1;
-  let acc = 0;
-  const offsets = [0, ...seg.map((d) => (acc += d) / totalLen)];
-  const duration = 2200;
-  const anim = rider.animate(
-    pts.map((p, k) => ({ transform: `translate(${p.x}px, ${p.y}px)`, offset: offsets[k] })),
-    { duration, easing: "linear", fill: "forwards" }
-  );
-  targets.forEach((t, k) => setTimeout(() => runOver(t.i), offsets[k + 1] * duration));
-  anim.onfinish = () => { anim.cancel(); finish(); };
-  setTimeout(() => { anim.cancel(); finish(); }, duration + 400); // por si la pestaña no anima (segundo plano)
+  wrong.forEach((i) => runOver(i, 0.15));
+  rider.hidden = true;
+  quiz.busy = false;
+  guillermo.say("¡Rappi atropelló dos opciones incorrectas! Quedan dos: elegí bien.", "alegria", "jump");
+  renderLifelines();
 }
 
 function renderEval(total) {
@@ -2089,10 +2158,9 @@ function renderEval(total) {
 const actions = {
   home: goHome,
   instructions: () => { show("instructions"); guillermo.say(FRASES.instrucciones, "pensando"); },
-  "start-quiz": () => startQuiz(),
+  "start-quiz": startEval,
   "retry-quiz": () => startQuiz(quiz.lesson),
-  "quit-quiz": () => (quiz.lesson === null ? goHome() : quiz.lesson === "eval" ? evalIntro() : typeof quiz.lesson === "number" ? openLesson(quiz.lesson) : showLearn()),
-  "eval-intro": evalIntro,
+  "quit-quiz": () => (quiz.lesson === null ? goHome() : typeof quiz.lesson === "number" ? openLesson(quiz.lesson) : showLearn()),
   "start-eval": startEval,
   "eval-clear": clearEvalHistory,
   "life-rappi": llamarRappi,

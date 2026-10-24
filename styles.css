@@ -685,13 +685,14 @@ kbd {
 .lifelines .btn { flex: 1 1 180px; }
 .lifelines .btn.used { text-decoration: line-through; }
 
-.question-card { position: relative; overflow: hidden; }
+/* recorta solo a los costados: Rappi entra y sale por los bordes pero puede saltar por arriba */
+.question-card { position: relative; clip-path: inset(-400px 0 -60px 0); }
 .rappi-rider {
   position: absolute;
   left: 0;
   top: 0;
-  width: 128px;
-  aspect-ratio: 32 / 25;
+  width: 176px;
+  aspect-ratio: 52 / 34;
   z-index: 5;
   pointer-events: none;
   filter: drop-shadow(0 4px 0 #00000088);
@@ -713,8 +714,8 @@ kbd {
 .rappi-rider svg { animation: rumble 0.12s steps(2) infinite; }
 
 .option.run-over {
-  background: repeating-linear-gradient(90deg, #2a2230 0 10px, #1b1622 10px 16px);
-  box-shadow: inset 0 0 0 3px #55475e;
+  background: #4a3f58;
+  box-shadow: inset 0 0 0 3px #6b5d7a;
   color: #9b8fa8;
   opacity: 1;
   animation: squash 0.3s steps(3) both;
@@ -722,6 +723,23 @@ kbd {
 .option.run-over .label { text-decoration: line-through; }
 .option.run-over .key { background: #55475e; box-shadow: none; }
 .option.run-over .mark { color: var(--orange); }
+.option.run-over { position: relative; overflow: hidden; }
+.option.run-over > span:not(.skid) { position: relative; z-index: 1; }
+/* marca de la cubierta: se dibuja de izquierda a derecha mientras pasa la moto y queda */
+.option .skid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(78% - 16px);
+  height: 16px;
+  background:
+    repeating-linear-gradient(90deg, #0b0910 0 6px, #0b091066 6px 10px),
+    linear-gradient(#0b0910, #0b0910) 0 0 / 100% 3px no-repeat,
+    linear-gradient(#0b0910, #0b0910) 0 100% / 100% 3px no-repeat;
+  opacity: 0.9;
+  animation: skid var(--skid-d, 0.4s) linear both;
+}
+@keyframes skid { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 
 .rappi-card {
   display: flex;
@@ -733,7 +751,7 @@ kbd {
   background: #3a1f14;
   box-shadow: inset 0 0 0 3px var(--orange);
 }
-.rappi-portrait { width: 180px; max-width: 100%; aspect-ratio: 32 / 25; flex: none; }
+.rappi-portrait { width: 200px; max-width: 100%; aspect-ratio: 52 / 34; flex: none; }
 .rappi-text { flex: 1 1 240px; min-width: 0; }
 .rappi-text ul { margin: 0; padding-left: 20px; }
 .rappi-text li { margin-bottom: 6px; }
@@ -783,6 +801,10 @@ kbd {
     transition-duration: 0.001ms !important;
   }
   .mascot { animation: none !important; }
+  /* el atropello de Rappi se ve igual: es el centro del comodín */
+  .rappi-rider svg { animation-duration: 0.12s !important; animation-iteration-count: infinite !important; }
+  .option.run-over { animation-duration: 0.3s !important; }
+  .option .skid { animation-duration: var(--skid-d, 0.4s) !important; }
 }
 
 /* ---------- responsive ---------- */
@@ -830,4 +852,5 @@ kbd {
   .btn-tf { min-height: 68px; font-size: 18px; }
   .btn-tf kbd { display: none; }
   .host { grid-template-columns: 92px 1fr; }
+  .rappi-rider { width: 140px; }
 }

@@ -20,7 +20,7 @@
     </button>
     <div class="topbar-right">
       <span class="records" aria-label="Récords guardados">
-        <span title="Mejor puntaje en Preguntas">🏆 <span id="best-quiz">0</span></span>
+        <span title="Mejor nota en la evaluación">🎓 <span id="best-quiz">–</span></span>
         <span title="Récord en El desafío de Guillermo">⏱ <span id="best-challenge">0</span></span>
       </span>
       <button id="sound-toggle" class="icon-btn" type="button" aria-pressed="true">
@@ -47,17 +47,35 @@
 
       <!-- INICIO -->
       <div class="screen" id="screen-start" data-screen>
-        <p class="demo-badge">Preguntas de demostración</p>
+        <p class="demo-badge">Teoría de grafos</p>
         <h1 class="title">Guillermo<br><span>te pregunta</span></h1>
-        <p class="lead">Guillermo, nuestra mascota, te va a hacer preguntas de cultura general, ciencia, informática y matemática. Respondé, sumá puntos y armá la racha más larga.</p>
+        <p class="lead">12 preguntas sobre lo que vimos en la clase: qué es un grafo, vértices, aristas y grado. Al final te llevás una nota orientativa del 1 al 12 y el repaso de los errores.</p>
+        <div class="rappi-card">
+          <div class="rappi-portrait" id="rappi-portrait" role="img" aria-label="Rappi con su campera naranja, en la moto de reparto"></div>
+          <div class="rappi-text">
+            <h3 class="h3">Comodines (uno de cada uno)</h3>
+            <ul>
+              <li><strong>🛵 Llamar a Rappi:</strong> pasa en su moto y atropella dos opciones incorrectas.</li>
+              <li><strong>💡 Pista de Guillermo:</strong> Guillermo te da una pista.</li>
+              <li><strong>🔄 Cambiar pregunta:</strong> cambia la pregunta por otra.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="field">
+          <label for="eval-name">Tu nombre (opcional)</label>
+          <input id="eval-name" type="text" maxlength="40" autocomplete="off" placeholder="Ej.: Sofía">
+        </div>
         <div class="menu">
           <button class="btn btn-yellow btn-big" type="button" data-action="start-quiz">▶ Jugar</button>
           <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ El desafío de Guillermo</button>
           <button class="btn btn-green" type="button" data-action="learn">◆ Clase: Teoría de grafos</button>
-          <button class="btn btn-orange" type="button" data-action="eval-intro">📝 Evaluación para alumnos</button>
           <button class="btn btn-violet" type="button" data-action="instructions">? Instrucciones</button>
         </div>
-        <p class="note">Las preguntas son de prueba: después se van a reemplazar por las del proyecto.</p>
+        <div class="eval-history" id="eval-history-wrap" hidden>
+          <h3 class="h3">Últimas partidas en este dispositivo</h3>
+          <ol class="ready-list" id="eval-history"></ol>
+          <button class="btn btn-ghost btn-small" type="button" id="eval-clear" data-action="eval-clear">Borrar historial</button>
+        </div>
       </div>
 
       <!-- INSTRUCCIONES -->
@@ -65,12 +83,12 @@
         <h2 class="h2">Cómo se juega</h2>
         <div class="rules">
           <div class="rule-card">
-            <h3>▶ Preguntas</h3>
+            <h3>▶ Jugar (evaluación)</h3>
             <ul>
-              <li>Son <strong>10 preguntas</strong> por partida, sin repetir.</li>
+              <li>Son <strong>12 preguntas</strong> de teoría de grafos, sin repetir.</li>
               <li>Cada una tiene 4 opciones y <strong>una sola</strong> es correcta.</li>
-              <li>Acierto: <strong>+100</strong>. Con racha, sumás un extra de +10 por cada acierto seguido (máximo +50).</li>
-              <li>Podés pedir <strong>una pista</strong> por pregunta: si acertás, esa pregunta te da <strong>25 puntos menos</strong>.</li>
+              <li>Tenés <strong>3 comodines</strong> para toda la partida: <strong>🛵 Rappi</strong> atropella dos opciones incorrectas, <strong>💡 Pista</strong> y <strong>🔄 Cambiar pregunta</strong>.</li>
+              <li>Al final sale una <strong>nota del 1 al 12</strong> (se aprueba con 6) y el repaso de lo que fallaste.</li>
               <li>Atajos: teclas <kbd>1</kbd>–<kbd>4</kbd> para responder, <kbd>P</kbd> para la pista y <kbd>Enter</kbd> para seguir.</li>
             </ul>
           </div>
@@ -201,7 +219,7 @@
         <p class="lead small center" id="cr-detail"></p>
         <div class="menu menu-row">
           <button class="btn btn-yellow" type="button" data-action="start-challenge">↻ Otra vez</button>
-          <button class="btn btn-violet" type="button" data-action="start-quiz">▶ Modo preguntas</button>
+          <button class="btn btn-violet" type="button" data-action="start-quiz">▶ Jugar</button>
           <button class="btn btn-ghost" type="button" data-action="home">Inicio</button>
         </div>
       </div>
@@ -223,7 +241,6 @@
         </div>
         <div class="menu menu-row">
           <button class="btn btn-violet" type="button" data-action="lesson-review">★ Repaso rápido (10 preguntas)</button>
-          <button class="btn btn-orange" type="button" data-action="eval-intro">📝 Evaluación para alumnos</button>
           <button class="btn btn-ghost" type="button" data-action="home">← Inicio</button>
         </div>
         <p class="note" id="clase-fuente"></p>
@@ -254,37 +271,6 @@
           <button class="btn btn-yellow" type="button" data-action="lesson-quiz" id="lesson-quiz-btn">✔ ¿Lo entendí? Preguntame</button>
           <button class="btn btn-ghost btn-small" type="button" data-action="lesson-prev" id="lesson-prev">◀ Anterior</button>
           <button class="btn btn-ghost btn-small" type="button" data-action="lesson-next" id="lesson-next">Siguiente ▶</button>
-        </div>
-      </div>
-
-      <!-- EVALUACIÓN PARA ALUMNOS -->
-      <div class="screen" id="screen-eval-intro" data-screen hidden>
-        <p class="demo-badge demo-orange">Teoría de grafos</p>
-        <h2 class="title title-sm">Evaluación<br><span>para alumnos</span></h2>
-        <p class="lead">12 preguntas sobre lo que vimos en la clase: qué es un grafo, vértices, aristas y grado. Al final aparece una nota orientativa del 1 al 12 y el repaso de los errores.</p>
-        <div class="rappi-card">
-          <div class="rappi-portrait" id="rappi-portrait" role="img" aria-label="Rappi, en su moto de reparto"></div>
-          <div class="rappi-text">
-            <h3 class="h3">Comodines (uno de cada uno)</h3>
-            <ul>
-              <li><strong>🛵 Llamar a Rappi:</strong> Rappi pasa en su moto y arrolla dos opciones incorrectas.</li>
-              <li><strong>💡 Pista de Guillermo:</strong> Guillermo te da una pista.</li>
-              <li><strong>🔄 Cambiar pregunta:</strong> cambia la pregunta por otra.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="field">
-          <label for="eval-name">Nombre del alumno (opcional)</label>
-          <input id="eval-name" type="text" maxlength="40" autocomplete="off" placeholder="Ej.: Sofía">
-        </div>
-        <div class="menu menu-row">
-          <button class="btn btn-yellow btn-big" type="button" data-action="start-eval">▶ Empezar evaluación</button>
-          <button class="btn btn-ghost" type="button" data-action="home">← Inicio</button>
-        </div>
-        <div class="eval-history" id="eval-history-wrap" hidden>
-          <h3 class="h3">Últimas evaluaciones en este dispositivo</h3>
-          <ol class="ready-list" id="eval-history"></ol>
-          <button class="btn btn-ghost btn-small" type="button" id="eval-clear" data-action="eval-clear">Borrar historial</button>
         </div>
       </div>
 
