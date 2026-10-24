@@ -1367,12 +1367,13 @@ let current = "start";
    Cada error lo enoja un poco más y le pega un mordiscón a la página.
    ========================================================= */
 const ENOJO = {
+  duracion: 1400, // ms que tarda Guillermo en ir, morder y volver
   caras: ["espera", "molesto", "enojado", "furioso"],
   // dónde muerde, en orden: [borde del panel, posición a lo largo del borde en %]
   mordidas: [["top", 88], ["left", 35], ["bottom", 70], ["right", 55], ["top", 30], ["bottom", 18],
     ["left", 78], ["right", 15], ["top", 60], ["bottom", 45], ["left", 8], ["right", 85]]
 };
-const enojo = { errores: 0 };
+const enojo = { errores: 0, gen: 0, siguiente: 0, comiendo: 0 };
 const nivelEnojo = () => (enojo.errores >= 4 ? 3 : enojo.errores >= 2 ? 2 : enojo.errores);
 const caraBase = () => ENOJO.caras[nivelEnojo()];
 
@@ -1401,28 +1402,132 @@ function morder() {
   guillermo.rojo = n >= 3;
   document.body.dataset.rabia = n;
   guillermo.say(pick(FRASES.enojo[n]), "mordida");
-  sound.play("chomp");
 
-  const [lado, pos] = ENOJO.mordidas[(enojo.errores - 1) % ENOJO.mordidas.length];
   const b = document.createElement("span");
   b.className = "bite";
   b.style.setProperty("--s", `${84 + n * 26}px`);
-  const horizontal = lado === "top" || lado === "bottom";
-  // el centro queda sobre el borde del panel (la capa sobresale 14px), así el mordiscón entra bien
-  b.style.left = horizontal ? `${pos}%` : lado === "left" ? "14px" : "calc(100% - 14px)";
-  b.style.top = horizontal ? (lado === "top" ? "14px" : "calc(100% - 14px)") : `${pos}%`;
   b.innerHTML = mordidaSVG(enojo.errores * 1.7);
+  b.style.visibility = "hidden"; // aparece recién cuando Guillermo llega y muerde
   $("#bites").appendChild(b);
+  // sigue el orden de la lista, pero salta los lugares que quedan fuera de la pantalla (así se lo ve comer)
+  const total = ENOJO.mordidas.length;
+  for (let k = 0; k < total; k++) {
+    const [lado, pos] = ENOJO.mordidas[(enojo.siguiente + k) % total];
+    const horizontal = lado === "top" || lado === "bottom";
+    // el centro queda sobre el borde del panel (la capa sobresale 14px), así el mordiscón entra bien
+    b.style.left = horizontal ? `${pos}%` : lado === "left" ? "14px" : "calc(100% - 14px)";
+    b.style.top = horizontal ? (lado === "top" ? "14px" : "calc(100% - 14px)") : `${pos}%`;
+    const r = b.getBoundingClientRect();
+    const cy = r.top + r.height / 2;
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    if (!vh || (cy > 40 && cy < vh - 40)) { enojo.siguiente += k + 1; break; }
+    if (k === total - 1) enojo.siguiente++;
+  }
+  comerAnimado(b);
+}
 
-  const panel = $("#panel");
-  panel.classList.remove("chomp");
-  void panel.offsetWidth;
-  panel.classList.add("chomp");
-  setTimeout(() => { if (guillermo.mood === "mordida") guillermo.set(caraBase(), "shake"); }, 700);
+// Guillermo sale volando de su lugar, muerde el borde de la página (abre y cierra la boca),
+// tira migas y vuelve. Usa la Web Animations API, así se ve aunque el sistema pida menos movimiento.
+function comerAnimado(bite) {
+  const gen = enojo.gen;
+  const from = guillermo.el.getBoundingClientRect();
+  const to = bite.getBoundingClientRect();
+  const size = Math.round(Math.min(130, Math.max(84, from.width * 0.62)));
+  const alto = (size * 29) / 24;
+  const head = document.createElement("div");
+  head.className = "chomper";
+  head.setAttribute("aria-hidden", "true");
+  head.style.width = `${size}px`;
+  const abierta = spriteSVG("mordida", guillermo.rojo);
+  const cerrada = spriteSVG("furioso", guillermo.rojo);
+  head.innerHTML = abierta;
+  document.body.appendChild(head);
+  enojo.comiendo++;
+  guillermo.el.style.visibility = "hidden"; // se fue a comer
+
+  const x0 = from.left + from.width / 2 - size / 2;
+  const y0 = from.top + from.height / 2 - alto / 2;
+  const x1 = to.left + to.width / 2 - size / 2;
+  const y1 = to.top + to.height / 2 - alto * 0.6; // la boca (fila 17 de 29) queda sobre la mordida
+  const at = (x, y, s, r) => `translate(${x}px, ${y}px) scale(${s}) rotate(${r}deg)`;
+  const T = ENOJO.duracion;
+  const anim = head.animate([
+    { transform: at(x0, y0, 0.7, 0), offset: 0 },
+    { transform: at((x0 + x1) / 2, Math.max(10, Math.min(y0, y1) - 60), 1, -10), offset: 0.16 },
+    { transform: at(x1, y1, 1.15, -6), offset: 0.3 },
+    { transform: at(x1, y1, 1.2, 6), offset: 0.45 },
+    { transform: at(x1, y1, 1.15, -6), offset: 0.6 },
+    { transform: at(x1, y1, 1.15, 0), offset: 0.68 },
+    { transform: at((x0 + x1) / 2, Math.max(10, Math.min(y0, y1) - 40), 0.9, 8), offset: 0.85 },
+    { transform: at(x0, y0, 0.7, 0), offset: 1 }
+  ], { duration: T, easing: "linear", fill: "forwards" });
+
+  // abre y cierra la boca mientras muerde
+  let frame = 0;
+  const timers = [];
+  timers.push(setTimeout(() => {
+    const chomp = setInterval(() => { head.innerHTML = ++frame % 2 ? cerrada : abierta; }, 90);
+    timers.push(chomp); // clearTimeout también corta intervalos
+    timers.push(setTimeout(() => { clearInterval(chomp); head.innerHTML = cerrada; }, T * 0.38));
+  }, T * 0.3));
+
+  // primer mordiscón: aparece el agujero, tiembla el panel y vuelan migas
+  timers.push(setTimeout(() => {
+    if (gen !== enojo.gen) return;
+    sound.play("chomp");
+    bite.style.visibility = "";
+    bite.classList.add("pop");
+    const panel = $("#panel");
+    panel.classList.remove("chomp");
+    void panel.offsetWidth;
+    panel.classList.add("chomp");
+    migas(to.left + to.width / 2, to.top + to.height / 2);
+  }, T * 0.34));
+
+  let terminado = false;
+  const end = () => {
+    if (terminado) return;
+    terminado = true;
+    timers.forEach(clearTimeout);
+    head.remove();
+    enojo.comiendo--;
+    if (!enojo.comiendo) guillermo.el.style.visibility = ""; // vuelve a su lugar cuando no queda ninguno comiendo
+    if (gen !== enojo.gen) return;
+    bite.style.visibility = "";
+    bite.classList.add("pop");
+    if (guillermo.mood === "mordida") guillermo.set(caraBase(), "shake");
+  };
+  anim.onfinish = end;
+  setTimeout(end, T + 400); // por si la pestaña no anima (segundo plano)
+}
+
+function migas(cx, cy) {
+  const colores = ["#202c6e", "#2f3d8f", "#18225a", "#ffd23f", "#f2f4ff"];
+  for (let k = 0; k < 10; k++) {
+    const m = document.createElement("span");
+    m.className = "miga";
+    m.style.background = colores[k % colores.length];
+    m.style.left = `${cx}px`;
+    m.style.top = `${cy}px`;
+    document.body.appendChild(m);
+    const a = Math.random() * Math.PI * 2;
+    const d = 30 + Math.random() * 50;
+    const dx = Math.cos(a) * d;
+    const dy = Math.sin(a) * d;
+    const anim = m.animate([
+      { transform: "translate(0, 0)", opacity: 1 },
+      { transform: `translate(${dx}px, ${dy - 20}px)`, opacity: 1, offset: 0.5 },
+      { transform: `translate(${dx * 1.3}px, ${dy + 60}px)`, opacity: 0 }
+    ], { duration: 650, easing: "ease-out", fill: "forwards" });
+    anim.onfinish = () => m.remove();
+    setTimeout(() => m.remove(), 1000);
+  }
 }
 
 function resetEnojo() {
+  enojo.gen++;
   enojo.errores = 0;
+  enojo.siguiente = 0;
   guillermo.rojo = false;
   delete document.body.dataset.rabia;
   $("#bites").innerHTML = "";
