@@ -307,23 +307,14 @@ const CLASE = {
         <h3>¿Dónde aparecen?</h3>
         <ul>
           <li><strong>Redes de computadoras:</strong> cada computadora es un punto y cada cable o enlace es una línea. Es el ejemplo con el que arranca el libro.</li>
-          <li><strong>Mapas y rutas:</strong> las ciudades son puntos y las rutas que las unen son líneas. Sirve, por ejemplo, para buscar el camino más corto.</li>
+          <li><strong>Mapas y rutas:</strong> las ciudades son puntos y las rutas que las unen son líneas.</li>
           <li><strong>Redes sociales:</strong> en un «grafo de conocidos» cada persona es un punto y se unen dos personas si se conocen.</li>
           <li><strong>Ecología:</strong> cada especie es un punto y se unen dos especies si compiten por el mismo alimento.</li>
         </ul>
         <p>Lo que importa es <strong>qué está conectado con qué</strong>. Dónde dibujes los puntos o si las líneas son rectas o curvas no cambia el grafo.</p>
         <h3>Un poco de historia</h3>
         <p>Las ideas básicas las introdujo el matemático suizo <strong>Leonhard Euler</strong> en el siglo XVIII, cuando resolvió el problema de los <strong>puentes de Königsberg</strong>: ¿se puede recorrer la ciudad cruzando cada puente una sola vez?</p>
-        <h3>Tipos de grafos (según el libro)</h3>
-        <div class="table-wrap"><table>
-          <thead><tr><th>Tipo</th><th>Aristas</th><th>¿Aristas múltiples?</th><th>¿Lazos?</th></tr></thead>
-          <tbody>
-            <tr><td>Grafo simple</td><td>No dirigidas</td><td>No</td><td>No</td></tr>
-            <tr><td>Multigrafo</td><td>No dirigidas</td><td>Sí</td><td>No</td></tr>
-            <tr><td>Pseudografo</td><td>No dirigidas</td><td>Sí</td><td>Sí</td></tr>
-            <tr><td>Grafo dirigido</td><td>Dirigidas (flechas)</td><td>No</td><td>Sí</td></tr>
-          </tbody>
-        </table></div>`,
+`,
       clase: [
         "Arrancá con una pregunta: «¿Qué tienen en común un mapa de ómnibus, Instagram y la red de computadoras del liceo?». La respuesta: todos son cosas conectadas.",
         "Dibujá en el pizarrón un grafo de rutas con 4 o 5 ciudades y preguntá cuáles son los puntos y cuáles las conexiones.",
@@ -353,7 +344,7 @@ const CLASE = {
         },
         {
           pregunta: "Dibujás un grafo y después movés los puntos a otro lugar, sin cambiar ninguna conexión. ¿Qué pasa?",
-          opciones: ["Sigue siendo el mismo grafo", "Se convierte en otro grafo", "Pierde aristas", "Se vuelve un grafo dirigido"],
+          opciones: ["Sigue siendo el mismo grafo", "Se convierte en otro grafo", "Pierde aristas", "Gana vértices nuevos"],
           correcta: 0,
           pista: "¿Cambió qué está conectado con qué?",
           explicacion: "En un grafo solo importan las conexiones, no la posición ni la forma del dibujo."
@@ -366,11 +357,11 @@ const CLASE = {
           explicacion: "Leonhard Euler usó grafos en el siglo XVIII para resolver el problema de los puentes de Königsberg."
         },
         {
-          pregunta: "Según el libro, ¿qué NO permite un grafo simple?",
-          opciones: ["Lazos ni aristas múltiples", "Tener más de tres vértices", "Tener aristas", "Dibujarse en papel"],
+          pregunta: "En un grafo de conocidos, ¿cuándo se unen dos personas con una arista?",
+          opciones: ["Cuando se conocen", "Cuando viven en la misma ciudad", "Siempre", "Nunca: las personas son aristas"],
           correcta: 0,
-          pista: "Mirá la tabla de tipos de grafos.",
-          explicacion: "En un grafo simple cada arista une dos vértices distintos y no hay dos aristas entre el mismo par."
+          pista: "El grafo se llama «de conocidos».",
+          explicacion: "Cada persona es un vértice y se dibuja una arista entre dos personas si se conocen."
         }
       ]
     },
@@ -447,7 +438,7 @@ const CLASE = {
       modo: "general",
       contenido: `
         <p>Las <strong>aristas</strong> (también llamadas <strong>enlaces</strong>) son las <strong>conexiones entre los vértices</strong>. Cada arista une dos vértices.</p>
-        <div class="def"><span class="def-tag">Notación</span>Una arista entre u y v se escribe <strong>{u, v}</strong>. Las aristas se juntan en el conjunto <strong>E</strong>, por ejemplo E = {{a, b}, {b, c}}. En un grafo no dirigido el orden no importa: {u, v} y {v, u} son la misma arista.</div>
+        <div class="def"><span class="def-tag">Notación</span>Una arista entre u y v se escribe <strong>{u, v}</strong>. Las aristas se juntan en el conjunto <strong>E</strong>, por ejemplo E = {{a, b}, {b, c}}. El orden no importa: {u, v} y {v, u} son la misma arista.</div>
         <h3>Palabras que usa el libro</h3>
         <ul>
           <li>Si e = {u, v}, la arista e es <strong>incidente</strong> con u y con v, y decimos que <strong>conecta</strong> u y v.</li>
@@ -457,11 +448,10 @@ const CLASE = {
         <ul>
           <li><strong>Aristas múltiples (o paralelas):</strong> dos o más aristas que unen el mismo par de vértices, como dos cables entre las mismas computadoras. Un grafo con aristas múltiples es un <strong>multigrafo</strong>.</li>
           <li><strong>Lazo (o bucle):</strong> una arista que une un vértice consigo mismo. Un grafo que admite lazos es un <strong>pseudografo</strong>.</li>
-          <li><strong>Aristas dirigidas:</strong> tienen sentido y se dibujan con una flecha. Se escriben como pares ordenados (u, v), del vértice inicial al final. Por ejemplo, una calle de una sola mano.</li>
         </ul>
         <p>Tocá una arista del ejemplo para ver qué vértices conecta.</p>`,
       clase: [
-        "Usá un ejemplo cotidiano: las calles de doble mano son aristas no dirigidas; las de una sola mano son aristas dirigidas (con flecha).",
+        "Usá un ejemplo cotidiano: en una red del liceo, cada cable entre dos computadoras es una arista; si hay dos cables entre las mismas, son aristas múltiples.",
         "Mostrá el ejemplo con lazo y aristas múltiples y preguntá: «¿esto es un grafo simple?». (No, es un pseudografo.)",
         "Escribí E como conjunto de pares y hacé que la clase cuente |E|."
       ],
@@ -474,11 +464,11 @@ const CLASE = {
           explicacion: "Una arista es una conexión entre dos vértices; se escribe {u, v}."
         },
         {
-          pregunta: "En un grafo no dirigido, ¿qué relación hay entre {a, b} y {b, a}?",
-          opciones: ["Son la misma arista", "Son dos aristas distintas", "Una es un lazo", "Son aristas dirigidas"],
+          pregunta: "¿Qué relación hay entre las aristas {a, b} y {b, a}?",
+          opciones: ["Son la misma arista", "Son dos aristas distintas", "Una es un lazo", "Son aristas múltiples"],
           correcta: 0,
           pista: "En un conjunto, ¿importa el orden de los elementos?",
-          explicacion: "Una arista no dirigida es un par no ordenado: {a, b} = {b, a}."
+          explicacion: "Una arista es un par no ordenado, como un conjunto: {a, b} = {b, a}."
         },
         {
           pregunta: "¿Qué es un lazo (o bucle)?",
@@ -489,7 +479,7 @@ const CLASE = {
         },
         {
           pregunta: "Dos aristas distintas que unen el mismo par de vértices se llaman…",
-          opciones: ["Aristas múltiples (paralelas)", "Lazos", "Aristas dirigidas", "Vértices adyacentes"],
+          opciones: ["Aristas múltiples (paralelas)", "Lazos", "Extremos", "Vértices adyacentes"],
           correcta: 0,
           pista: "Son como dos cables entre las mismas dos computadoras.",
           explicacion: "Son aristas múltiples o paralelas; un grafo que las tiene es un multigrafo."
@@ -502,11 +492,11 @@ const CLASE = {
           explicacion: "La arista es incidente con sus extremos u y v. Los vértices u y v son adyacentes entre sí."
         },
         {
-          pregunta: "¿Cómo se representan las aristas de un grafo dirigido?",
-          opciones: ["Como pares ordenados (flechas)", "Como lazos", "Como vértices aislados", "Como números de grado"],
+          pregunta: "Si e = {u, v}, ¿cómo se llaman u y v respecto de la arista e?",
+          opciones: ["Sus extremos", "Sus lazos", "Sus grados", "Sus aristas múltiples"],
           correcta: 0,
-          pista: "Piensen en una calle de una sola mano.",
-          explicacion: "En un grafo dirigido la arista (u, v) va de u hacia v, por eso se dibuja con una flecha."
+          pista: "Son los dos puntos donde empieza y termina la línea.",
+          explicacion: "u y v son los extremos de la arista e; también se dice que e conecta u y v."
         }
       ]
     },
@@ -521,7 +511,7 @@ const CLASE = {
         <h3>Ejemplo del libro</h3>
         <p>En el grafo G de abajo (el de la Figura 1 de la sección 8.2): δ(a) = 2, δ(b) = δ(c) = δ(f) = 4, δ(d) = 1, δ(e) = 3 y δ(g) = 0. Por eso g es <strong>aislado</strong> (grado 0) y d es una <strong>hoja</strong> (grado 1).</p>
         <h3>Teorema de los apretones de manos</h3>
-        <div class="def def-yellow"><span class="def-tag">Teorema</span>Si un grafo no dirigido tiene e aristas, la <strong>suma de los grados de todos sus vértices es 2e</strong>.</div>
+        <div class="def def-yellow"><span class="def-tag">Teorema</span>Si un grafo tiene e aristas, la <strong>suma de los grados de todos sus vértices es 2e</strong>.</div>
         <p>¿Por qué? Cada arista tiene dos extremos, así que suma 1 al grado de cada uno: en total aporta 2. Es como un saludo: cada apretón de manos usa dos manos.</p>
         <ul>
           <li><strong>Uso rápido:</strong> si hay 10 vértices y cada uno tiene grado 6, la suma es 60 = 2e, así que hay <strong>30 aristas</strong>.</li>
@@ -536,7 +526,7 @@ const CLASE = {
       preguntas: [
         {
           pregunta: "¿Qué indica el grado δ(v) de un vértice?",
-          opciones: ["Cuántas aristas son incidentes con v", "Cuántos vértices tiene el grafo", "La distancia entre dos vértices", "Si el grafo es dirigido"],
+          opciones: ["Cuántas aristas son incidentes con v", "Cuántos vértices tiene el grafo", "El nombre del vértice", "Cuántos lazos tiene el grafo"],
           correcta: 0,
           pista: "Contá las líneas que tocan ese punto.",
           explicacion: "δ(v) es el número de aristas incidentes con v (los lazos cuentan doble)."
@@ -564,7 +554,7 @@ const CLASE = {
         },
         {
           pregunta: "¿Puede existir un grafo cuyos vértices tengan grados 1, 2 y 2?",
-          opciones: ["No, porque la suma de los grados es impar", "Sí, siempre", "Sí, si es dirigido", "No, porque tiene solo tres vértices"],
+          opciones: ["No, porque la suma de los grados es impar", "Sí, siempre", "Sí, si se agrega un lazo", "No, porque tiene solo tres vértices"],
           correcta: 0,
           pista: "La suma de los grados siempre es 2e.",
           explicacion: "1 + 2 + 2 = 5 es impar, pero la suma de los grados siempre es par (2e). Ese grafo no existe."
