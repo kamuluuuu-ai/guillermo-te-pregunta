@@ -129,6 +129,10 @@
           <div class="score-box"><span class="hud-label">Mejor racha</span><span class="score-big" id="r-streak">0</span></div>
         </div>
         <p class="record-msg" id="r-record" hidden>★ ¡Nuevo récord! ★</p>
+        <div class="ready" id="r-ready" hidden>
+          <h3 class="ready-title" id="r-ready-title"></h3>
+          <ul class="ready-list" id="r-ready-list" aria-label="Resultado por tema"></ul>
+        </div>
         <div class="review" id="r-review-wrap">
           <h3 class="h3">Para repasar</h3>
           <ol class="review-list" id="r-review"></ol>
@@ -201,8 +205,16 @@
         <p class="lead">Leé cada tema, jugá con el grafo de ejemplo y después dejá que Guillermo te pregunte para ver si lo entendiste. Al final hay un repaso con todo.</p>
         <p class="team">Equipo: Velazco · Bueno · Kasmenko</p>
         <ol class="topic-list" id="topic-list"></ol>
+        <div class="exam-card">
+          <div class="exam-text">
+            <h3 class="h3">¿Estoy listo para dar la clase?</h3>
+            <p>Un examen de 21 preguntas nuevas sobre los 4 temas. Al final Guillermo te dice qué tema tenés pronto y cuál repasar.</p>
+            <p class="exam-best" id="exam-best"></p>
+          </div>
+          <button class="btn btn-yellow btn-big" type="button" data-action="lesson-exam">🎓 Hacer el examen</button>
+        </div>
         <div class="menu menu-row">
-          <button class="btn btn-yellow" type="button" data-action="lesson-review">★ Repaso de toda la clase</button>
+          <button class="btn btn-violet" type="button" data-action="lesson-review">★ Repaso rápido (10 preguntas)</button>
           <button class="btn btn-ghost" type="button" data-action="home">← Inicio</button>
         </div>
         <p class="note" id="clase-fuente"></p>

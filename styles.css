@@ -645,6 +645,37 @@ kbd {
 .teach-box ul { margin: 0; padding-left: 22px; }
 .teach-box li { margin-bottom: 6px; }
 
+/* ---------- examen: ¿estoy listo? ---------- */
+.exam-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 16px;
+  background: #2a1f5c;
+  box-shadow: inset 0 0 0 3px var(--yellow);
+}
+.exam-text { flex: 1 1 260px; min-width: 0; }
+.exam-text p { margin: 0 0 6px; }
+.exam-best { color: var(--yellow); font-weight: 800; }
+
+.ready { margin-top: 16px; padding: 14px 16px; background: var(--ink); box-shadow: inset 0 0 0 4px var(--line); }
+.ready-ok { box-shadow: inset 0 0 0 4px var(--good); }
+.ready-casi { box-shadow: inset 0 0 0 4px var(--yellow); }
+.ready-no { box-shadow: inset 0 0 0 4px var(--bad); }
+.ready-title { margin: 0 0 12px; font-family: var(--font-retro); font-size: 13px; line-height: 1.6; }
+.ready-ok .ready-title { color: var(--good); }
+.ready-casi .ready-title { color: var(--yellow); }
+.ready-no .ready-title { color: var(--bad); }
+.ready-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.ready-list li { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding: 8px 12px; background: #0f1640; font-weight: 800; }
+.ready-list li.good { box-shadow: inset 4px 0 0 var(--good); }
+.ready-list li.bad { box-shadow: inset 4px 0 0 var(--bad); }
+.ready-list .rs { font-variant-numeric: tabular-nums; }
+.ready-list li.good .rs { color: var(--good); }
+.ready-list li.bad .rs { color: var(--bad); }
+
 /* ---------- pie ---------- */
 .footer {
   padding: 18px 16px 24px;

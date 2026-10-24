@@ -571,6 +571,194 @@ const CLASE = {
   ]
 };
 
+/* ---------------------------------------------------------
+   3b) EXAMEN: ¿ESTOY LISTO PARA DAR LA CLASE?
+   Preguntas nuevas (no se repiten con las de cada tema).
+   tema → posición del tema en CLASE.temas (0 a 3), para
+          mostrar el resultado separado por tema.
+   --------------------------------------------------------- */
+const EXAMEN = {
+  aprobado: 85,   // % para «¡Estás listo!»
+  casi: 60,       // % para «Casi listo»
+  preguntas: [
+    // Tema 0: ¿Qué es un grafo?
+    {
+      tema: 0,
+      pregunta: "Un compañero dice: «Un grafo es lo mismo que un gráfico de barras». ¿Qué le respondés?",
+      opciones: ["No: un grafo muestra conexiones entre elementos con vértices y aristas", "Sí, son sinónimos", "Sí, pero con colores", "No: un grafo es una tabla de números"],
+      correcta: 0,
+      pista: "Acordate de G = (V, E).",
+      explicacion: "Un grafo no muestra cantidades: muestra qué elementos (vértices) están conectados (aristas)."
+    },
+    {
+      tema: 0,
+      pregunta: "¿Cuál de estas situaciones se puede representar con un grafo?",
+      opciones: ["Las computadoras de un laboratorio y los cables que las unen", "La temperatura de un día", "El precio de un alfajor", "La altura de una persona"],
+      correcta: 0,
+      pista: "Buscá la que tenga elementos conectados entre sí.",
+      explicacion: "Las computadoras son vértices y los cables son aristas. Las otras opciones son un solo dato, no conexiones."
+    },
+    {
+      tema: 0,
+      pregunta: "En el ejemplo del libro de especies que compiten por alimento en un bosque, ¿qué representa una arista?",
+      opciones: ["Que dos especies compiten entre sí", "Una especie", "Un tipo de alimento", "El bosque entero"],
+      correcta: 0,
+      pista: "Las especies son los vértices.",
+      explicacion: "Cada especie es un vértice; una arista une dos especies si compiten por el mismo alimento."
+    },
+    {
+      tema: 0,
+      pregunta: "Dos dibujos tienen los mismos vértices y las mismas conexiones, pero uno usa líneas rectas y el otro curvas. ¿Qué podés decir?",
+      opciones: ["Representan el mismo grafo", "Son grafos distintos", "El de curvas tiene más aristas", "El de rectas no es un grafo"],
+      correcta: 0,
+      pista: "¿Qué es lo único que importa en un grafo?",
+      explicacion: "La forma de las líneas no cambia nada: solo importa qué está conectado con qué."
+    },
+    {
+      tema: 0,
+      pregunta: "G = (V, E) con V = {1, 2, 3} y E = {{1, 2}, {2, 3}}. ¿Con qué vértices está conectado el 2?",
+      opciones: ["Con 1 y con 3", "Solo con 1", "Con ninguno", "Solo consigo mismo"],
+      correcta: 0,
+      pista: "Buscá las aristas que tienen al 2.",
+      explicacion: "Las aristas {1, 2} y {2, 3} unen al 2 con el 1 y con el 3."
+    },
+
+    // Tema 1: Vértices
+    {
+      tema: 1,
+      pregunta: "En el mapa de rutas de la página, ¿cuál de estos es un vértice?",
+      opciones: ["Montevideo", "La ruta entre Montevideo y Canelones", "El grado de Rocha", "La suma de los grados"],
+      correcta: 0,
+      pista: "Los vértices son los puntos del mapa.",
+      explicacion: "Cada ciudad es un vértice; cada ruta entre dos ciudades es una arista."
+    },
+    {
+      tema: 1,
+      pregunta: "V = {Ana, Beto, Caro} y E = {{Ana, Beto}}. ¿Qué vértice es aislado?",
+      opciones: ["Caro", "Ana", "Beto", "Ninguno"],
+      correcta: 0,
+      pista: "¿Quién no aparece en ninguna arista?",
+      explicacion: "Caro no está en ninguna arista, así que no tiene vecinos: es un vértice aislado (grado 0)."
+    },
+    {
+      tema: 1,
+      pregunta: "En el grafo de conocidos, Eli solo conoce a Dani. ¿Qué tipo de vértice es Eli?",
+      opciones: ["Una hoja (vértice colgante)", "Un vértice aislado", "Un lazo", "Una arista múltiple"],
+      correcta: 0,
+      pista: "Tiene exactamente un vecino.",
+      explicacion: "Un vértice con un solo vecino tiene grado 1: es una hoja o vértice colgante."
+    },
+    {
+      tema: 1,
+      pregunta: "Si E = {{a, b}, {b, c}}, ¿son adyacentes a y c?",
+      opciones: ["No, porque no hay una arista {a, c}", "Sí, porque los dos están unidos a b", "Sí, todos los vértices son adyacentes", "Solo si tienen el mismo grado"],
+      correcta: 0,
+      pista: "Adyacente significa unido directamente por una arista.",
+      explicacion: "Para ser adyacentes tiene que existir la arista {a, c}. Compartir un vecino (b) no alcanza."
+    },
+    {
+      tema: 1,
+      pregunta: "Si un grafo cumple |V| = 6, ¿qué significa?",
+      opciones: ["Que tiene 6 vértices", "Que tiene 6 aristas", "Que cada vértice tiene grado 6", "Que tiene 6 lazos"],
+      correcta: 0,
+      pista: "Las barras |…| cuentan elementos de un conjunto.",
+      explicacion: "|V| es la cantidad de elementos del conjunto V, o sea, la cantidad de vértices."
+    },
+
+    // Tema 2: Aristas
+    {
+      tema: 2,
+      pregunta: "Si E = {{a, b}, {b, c}, {c, a}}, ¿cuánto vale |E|?",
+      opciones: ["3", "6", "2", "9"],
+      correcta: 0,
+      pista: "Contá los pares dentro del conjunto.",
+      explicacion: "E tiene tres aristas: {a, b}, {b, c} y {c, a}, así que |E| = 3."
+    },
+    {
+      tema: 2,
+      pregunta: "Si V = {a, b, c}, ¿cuál de estas NO puede ser una arista del grafo?",
+      opciones: ["{a, d}", "{a, b}", "{b, c}", "{c, a}"],
+      correcta: 0,
+      pista: "Una arista solo puede unir vértices que estén en V.",
+      explicacion: "d no está en V, así que {a, d} no puede ser una arista de este grafo."
+    },
+    {
+      tema: 2,
+      pregunta: "Un compañero dibuja una línea que sale del vértice b y vuelve a b. ¿Cómo se llama?",
+      opciones: ["Lazo (o bucle)", "Arista múltiple", "Vértice aislado", "Hoja"],
+      correcta: 0,
+      pista: "Une un vértice consigo mismo.",
+      explicacion: "Una arista que une un vértice consigo mismo es un lazo o bucle."
+    },
+    {
+      tema: 2,
+      pregunta: "Entre dos computadoras hay dos cables. En el grafo, ¿qué son esos cables?",
+      opciones: ["Dos aristas múltiples (paralelas)", "Un lazo", "Dos vértices", "Una sola arista"],
+      correcta: 0,
+      pista: "Son dos aristas entre el mismo par de vértices.",
+      explicacion: "Dos o más aristas que unen el mismo par de vértices son aristas múltiples o paralelas."
+    },
+    {
+      tema: 2,
+      pregunta: "¿Con qué vértices es incidente la arista {u, v}?",
+      opciones: ["Con u y con v", "Solo con u", "Con ningún vértice", "Con todos los vértices del grafo"],
+      correcta: 0,
+      pista: "Una arista es incidente con sus extremos.",
+      explicacion: "La arista {u, v} es incidente con sus dos extremos: u y v."
+    },
+
+    // Tema 3: Grado de un vértice
+    {
+      tema: 3,
+      pregunta: "Un compañero te pregunta por qué un lazo suma 2 al grado. ¿Qué le explicás?",
+      opciones: ["Porque los dos extremos del lazo están en el mismo vértice", "Porque el lazo es más largo", "Porque es una regla sin motivo", "Porque un lazo son dos vértices"],
+      correcta: 0,
+      pista: "Pensá en cuántas puntas de línea tocan el vértice.",
+      explicacion: "El grado cuenta extremos de aristas. El lazo sale y vuelve al mismo vértice: le aporta sus dos extremos."
+    },
+    {
+      tema: 3,
+      pregunta: "En el grafo G del libro, δ(e) = 3. ¿Qué significa?",
+      opciones: ["Que hay 3 aristas incidentes con e", "Que e está en la posición 3", "Que e tiene 3 lazos", "Que el grafo tiene 3 vértices"],
+      correcta: 0,
+      pista: "δ(v) es el grado del vértice v.",
+      explicacion: "δ(e) = 3 quiere decir que tres aristas llegan al vértice e."
+    },
+    {
+      tema: 3,
+      pregunta: "Un grafo tiene 4 vértices y cada uno tiene grado 3. ¿Cuántas aristas tiene?",
+      opciones: ["6", "12", "4", "7"],
+      correcta: 0,
+      pista: "Sumá los grados y dividí entre 2.",
+      explicacion: "La suma de los grados es 4 · 3 = 12 = 2e, entonces e = 6."
+    },
+    {
+      tema: 3,
+      pregunta: "Un grafo tiene 7 aristas. ¿Cuánto da la suma de los grados de sus vértices?",
+      opciones: ["14", "7", "21", "No se puede saber"],
+      correcta: 0,
+      pista: "Teorema de los apretones de manos.",
+      explicacion: "La suma de los grados siempre es 2e = 2 · 7 = 14."
+    },
+    {
+      tema: 3,
+      pregunta: "¿Puede existir un grafo con tres vértices de grados 3, 3 y 3?",
+      opciones: ["No, porque la suma (9) es impar", "Sí, sin problema", "Sí, si los tres son adyacentes", "No, porque tiene pocos vértices"],
+      correcta: 0,
+      pista: "La suma de los grados tiene que ser 2e.",
+      explicacion: "3 + 3 + 3 = 9 es impar, pero la suma de los grados siempre es par. Ese grafo no existe."
+    },
+    {
+      tema: 3,
+      pregunta: "¿Puede un grafo tener exactamente un vértice de grado impar?",
+      opciones: ["No, siempre hay una cantidad par de vértices de grado impar", "Sí, es lo más común", "Sí, si tiene un lazo", "Solo si tiene un vértice aislado"],
+      correcta: 0,
+      pista: "Es una consecuencia del teorema de los apretones de manos.",
+      explicacion: "Como la suma de los grados es par, los vértices de grado impar tienen que venir de a pares."
+    }
+  ]
+};
+
 /* Grafos de ejemplo para la clase. Las posiciones van de 0 a 100 (x) y de 0 a 60 (y).
    Una arista repetida es una arista múltiple; una arista [v, v] es un lazo. */
 const GRAFOS_EJEMPLO = {
@@ -909,21 +1097,23 @@ function goHome() {
 /* =========================================================
    MODO PRINCIPAL: PREGUNTAS
    ========================================================= */
-const quiz = { deck: [], index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, answered: false, hintUsed: false, mistakes: [], lesson: null };
+const quiz = { deck: [], index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, answered: false, hintUsed: false, mistakes: [], lesson: null, porTema: {} };
 
-// lesson: null = partida normal; un número = preguntas de ese tema de la clase; "todo" = repaso de toda la clase
+// lesson: null = partida normal; un número = preguntas de ese tema de la clase;
+// "todo" = repaso de toda la clase; "examen" = ¿estoy listo para dar la clase?
 function startQuiz(lesson = null) {
   stopChallenge();
   quiz.lesson = lesson;
   let pool = PREGUNTAS;
   let total = AJUSTES.preguntasPorPartida;
   if (lesson === "todo") pool = CLASE.temas.flatMap((t) => t.preguntas);
+  else if (lesson === "examen") { pool = EXAMEN.preguntas; total = pool.length; }
   else if (lesson !== null) { pool = CLASE.temas[lesson].preguntas; total = pool.length; }
   quiz.deck = shuffle(pool).slice(0, Math.min(total, pool.length)).map((q) => ({
     ...q,
     mezcla: shuffle(q.opciones.map((texto, i) => ({ texto, ok: i === q.correcta })))
   }));
-  Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [] });
+  Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {} });
   $("#q-score").textContent = "0";
   $("#q-streak").textContent = "0";
   sound.play("start");
@@ -982,6 +1172,12 @@ function answerQuestion(i) {
     else b.classList.add("dim");
   });
   $("#hint-btn").disabled = true;
+
+  if (q.tema !== undefined) {
+    const t = (quiz.porTema[q.tema] = quiz.porTema[q.tema] || { ok: 0, total: 0 });
+    t.total++;
+    if (chosen.ok) t.ok++;
+  }
 
   const fb = $("#q-feedback");
   fb.hidden = false;
@@ -1055,6 +1251,8 @@ function showResults() {
   $("#r-correct").textContent = `${quiz.correct}/${total}`;
   $("#r-streak").textContent = quiz.bestStreak;
   $("#r-record").hidden = !isRecord;
+  const ready = quiz.lesson === "examen" ? renderReadiness(Math.round((quiz.correct / total) * 100)) : null;
+  $("#r-ready").hidden = !ready;
 
   const list = $("#r-review");
   list.innerHTML = "";
@@ -1076,7 +1274,8 @@ function showResults() {
 
   const ratio = quiz.correct / total;
   let msg;
-  if (quiz.lesson !== null) {
+  if (ready) msg = ready.mensaje;
+  else if (quiz.lesson !== null) {
     if (ratio === 1) msg = `¡${total} de ${total}! Este tema lo tenés dominado: ya lo podés explicar en la clase.`;
     else if (ratio >= 0.7) msg = `¡Bien ahí! ${quiz.correct} de ${total}. Repasá las que fallaste y ya estás para explicarlo.`;
     else msg = `${quiz.correct} de ${total}. Volvé a leer el tema con calma y probá de nuevo. ¡Así se aprende!`;
@@ -1235,6 +1434,7 @@ function finishChallenge() {
    CLASE: TEORÍA DE GRAFOS
    ========================================================= */
 CLASE.temas.forEach((t) => t.preguntas.forEach((p) => { p.categoria = "Grafos · " + t.titulo; }));
+EXAMEN.preguntas.forEach((p) => { p.categoria = "Examen · " + CLASE.temas[p.tema].titulo; });
 
 const lesson = { index: 0, graph: null, selected: null, showDegrees: false };
 
@@ -1259,6 +1459,8 @@ function showLearn() {
     list.appendChild(li);
   });
   $("#clase-fuente").textContent = CLASE.fuente;
+  const bestExam = store.get("claseExamen", null);
+  $("#exam-best").textContent = bestExam === null ? "Todavía no lo hiciste." : `Tu mejor resultado: ${bestExam} %.`;
   show("learn");
   guillermo.say("¡Hoy damos teoría de grafos! Elegí un tema, leelo y después te pregunto a ver si lo entendiste.", "pensando");
 }
@@ -1281,6 +1483,47 @@ function openLesson(i) {
   show("lesson", $("#lesson-title"));
   window.scrollTo({ top: 0, behavior: "auto" });
   guillermo.say(`Tema ${i + 1}: ${t.titulo}${/[?!.]$/.test(t.titulo) ? "" : "."} Leelo tranqui y jugá con el grafo. Cuando estés, tocá «¿Lo entendí?».`, "espera");
+}
+
+/* ---------- examen: ¿estoy listo? ---------- */
+function renderReadiness(pct) {
+  const best = store.get("claseExamen", null);
+  if (best === null || pct > best) store.set("claseExamen", pct);
+
+  const flojos = CLASE.temas
+    .map((t, i) => ({ t, r: quiz.porTema[i] || { ok: 0, total: 0 } }))
+    .filter(({ r }) => r.total && r.ok / r.total < 0.8)
+    .map(({ t }) => t.titulo);
+  let nivel, titulo, mensaje;
+  if (pct >= EXAMEN.aprobado) {
+    nivel = "ok";
+    titulo = `✔ ¡Estás listo para dar la clase! (${pct} %)`;
+    mensaje = `¡Bien ahí! Sacaste ${pct} %. Estás pronto para dar la clase.`;
+  } else if (pct >= EXAMEN.casi) {
+    nivel = "casi";
+    titulo = `◐ Casi listo (${pct} %)`;
+    mensaje = `Sacaste ${pct} %. Te falta poquito: repasá ${flojos.join(", ") || "los errores"} y volvé a probar.`;
+  } else {
+    nivel = "no";
+    titulo = `✘ Todavía no (${pct} %)`;
+    mensaje = `Sacaste ${pct} %. Tranqui: volvé a leer los temas con calma y probá de nuevo. ¡Así se aprende!`;
+  }
+
+  $("#r-ready").className = "ready ready-" + nivel;
+  $("#r-ready-title").textContent = titulo;
+  const list = $("#r-ready-list");
+  list.innerHTML = "";
+  CLASE.temas.forEach((t, i) => {
+    const r = quiz.porTema[i] || { ok: 0, total: 0 };
+    const good = r.total && r.ok / r.total >= 0.8;
+    const li = document.createElement("li");
+    li.className = good ? "good" : "bad";
+    li.innerHTML = `<span class="rt"></span><span class="rs"></span>`;
+    li.querySelector(".rt").textContent = t.titulo;
+    li.querySelector(".rs").textContent = `${r.ok}/${r.total} · ${good ? "✔ Listo" : "✘ Repasar"}`;
+    list.appendChild(li);
+  });
+  return { mensaje };
 }
 
 /* ---------- grafo interactivo ---------- */
@@ -1427,7 +1670,8 @@ const actions = {
   instructions: () => { show("instructions"); guillermo.say(FRASES.instrucciones, "pensando"); },
   "start-quiz": () => startQuiz(),
   "retry-quiz": () => startQuiz(quiz.lesson),
-  "quit-quiz": () => (quiz.lesson === null ? goHome() : quiz.lesson === "todo" ? showLearn() : openLesson(quiz.lesson)),
+  "quit-quiz": () => (quiz.lesson === null ? goHome() : typeof quiz.lesson === "number" ? openLesson(quiz.lesson) : showLearn()),
+  "lesson-exam": () => startQuiz("examen"),
   learn: showLearn,
   "lesson-quiz": () => startQuiz(lesson.index),
   "lesson-review": () => startQuiz("todo"),
@@ -1447,7 +1691,7 @@ document.addEventListener("click", (e) => {
   if (!btn || btn.disabled) return;
   const fn = actions[btn.dataset.action];
   if (!fn) return;
-  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "start-challenge"].includes(btn.dataset.action)) sound.play("click");
+  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge"].includes(btn.dataset.action)) sound.play("click");
   fn();
 });
 
