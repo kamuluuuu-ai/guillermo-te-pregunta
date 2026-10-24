@@ -389,7 +389,7 @@ const CLASE = {
       preguntas: [
         {
           pregunta: "¿Qué representa un vértice en un grafo?",
-          opciones: ["Un punto o elemento de la red", "Una conexión entre dos puntos", "La cantidad de conexiones", "Una flecha"],
+          opciones: ["Un punto o elemento de la red", "Una conexión entre dos puntos", "La cantidad de conexiones", "Un número"],
           correcta: 0,
           pista: "También se le dice «nodo».",
           explicacion: "Un vértice (o nodo) es cada uno de los puntos de la red: una persona, una ciudad, una computadora…"
@@ -426,7 +426,7 @@ const CLASE = {
           pregunta: "Un vértice unido a exactamente un vértice se llama…",
           opciones: ["Colgante u hoja", "Aislado", "Central", "Múltiple"],
           correcta: 0,
-          pista: "Pensá en la hoja de un árbol, que cuelga de una sola rama.",
+          pista: "Está «colgado» de un solo vecino.",
           explicacion: "Un vértice colgante (u hoja) tiene una sola arista: su grado es 1."
         }
       ]
