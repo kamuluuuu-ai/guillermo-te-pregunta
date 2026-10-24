@@ -1369,7 +1369,7 @@ let current = "start";
 const ENOJO = {
   duracion: 1400, // ms que tarda Guillermo en ir, morder y volver
   caras: ["espera", "molesto", "enojado", "furioso"],
-  // dónde muerde, en orden: [x, y] como fracción de la pantalla (primero los bordes, después hacia el centro)
+  // dónde muerde, en orden: [x, y] como fracción del panel de la pregunta (primero los bordes, después el centro)
   mordidas: [[0.92, 0.12], [0.06, 0.55], [0.62, 0.94], [0.95, 0.62], [0.3, 0.06], [0.1, 0.93],
     [0.5, 0.45], [0.8, 0.32], [0.35, 0.7], [0.72, 0.78], [0.2, 0.28], [0.55, 0.18]]
 };
@@ -1408,15 +1408,18 @@ function morder() {
 
   enojo.final = enojo.errores >= limiteEnojo();
 
-  // cada mordida es más grande que la anterior y cae en la parte de la página que se está viendo
-  const vw = document.documentElement.clientWidth || window.innerWidth || 1000;
+  // cada mordida es más grande que la anterior y se come el panel de la pregunta (la parte que se ve)
+  const p = $("#panel").getBoundingClientRect();
   const vh = window.innerHeight || document.documentElement.clientHeight || 700;
   const [fx, fy] = ENOJO.mordidas[(enojo.errores - 1) % ENOJO.mordidas.length];
+  const top = Math.max(p.top, 0) + 30;
+  const bottom = Math.min(p.bottom, vh) - 30;
+  const y = Math.min(bottom, Math.max(top, p.top + fy * p.height));
   const b = document.createElement("span");
   b.className = "bite";
-  b.style.setProperty("--s", `${Math.round(Math.max(vw, vh) * (0.14 + 0.5 * progresoEnojo()))}px`);
-  b.style.left = `${fx * vw + window.scrollX}px`;
-  b.style.top = `${fy * vh + window.scrollY}px`;
+  b.style.setProperty("--s", `${Math.round(Math.max(p.width, Math.min(p.height, vh)) * (0.2 + 0.6 * progresoEnojo()))}px`);
+  b.style.left = `${p.left + fx * p.width + window.scrollX}px`;
+  b.style.top = `${y + window.scrollY}px`;
   b.innerHTML = mordidaSVG(enojo.errores * 1.7);
   b.style.visibility = "hidden"; // aparece recién cuando Guillermo llega y muerde
   $("#bites").appendChild(b);
@@ -1785,6 +1788,7 @@ function showResults() {
   else if (ratio >= 0.4) msg = `${quiz.correct} de ${total}. ¡Vas bien! Mirá el repaso y probá de nuevo.`;
   else msg = `${quiz.correct} de ${total}. ¡Tranqui! Leé las explicaciones y la próxima sale mejor.`;
 
+  $("#bites").innerHTML = ""; // para leer los resultados, la página "vuelve a crecer"
   if (enojo.final) msg += " ¡Y me comí toda la página! Las que faltaban cuentan como no respondidas.";
   else if (enojo.errores >= 2) msg += ` Por cierto: me comí ${enojo.errores} pedazos de la página.`;
   sound.play("end");

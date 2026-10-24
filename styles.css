@@ -779,11 +779,10 @@ kbd {
 @keyframes squash { 0% { transform: scaleY(1); } 40% { transform: scaleY(0.6) translateY(4px); } 100% { transform: scaleY(1); } }
 
 /* ---------- enojo de Guillermo: mordiscones a la página ---------- */
-/* la capa cubre toda la página; el contenido de cada pantalla y Guillermo quedan por encima,
-   así se puede seguir jugando mientras se come el fondo, el marco, el encabezado y el pie */
+/* la capa va por encima de la página de la pregunta (solo Guillermo queda arriba);
+   no atrapa clics, así que lo que quedó debajo de una mordida se puede tocar igual */
 body { position: relative; }
 .bites { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 20; }
-.screen { position: relative; z-index: 25; }
 .host { z-index: 26; }
 .bite {
   position: absolute;
