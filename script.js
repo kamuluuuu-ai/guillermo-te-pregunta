@@ -1369,12 +1369,15 @@ let current = "start";
 const ENOJO = {
   duracion: 1400, // ms que tarda Guillermo en ir, morder y volver
   caras: ["espera", "molesto", "enojado", "furioso"],
-  // dónde muerde, en orden: [borde del panel, posición a lo largo del borde en %]
-  mordidas: [["top", 88], ["left", 35], ["bottom", 70], ["right", 55], ["top", 30], ["bottom", 18],
-    ["left", 78], ["right", 15], ["top", 60], ["bottom", 45], ["left", 8], ["right", 85]]
+  // dónde muerde, en orden: [x, y] como fracción de la pantalla (primero los bordes, después hacia el centro)
+  mordidas: [[0.92, 0.12], [0.06, 0.55], [0.62, 0.94], [0.95, 0.62], [0.3, 0.06], [0.1, 0.93],
+    [0.5, 0.45], [0.8, 0.32], [0.35, 0.7], [0.72, 0.78], [0.2, 0.28], [0.55, 0.18]]
 };
-const enojo = { errores: 0, gen: 0, siguiente: 0, comiendo: 0 };
-const nivelEnojo = () => (enojo.errores >= 4 ? 3 : enojo.errores >= 2 ? 2 : enojo.errores);
+const enojo = { errores: 0, gen: 0, comiendo: 0, final: false };
+// con este error ya no se puede aprobar (menos de la mitad bien): ahí se come la página entera
+const limiteEnojo = () => { const t = quiz.deck.length || 12; return t - Math.ceil(t / 2) + 1; };
+const progresoEnojo = () => Math.min(1, enojo.errores / limiteEnojo());
+const nivelEnojo = () => { const p = progresoEnojo(); return !enojo.errores ? 0 : p >= 0.55 ? 3 : p >= 0.28 ? 2 : 1; };
 const caraBase = () => ENOJO.caras[nivelEnojo()];
 
 // marca de mordida pixelada: un círculo con el borde ondulado de los dientes
@@ -1403,32 +1406,41 @@ function morder() {
   document.body.dataset.rabia = n;
   guillermo.say(pick(FRASES.enojo[n]), "mordida");
 
+  enojo.final = enojo.errores >= limiteEnojo();
+
+  // cada mordida es más grande que la anterior y cae en la parte de la página que se está viendo
+  const vw = document.documentElement.clientWidth || window.innerWidth || 1000;
+  const vh = window.innerHeight || document.documentElement.clientHeight || 700;
+  const [fx, fy] = ENOJO.mordidas[(enojo.errores - 1) % ENOJO.mordidas.length];
   const b = document.createElement("span");
   b.className = "bite";
-  b.style.setProperty("--s", `${84 + n * 26}px`);
+  b.style.setProperty("--s", `${Math.round(Math.max(vw, vh) * (0.14 + 0.5 * progresoEnojo()))}px`);
+  b.style.left = `${fx * vw + window.scrollX}px`;
+  b.style.top = `${fy * vh + window.scrollY}px`;
   b.innerHTML = mordidaSVG(enojo.errores * 1.7);
   b.style.visibility = "hidden"; // aparece recién cuando Guillermo llega y muerde
   $("#bites").appendChild(b);
-  // sigue el orden de la lista, pero salta los lugares que quedan fuera de la pantalla (así se lo ve comer)
-  const total = ENOJO.mordidas.length;
-  for (let k = 0; k < total; k++) {
-    const [lado, pos] = ENOJO.mordidas[(enojo.siguiente + k) % total];
-    const horizontal = lado === "top" || lado === "bottom";
-    // el centro queda sobre el borde del panel (la capa sobresale 14px), así el mordiscón entra bien
-    b.style.left = horizontal ? `${pos}%` : lado === "left" ? "14px" : "calc(100% - 14px)";
-    b.style.top = horizontal ? (lado === "top" ? "14px" : "calc(100% - 14px)") : `${pos}%`;
-    const r = b.getBoundingClientRect();
-    const cy = r.top + r.height / 2;
-    const vh = window.innerHeight || document.documentElement.clientHeight;
-    if (!vh || (cy > 40 && cy < vh - 40)) { enojo.siguiente += k + 1; break; }
-    if (k === total - 1) enojo.siguiente++;
-  }
-  comerAnimado(b);
+  comerAnimado(b, enojo.final);
+}
+
+// el último mordiscón: un agujero negro que crece desde la mordida y se traga toda la pantalla
+function comioTodo(cx, cy) {
+  const o = $("#eaten");
+  o.hidden = false;
+  $("#eaten-guillermo").innerHTML = spriteSVG("mordida", true);
+  $("#eaten-detail").textContent = `Erraste ${enojo.errores} preguntas y en la ${quiz.index + 1} de ${quiz.deck.length} me comí la página entera. Las que faltaban cuentan como no respondidas.`;
+  sound.play("chomp");
+  o.animate([
+    { clipPath: `circle(0px at ${cx}px ${cy}px)` },
+    { clipPath: `circle(150vmax at ${cx}px ${cy}px)` }
+  ], { duration: 700, easing: "ease-in" });
+  guillermo.say("¡ÑAAAM! ¡Me comí toda la página!", "mordida");
+  $("#eaten-btn").focus({ preventScroll: true });
 }
 
 // Guillermo sale volando de su lugar, muerde el borde de la página (abre y cierra la boca),
 // tira migas y vuelve. Usa la Web Animations API, así se ve aunque el sistema pida menos movimiento.
-function comerAnimado(bite) {
+function comerAnimado(bite, final = false) {
   const gen = enojo.gen;
   const from = guillermo.el.getBoundingClientRect();
   const to = bite.getBoundingClientRect();
@@ -1477,10 +1489,6 @@ function comerAnimado(bite) {
     sound.play("chomp");
     bite.style.visibility = "";
     bite.classList.add("pop");
-    const panel = $("#panel");
-    panel.classList.remove("chomp");
-    void panel.offsetWidth;
-    panel.classList.add("chomp");
     migas(to.left + to.width / 2, to.top + to.height / 2);
   }, T * 0.34));
 
@@ -1495,7 +1503,8 @@ function comerAnimado(bite) {
     if (gen !== enojo.gen) return;
     bite.style.visibility = "";
     bite.classList.add("pop");
-    if (guillermo.mood === "mordida") guillermo.set(caraBase(), "shake");
+    if (final) comioTodo(to.left + to.width / 2, to.top + to.height / 2);
+    else if (guillermo.mood === "mordida") guillermo.set(caraBase(), "shake");
   };
   anim.onfinish = end;
   setTimeout(end, T + 400); // por si la pestaña no anima (segundo plano)
@@ -1527,10 +1536,11 @@ function migas(cx, cy) {
 function resetEnojo() {
   enojo.gen++;
   enojo.errores = 0;
-  enojo.siguiente = 0;
+  enojo.final = false;
   guillermo.rojo = false;
   delete document.body.dataset.rabia;
   $("#bites").innerHTML = "";
+  $("#eaten").hidden = true;
 }
 
 function show(name, focusEl) {
@@ -1700,8 +1710,8 @@ function answerQuestion(i) {
 
   const next = $("#next-btn");
   next.textContent = quiz.index + 1 < quiz.deck.length ? "Siguiente ▶" : "Ver resultados ▶";
-  next.hidden = false;
-  next.focus({ preventScroll: true });
+  next.hidden = enojo.final;
+  if (!enojo.final) next.focus({ preventScroll: true });
 }
 
 function useHint() {
@@ -1716,7 +1726,7 @@ function useHint() {
 }
 
 function nextQuestion() {
-  if (!quiz.answered || current !== "quiz") return;
+  if (!quiz.answered || current !== "quiz" || enojo.final) return; // si se comió la página, solo quedan los resultados
   sound.play("click");
   quiz.index++;
   if (quiz.index < quiz.deck.length) renderQuestion();
@@ -1775,7 +1785,8 @@ function showResults() {
   else if (ratio >= 0.4) msg = `${quiz.correct} de ${total}. ¡Vas bien! Mirá el repaso y probá de nuevo.`;
   else msg = `${quiz.correct} de ${total}. ¡Tranqui! Leé las explicaciones y la próxima sale mejor.`;
 
-  if (enojo.errores >= 2) msg += ` Por cierto: me comí ${enojo.errores} pedazos de la página.`;
+  if (enojo.final) msg += " ¡Y me comí toda la página! Las que faltaban cuentan como no respondidas.";
+  else if (enojo.errores >= 2) msg += ` Por cierto: me comí ${enojo.errores} pedazos de la página.`;
   sound.play("end");
   show("results");
   guillermo.say(isRecord ? msg + " ¡Y es nuevo récord!" : msg, nivelEnojo() >= 3 ? "furioso" : ratio >= 0.4 ? "alegria" : "animo", "jump");
@@ -2407,6 +2418,7 @@ const actions = {
   "start-eval": startEval,
   "eval-clear": clearEvalHistory,
   "life-rappi": llamarRappi,
+  "eaten-results": () => { $("#eaten").hidden = true; showResults(); },
   "life-pista": usarPista,
   "life-cambio": cambiarPregunta,
   "lesson-exam": () => startQuiz("examen"),
