@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=21">
+  <link rel="stylesheet" href="styles.css?v=22">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -82,16 +82,16 @@
             <ul>
               <li>Son <strong>12 preguntas</strong> de teoría de grafos, sin repetir.</li>
               <li>Cada una tiene 4 opciones y <strong>una sola</strong> es correcta.</li>
-              <li>Algunas son <strong>mini retos de grafos</strong>: tocás los vértices o las aristas que pide Guillermo y después <strong>✔ Comprobar</strong>. Cuentan como una pregunta más.</li>
+              <li>Algunas son <strong>mini retos de grafos</strong>: tocás los vértices o las aristas para seleccionarlos (tocá de nuevo para quitarlos) y recién al apretar <strong>✔ Comprobar</strong> se corrige. Cuentan como una pregunta más.</li>
               <li>Tenés <strong>4 comodines</strong> para toda la partida: <strong>🛵 Rappi</strong> atropella dos opciones incorrectas, <strong>💡 Pista</strong>, <strong>🔄 Cambiar pregunta</strong> y <strong>⚡ Rescate SSJ</strong>, que calma a Guillermo y restaura el panel (ese también está en las prácticas de la clase).</li>
               <li>Al final sale una <strong>nota del 1 al 12</strong> (se aprueba con 6) y el repaso de lo que fallaste.</li>
-              <li>Atajos: teclas <kbd>1</kbd>–<kbd>4</kbd> para responder, <kbd>P</kbd> para la pista y <kbd>Enter</kbd> para seguir.</li>
+              <li>Atajos: teclas <kbd>1</kbd>–<kbd>4</kbd> para responder, <kbd>P</kbd> para la pista y <kbd>Enter</kbd> para seguir. En los mini retos, <kbd>Tab</kbd> recorre los vértices o aristas y <kbd>Enter</kbd> o <kbd>Espacio</kbd> selecciona o quita.</li>
             </ul>
           </div>
           <div class="rule-card">
             <h3>⏱ El desafío de Guillermo</h3>
             <ul>
-              <li>Tenés <strong>60 segundos</strong> para decir si cada afirmación es verdadera o falsa.</li>
+              <li>Tenés <strong>60 segundos</strong> para decir si cada afirmación sobre grafos es verdadera o falsa.</li>
               <li>Acierto: <strong>+10</strong>, más +5 por cada acierto seguido (máximo +25).</li>
               <li>Si te equivocás se corta la racha y Guillermo te muestra la respuesta.</li>
               <li>Atajos: <kbd>V</kbd> o <kbd>←</kbd> para Verdadero, <kbd>F</kbd> o <kbd>→</kbd> para Falso.</li>
@@ -124,8 +124,7 @@
         <div class="question-card" id="q-card">
           <div class="rappi-rider" id="rappi-rider" aria-hidden="true" hidden></div>
           <div class="q-meta">
-            <span class="chip" id="q-category">Ciencia</span>
-            <span class="chip chip-demo">Demo</span>
+            <span class="chip" id="q-category">Grafos</span>
           </div>
           <h2 class="question" id="q-text" tabindex="-1">Pregunta</h2>
           <div class="options" id="q-options" role="group" aria-label="Opciones de respuesta"></div>
@@ -202,7 +201,7 @@
       <div class="screen" id="screen-challenge-intro" data-screen hidden>
         <p class="demo-badge demo-teal">Minijuego</p>
         <h2 class="title title-sm">El desafío<br><span>de Guillermo</span></h2>
-        <p class="lead">Verdadero o falso contrarreloj: tenés <strong>60 segundos</strong>. Cada acierto suma y los aciertos seguidos dan bonus. El reloj arranca solo cuando apretás «Empezar».</p>
+        <p class="lead">Verdadero o falso sobre grafos, contrarreloj: tenés <strong>60 segundos</strong>. Cada acierto suma y los aciertos seguidos dan bonus. El reloj arranca solo cuando apretás «Empezar».</p>
         <p class="lead small">Tu récord: <strong id="c-best-intro">0</strong> puntos</p>
         <div class="menu menu-row">
           <button class="btn btn-yellow btn-big" type="button" data-action="start-challenge">▶ Empezar</button>
@@ -220,7 +219,7 @@
         <div class="progress progress-time" aria-hidden="true"><div class="progress-fill" id="c-bar"></div></div>
 
         <div class="question-card statement-card" id="c-card">
-          <div class="q-meta"><span class="chip chip-teal">¿Verdadero o falso?</span><span class="chip chip-demo">Demo</span></div>
+          <div class="q-meta"><span class="chip chip-teal">¿Verdadero o falso?</span><span class="chip chip-reto">Grafos</span></div>
           <p class="question" id="c-text">Afirmación</p>
           <p class="c-flash" id="c-flash" aria-live="assertive"></p>
         </div>
@@ -305,7 +304,7 @@
   </main>
 
   <footer class="footer">
-    <p>Proyecto estudiantil de UTU · Prototipo con preguntas de prueba</p>
+    <p>Proyecto estudiantil de UTU · Teoría de grafos basada en Rosen, cap. 8</p>
   </footer>
 
   <!-- capa de efectos: Guillermo volando a morder, migas y carteles (no atrapa clics) -->
@@ -319,6 +318,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=21"></script>
+  <script src="script.js?v=22"></script>
 </body>
 </html>

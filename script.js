@@ -7,7 +7,9 @@
    ========================================================= */
 
 /* ---------------------------------------------------------
-   1) PREGUNTAS DEL MODO PRINCIPAL (de demostración)
+   1) PREGUNTAS DEL MODO PRINCIPAL
+   Solo los temas de la clase: qué es un grafo, vértices (V),
+   aristas (E) y grado de un vértice. Grafos simples, no dirigidos.
    Cada pregunta tiene:
      categoria   → texto que aparece en la etiqueta
      pregunta    → el enunciado
@@ -18,267 +20,186 @@
    Las opciones se mezclan solas en cada partida.
    --------------------------------------------------------- */
 const PREGUNTAS = [
-  // Cultura general
+  // Qué es un grafo
   {
-    categoria: "Cultura general",
-    pregunta: "¿Cuál es la capital de Uruguay?",
-    opciones: ["Montevideo", "Salto", "Paysandú", "Maldonado"],
+    categoria: "¿Qué es un grafo?",
+    pregunta: "¿Qué hace falta para tener un grafo G = (V, E)?",
+    opciones: ["Un conjunto de vértices y un conjunto de aristas que los unen", "Una tabla con filas y columnas", "Un eje x y un eje y", "Una lista de números ordenados"],
     correcta: 0,
-    pista: "Tiene el puerto más importante del país… y un Cerro famoso.",
-    explicacion: "Montevideo es la capital y la ciudad más poblada de Uruguay."
+    pista: "Las dos letras de G = (V, E) te lo dicen.",
+    explicacion: "Un grafo está formado por un conjunto V de vértices y un conjunto E de aristas entre ellos."
   },
   {
-    categoria: "Cultura general",
-    pregunta: "¿En qué año ganó Uruguay el primer Mundial de fútbol?",
-    opciones: ["1930", "1950", "1924", "1934"],
+    categoria: "¿Qué es un grafo?",
+    pregunta: "En un mapa modelado con un grafo, ¿qué representa una arista?",
+    opciones: ["Una ruta que une dos ciudades", "Una ciudad", "La cantidad de ciudades", "El nombre del mapa"],
     correcta: 0,
-    pista: "Fue el mismo año en que se inauguró el Estadio Centenario.",
-    explicacion: "El primer Mundial se jugó en Uruguay en 1930 y lo ganó la Celeste."
+    pista: "Las ciudades son los puntos.",
+    explicacion: "Cada ciudad es un vértice y cada ruta que une dos ciudades es una arista."
   },
   {
-    categoria: "Cultura general",
-    pregunta: "¿Quién escribió «Don Quijote de la Mancha»?",
-    opciones: ["Miguel de Cervantes", "Lope de Vega", "Gabriel García Márquez", "Jorge Luis Borges"],
+    categoria: "¿Qué es un grafo?",
+    pregunta: "¿Qué es lo único que importa de un grafo?",
+    opciones: ["Qué vértices están conectados con cuáles", "El color de los puntos", "Si las líneas son rectas o curvas", "Dónde está dibujado cada punto"],
     correcta: 0,
-    pista: "Era español y vivió en los siglos XVI y XVII.",
-    explicacion: "Miguel de Cervantes publicó el Quijote en dos partes, en 1605 y 1615."
+    pista: "Si movés los puntos sin cambiar las conexiones, el grafo es el mismo.",
+    explicacion: "Un grafo solo guarda las conexiones: la posición y la forma del dibujo no cambian nada."
   },
   {
-    categoria: "Cultura general",
-    pregunta: "¿Cuál es el océano más grande del planeta?",
-    opciones: ["Pacífico", "Atlántico", "Índico", "Ártico"],
+    categoria: "¿Qué es un grafo?",
+    pregunta: "En el dibujo de un grafo, dos aristas se cruzan en un punto donde no hay ningún cuadradito. ¿Ese cruce es un vértice?",
+    opciones: ["No: los vértices son solo los puntos marcados del grafo", "Sí, todo cruce es un vértice", "Sí, y tiene grado 4", "Depende del color de las líneas"],
     correcta: 0,
-    pista: "Su nombre suena tranquilo, pero es gigante.",
-    explicacion: "El océano Pacífico cubre cerca de un tercio de la superficie de la Tierra."
+    pista: "¿Ese punto está en el conjunto V?",
+    explicacion: "Un cruce del dibujo no es un vértice: los vértices son los elementos de V. Las aristas pueden cruzarse en el papel sin tocarse."
+  },
+  // Vértices
+  {
+    categoria: "Vértices",
+    pregunta: "En una red de computadoras modelada con un grafo, ¿qué son los vértices?",
+    opciones: ["Las computadoras", "Los cables", "Los datos que viajan", "La velocidad de la red"],
+    correcta: 0,
+    pista: "Los cables son las conexiones.",
+    explicacion: "Cada computadora es un vértice (nodo) y cada cable o enlace es una arista."
   },
   {
-    categoria: "Cultura general",
-    pregunta: "¿Cuántos departamentos tiene Uruguay?",
-    opciones: ["19", "18", "20", "23"],
+    categoria: "Vértices",
+    pregunta: "Si V = {Ana, Beto, Caro, Dani, Eli, Fede}, ¿cuánto vale |V|?",
+    opciones: ["6", "5", "12", "1"],
     correcta: 0,
-    pista: "Es un número impar, entre 15 y 20.",
-    explicacion: "Uruguay está dividido en 19 departamentos."
+    pista: "Contá los nombres.",
+    explicacion: "V tiene seis elementos, así que |V| = 6."
   },
   {
-    categoria: "Cultura general",
-    pregunta: "¿Qué continente tiene más países?",
-    opciones: ["África", "Asia", "Europa", "América"],
+    categoria: "Vértices",
+    pregunta: "V = {a, b, c, d} y E = {{a, b}, {b, c}}. ¿Qué vértice es aislado?",
+    opciones: ["d", "a", "b", "c"],
     correcta: 0,
-    pista: "Ahí está el desierto del Sahara.",
-    explicacion: "África tiene 54 países reconocidos, más que cualquier otro continente."
-  },
-
-  // Ciencia
-  {
-    categoria: "Ciencia",
-    pregunta: "¿Qué gas absorben las plantas para hacer la fotosíntesis?",
-    opciones: ["Dióxido de carbono", "Oxígeno", "Nitrógeno", "Helio"],
-    correcta: 0,
-    pista: "Es el mismo gas que nosotros largamos al exhalar.",
-    explicacion: "Las plantas toman dióxido de carbono (CO₂) y, con luz, producen azúcar y oxígeno."
+    pista: "Buscá el que no aparece en ninguna arista.",
+    explicacion: "d no está en ninguna arista: no tiene vecinos y su grado es 0."
   },
   {
-    categoria: "Ciencia",
-    pregunta: "¿Cuál es el planeta más cercano al Sol?",
-    opciones: ["Mercurio", "Venus", "Marte", "Tierra"],
+    categoria: "Vértices",
+    pregunta: "E = {{a, b}, {b, c}, {b, d}}. ¿Cuáles son los vecinos de b?",
+    opciones: ["a, c y d", "Solo a", "Solo c y d", "Ninguno"],
     correcta: 0,
-    pista: "Comparte nombre con un metal líquido de los termómetros viejos.",
-    explicacion: "Mercurio es el primer planeta del sistema solar y también el más chico."
+    pista: "Mirá todas las aristas donde aparece b.",
+    explicacion: "b está unido a a, a c y a d por una arista, así que esos tres son sus vecinos (adyacentes)."
+  },
+  // Aristas
+  {
+    categoria: "Aristas",
+    pregunta: "En una red, ¿qué palabra significa lo mismo que «arista»?",
+    opciones: ["Enlaces", "Nodos", "Vértices", "Grados"],
+    correcta: 0,
+    pista: "Son las conexiones de la red.",
+    explicacion: "Aristas y enlaces son lo mismo: las conexiones entre dos vértices."
   },
   {
-    categoria: "Ciencia",
-    pregunta: "¿Cuál es el símbolo químico del oro?",
-    opciones: ["Au", "Ag", "Or", "Go"],
+    categoria: "Aristas",
+    pregunta: "Si E = {{1, 2}, {2, 3}, {3, 4}, {1, 4}}, ¿cuánto vale |E|?",
+    opciones: ["4", "8", "3", "2"],
     correcta: 0,
-    pista: "Viene del latín «aurum».",
-    explicacion: "El símbolo Au viene de «aurum». Ag es la plata."
+    pista: "Contá los pares, no los números.",
+    explicacion: "Hay cuatro pares en E, así que el grafo tiene 4 aristas."
   },
   {
-    categoria: "Ciencia",
-    pregunta: "¿A qué temperatura hierve el agua a nivel del mar?",
-    opciones: ["100 °C", "90 °C", "80 °C", "120 °C"],
+    categoria: "Aristas",
+    pregunta: "La arista {Ana, Caro}, ¿con qué vértices es incidente?",
+    opciones: ["Con Ana y con Caro", "Solo con Ana", "Con todos los vértices", "Con ninguno"],
     correcta: 0,
-    pista: "Es un número redondo de tres cifras.",
-    explicacion: "A nivel del mar el agua hierve a 100 °C. En la altura hierve a menos temperatura."
+    pista: "Una arista es incidente con sus dos extremos.",
+    explicacion: "Los extremos de {Ana, Caro} son Ana y Caro: la arista es incidente con los dos."
   },
   {
-    categoria: "Ciencia",
-    pregunta: "¿Qué órgano bombea la sangre por todo el cuerpo?",
-    opciones: ["El corazón", "Los pulmones", "El hígado", "El estómago"],
+    categoria: "Aristas",
+    pregunta: "En un grafo, ¿las aristas {x, y} y {y, x} son distintas?",
+    opciones: ["No, son la misma arista", "Sí, una va y la otra vuelve", "Sí, porque cambia el orden", "Solo si x e y son aislados"],
     correcta: 0,
-    pista: "Late unas 70 veces por minuto.",
-    explicacion: "El corazón es un músculo que impulsa la sangre por arterias y venas."
+    pista: "Una arista es un par sin orden.",
+    explicacion: "Una arista es un par no ordenado: {x, y} = {y, x}."
+  },
+  // Grado
+  {
+    categoria: "Grado",
+    pregunta: "E = {{a, b}, {a, c}, {a, d}, {c, d}}. ¿Cuánto vale δ(a)?",
+    opciones: ["3", "1", "4", "2"],
+    correcta: 0,
+    pista: "Contá las aristas donde aparece a.",
+    explicacion: "a aparece en {a, b}, {a, c} y {a, d}: δ(a) = 3."
   },
   {
-    categoria: "Ciencia",
-    pregunta: "¿Cuál es el hueso más largo del cuerpo humano?",
-    opciones: ["Fémur", "Tibia", "Húmero", "Radio"],
+    categoria: "Grado",
+    pregunta: "E = {{a, b}, {b, c}, {c, d}, {b, d}}. ¿Qué vértice tiene el grado más alto?",
+    opciones: ["b", "a", "c", "d"],
     correcta: 0,
-    pista: "Está en el muslo.",
-    explicacion: "El fémur, el hueso del muslo, es el más largo y uno de los más fuertes."
-  },
-
-  // Informática
-  {
-    categoria: "Informática",
-    pregunta: "¿Qué significa la sigla CPU?",
-    opciones: ["Unidad central de procesamiento", "Computadora personal unida", "Control de programas útiles", "Copia de punto único"],
-    correcta: 0,
-    pista: "Es el «cerebro» de la computadora.",
-    explicacion: "CPU (Central Processing Unit) es el procesador: ejecuta las instrucciones de los programas."
+    pista: "Calculá el grado de cada uno: contá en cuántas aristas aparece.",
+    explicacion: "δ(a) = 1, δ(b) = 3, δ(c) = 2 y δ(d) = 2. El máximo es 3 y solo lo tiene b."
   },
   {
-    categoria: "Informática",
-    pregunta: "¿Cuántos bits tiene un byte?",
-    opciones: ["8", "4", "16", "10"],
+    categoria: "Grado",
+    pregunta: "Un grafo tiene 6 aristas. ¿Cuánto suman los grados de todos sus vértices?",
+    opciones: ["12", "6", "3", "36"],
     correcta: 0,
-    pista: "Es el doble de 4.",
-    explicacion: "Un byte son 8 bits, y con él se pueden representar 256 valores distintos."
+    pista: "Cada arista suma 1 al grado de cada uno de sus dos extremos.",
+    explicacion: "Por el teorema de los apretones de manos, la suma de los grados es 2 · 6 = 12."
   },
   {
-    categoria: "Informática",
-    pregunta: "¿Qué lenguaje se usa para darle estilo (colores, tamaños) a una página web?",
-    opciones: ["CSS", "HTML", "SQL", "Python"],
+    categoria: "Grado",
+    pregunta: "¿Qué grado tiene una hoja (vértice colgante)?",
+    opciones: ["1", "0", "2", "Depende del grafo"],
     correcta: 0,
-    pista: "Sus siglas significan «hojas de estilo en cascada».",
-    explicacion: "HTML arma la estructura, CSS le da el estilo y JavaScript agrega comportamiento."
-  },
-  {
-    categoria: "Informática",
-    pregunta: "En sistema binario, ¿cuánto vale el número 101?",
-    opciones: ["5", "3", "101", "6"],
-    correcta: 0,
-    pista: "Sumá 4 + 0 + 1.",
-    explicacion: "101 en binario es 1×4 + 0×2 + 1×1 = 5."
-  },
-  {
-    categoria: "Informática",
-    pregunta: "¿Qué tipo de programa es Linux?",
-    opciones: ["Un sistema operativo", "Un navegador web", "Un antivirus", "Una planilla de cálculo"],
-    correcta: 0,
-    pista: "Es de la misma familia que Windows o macOS.",
-    explicacion: "Linux es un sistema operativo libre que se usa en servidores, celulares (Android) y PC."
-  },
-  {
-    categoria: "Informática",
-    pregunta: "En programación, ¿qué es un «bug»?",
-    opciones: ["Un error en el programa", "Un tipo de virus", "Un lenguaje nuevo", "Una pieza de la placa madre"],
-    correcta: 0,
-    pista: "Es lo que buscás cuando hacés «debugging».",
-    explicacion: "Un bug es un error o falla en el código que hace que el programa funcione mal."
-  },
-
-  // Matemática
-  {
-    categoria: "Matemática",
-    pregunta: "¿Cuánto es 7 × 8?",
-    opciones: ["56", "54", "64", "48"],
-    correcta: 0,
-    pista: "5, 6, 7, 8… ¡el resultado tiene los primeros dos!",
-    explicacion: "7 × 8 = 56. Truco: 5-6-7-8 → 56 = 7 × 8."
-  },
-  {
-    categoria: "Matemática",
-    pregunta: "¿Cuál es el 25 % de 200?",
-    opciones: ["50", "25", "75", "40"],
-    correcta: 0,
-    pista: "El 25 % es lo mismo que la cuarta parte.",
-    explicacion: "25 % es un cuarto: 200 ÷ 4 = 50."
-  },
-  {
-    categoria: "Matemática",
-    pregunta: "¿Cuántos lados tiene un hexágono?",
-    opciones: ["6", "5", "8", "7"],
-    correcta: 0,
-    pista: "Pensá en las celdas de un panal de abejas.",
-    explicacion: "«Hexa» significa seis: el hexágono tiene 6 lados."
-  },
-  {
-    categoria: "Matemática",
-    pregunta: "¿Cuál es la raíz cuadrada de 81?",
-    opciones: ["9", "8", "7", "18"],
-    correcta: 0,
-    pista: "¿Qué número multiplicado por sí mismo da 81?",
-    explicacion: "9 × 9 = 81, entonces la raíz cuadrada de 81 es 9."
-  },
-  {
-    categoria: "Matemática",
-    pregunta: "Un triángulo tiene un ángulo de 90° y otro de 45°. ¿Cuánto mide el tercero?",
-    opciones: ["45°", "90°", "60°", "30°"],
-    correcta: 0,
-    pista: "Los ángulos de un triángulo siempre suman 180°.",
-    explicacion: "180° − 90° − 45° = 45°."
-  },
-  {
-    categoria: "Matemática",
-    pregunta: "¿Cuál de estos números es primo?",
-    opciones: ["13", "15", "21", "27"],
-    correcta: 0,
-    pista: "Un primo solo se divide por 1 y por sí mismo.",
-    explicacion: "13 solo es divisible por 1 y por 13. Los otros se dividen por 3 o por 5."
+    pista: "Está colgada de un solo vecino.",
+    explicacion: "Una hoja está unida a un solo vértice, así que su grado es 1."
   }
 ];
 
 /* ---------------------------------------------------------
-   2) AFIRMACIONES DEL MINIJUEGO (de demostración)
+   2) AFIRMACIONES DEL MINIJUEGO (verdadero o falso sobre grafos)
    texto → la afirmación
    v     → true si es verdadera, false si es falsa
    --------------------------------------------------------- */
 const AFIRMACIONES = [
-  { texto: "El Sol es una estrella.", v: true },
-  { texto: "La Luna tiene luz propia.", v: false },
-  { texto: "Un byte tiene 8 bits.", v: true },
-  { texto: "El agua está formada por hidrógeno y oxígeno.", v: true },
-  { texto: "Los murciélagos son aves.", v: false },
-  { texto: "Montevideo es la capital de Uruguay.", v: true },
-  { texto: "El Río de la Plata separa a Uruguay de Chile.", v: false },
-  { texto: "7 × 6 = 42.", v: true },
-  { texto: "La mitad de 150 es 70.", v: false },
-  { texto: "HTML es un lenguaje para manejar bases de datos.", v: false },
-  { texto: "Un triángulo tiene tres lados.", v: true },
-  { texto: "A Marte se lo conoce como el planeta rojo.", v: true },
-  { texto: "Las arañas son insectos.", v: false },
-  { texto: "El número 0 es par.", v: true },
-  { texto: "La Tierra tarda un día en dar la vuelta al Sol.", v: false },
-  { texto: "El corazón humano tiene cuatro cavidades.", v: true },
-  { texto: "Python es un lenguaje de programación.", v: true },
-  { texto: "9 es un número primo.", v: false },
-  { texto: "El sonido viaja más rápido que la luz.", v: false },
-  { texto: "Un hexágono tiene seis lados.", v: true },
-  { texto: "Las ballenas son mamíferos.", v: true },
-  { texto: "La memoria RAM guarda los datos aunque se apague la computadora.", v: false },
-  { texto: "El Everest es la montaña más alta sobre el nivel del mar.", v: true },
-  { texto: "100 dividido 4 es 20.", v: false },
-  { texto: "El hielo flota en el agua.", v: true },
-  { texto: "Los pingüinos viven en el Polo Norte.", v: false },
-  { texto: "La fotosíntesis produce oxígeno.", v: true },
-  { texto: "En binario, el número 2 se escribe 10.", v: true },
-  { texto: "Un año bisiesto tiene 365 días.", v: false },
-  { texto: "El cuadrado de 5 es 25.", v: true },
-  { texto: "Uruguay limita con Brasil y Argentina.", v: true },
-  { texto: "El oro se oxida con facilidad.", v: false },
-  { texto: "El teclado es un dispositivo de entrada.", v: true },
-  { texto: "La impresora es un dispositivo de entrada.", v: false },
-  { texto: "Júpiter es el planeta más grande del sistema solar.", v: true },
-  { texto: "Una persona adulta tiene 206 huesos.", v: true },
-  { texto: "3/4 es mayor que 0,8.", v: false },
-  { texto: "«www» son las siglas de World Wide Web.", v: true },
-  { texto: "El mate se prepara con yerba.", v: true },
-  { texto: "Un ángulo recto mide 180°.", v: false },
-  { texto: "Los virus informáticos contagian a las personas.", v: false },
-  { texto: "La sangre se oxigena en los pulmones.", v: true },
-  { texto: "El número pi es exactamente 3,14.", v: false },
-  { texto: "Un decágono tiene diez lados.", v: true },
-  { texto: "La Luna es más grande que la Tierra.", v: false },
-  { texto: "El wifi funciona con ondas de radio.", v: true },
-  { texto: "Un kilómetro tiene 100 metros.", v: false },
-  { texto: "Las plantas también respiran.", v: true },
-  { texto: "Colón llegó a América en 1492.", v: true },
-  { texto: "El cero es un número negativo.", v: false },
-  { texto: "«123456» es una contraseña segura.", v: false },
-  { texto: "A nivel del mar, el agua hierve a 50 °C.", v: false },
-  { texto: "Un litro equivale a 1000 mililitros.", v: true },
-  { texto: "La Antártida es el continente más frío.", v: true }
+  { texto: "Un grafo está formado por vértices y aristas.", v: true },
+  { texto: "En G = (V, E), la letra E es el conjunto de vértices.", v: false },
+  { texto: "Los vértices también se llaman nodos.", v: true },
+  { texto: "Las aristas también se llaman enlaces.", v: true },
+  { texto: "Una arista une dos vértices.", v: true },
+  { texto: "Un grafo es lo mismo que un gráfico de barras.", v: false },
+  { texto: "En un mapa de rutas, las ciudades pueden ser los vértices.", v: true },
+  { texto: "En una red de computadoras, los cables pueden ser las aristas.", v: true },
+  { texto: "En un grafo de conocidos, cada persona es una arista.", v: false },
+  { texto: "Si movés los puntos de un grafo sin cambiar las conexiones, sigue siendo el mismo grafo.", v: true },
+  { texto: "Un cruce de dos líneas en el dibujo siempre es un vértice.", v: false },
+  { texto: "Si V = {a, b, c}, entonces |V| = 3.", v: true },
+  { texto: "Si V = {p, q, r, s}, entonces |V| = 3.", v: false },
+  { texto: "Si E = {{a, b}, {b, c}}, el grafo tiene 2 aristas.", v: true },
+  { texto: "Si E = {{1, 2}, {3, 4}}, el grafo tiene 4 aristas.", v: false },
+  { texto: "{a, b} y {b, a} son la misma arista.", v: true },
+  { texto: "Dos vértices unidos por una arista son adyacentes.", v: true },
+  { texto: "Si E = {{a, b}, {b, c}}, entonces a y c son adyacentes.", v: false },
+  { texto: "Un vértice aislado no tiene vecinos.", v: true },
+  { texto: "Un vértice aislado tiene grado 1.", v: false },
+  { texto: "Una hoja (vértice colgante) tiene grado 1.", v: true },
+  { texto: "La arista {u, v} es incidente con u y con v.", v: true },
+  { texto: "u y v son los extremos de la arista {u, v}.", v: true },
+  { texto: "El grado de un vértice es la cantidad de aristas incidentes con él.", v: true },
+  { texto: "El grado de un vértice es la cantidad de vértices del grafo.", v: false },
+  { texto: "Si E = {{a, b}, {a, c}}, entonces δ(a) = 2.", v: true },
+  { texto: "Si E = {{a, b}, {a, c}}, entonces δ(b) = 2.", v: false },
+  { texto: "Si E = {{a, b}, {b, c}, {b, d}}, b es el vértice de mayor grado.", v: true },
+  { texto: "Si E = {{a, b}, {c, d}}, todos los vértices tienen grado 1.", v: true },
+  { texto: "Puede haber varios vértices empatados con el grado más alto.", v: true },
+  { texto: "Siempre hay un único vértice con el grado más alto.", v: false },
+  { texto: "La suma de los grados de todos los vértices es el doble de la cantidad de aristas.", v: true },
+  { texto: "Un grafo con 5 aristas tiene grados que suman 10.", v: true },
+  { texto: "Un grafo con 4 aristas tiene grados que suman 4.", v: false },
+  { texto: "Puede existir un grafo con grados 1, 1 y 2.", v: true },
+  { texto: "Puede existir un grafo con grados 1, 2 y 2.", v: false },
+  { texto: "Todo grafo tiene una cantidad par de vértices de grado impar.", v: true },
+  { texto: "Un grafo puede tener exactamente un vértice de grado impar.", v: false },
+  { texto: "Si cada uno de 10 vértices tiene grado 6, el grafo tiene 30 aristas.", v: true },
+  { texto: "Si 4 vértices tienen grado 3 cada uno, el grafo tiene 12 aristas.", v: false }
 ];
 
 /* ---------------------------------------------------------
@@ -294,7 +215,7 @@ const AFIRMACIONES = [
      preguntas       → igual que PREGUNTAS (sin "categoria")
    --------------------------------------------------------- */
 const CLASE = {
-  fuente: "Basado en Rosen, K. H., «Matemática discreta y sus aplicaciones», 5.ª ed., McGraw-Hill: cap. 8, sección 8.1 «Introducción a los grafos» (págs. 503–506) y sección 8.2 «Terminología en teoría de grafos» (págs. 511–512).",
+  fuente: "Basado en Rosen, K. H., «Matemática discreta y sus aplicaciones», 5.ª ed., McGraw-Hill: cap. 8, sección 8.1 «Introducción a los grafos» (págs. 503, 504 y 506) y sección 8.2 «Terminología en teoría de grafos» (págs. 511–512).",
   temas: [
     {
       titulo: "¿Qué es un grafo?",
@@ -312,8 +233,9 @@ const CLASE = {
           <li><strong>Ecología:</strong> cada especie es un punto y se unen dos especies si compiten por el mismo alimento.</li>
         </ul>
         <p>Lo que importa es <strong>qué está conectado con qué</strong>. Dónde dibujes los puntos o si las líneas son rectas o curvas no cambia el grafo.</p>
-        <h3>Un poco de historia</h3>
-        <p>Las ideas básicas las introdujo el matemático suizo <strong>Leonhard Euler</strong> en el siglo XVIII, cuando resolvió el problema de los <strong>puentes de Königsberg</strong>: ¿se puede recorrer la ciudad cruzando cada puente una sola vez?</p>
+        <h3>Ojo con los cruces</h3>
+        <p>En el dibujo, dos aristas pueden cruzarse sin tocarse. <strong>Un cruce no es un vértice</strong>: los vértices son solo los puntos marcados, los elementos de V.</p>
+        <p>En esta clase usamos <strong>grafos simples</strong>: cada arista une dos vértices distintos y entre dos vértices hay como mucho una arista.</p>
 `,
       clase: [
         "Arrancá con una pregunta: «¿Qué tienen en común un mapa de ómnibus, Instagram y la red de computadoras del liceo?». La respuesta: todos son cosas conectadas.",
@@ -337,7 +259,7 @@ const CLASE = {
         },
         {
           pregunta: "Si en un mapa de rutas modelado con un grafo las rutas son las aristas, ¿qué son las ciudades?",
-          opciones: ["Los vértices", "Las aristas", "Los lazos", "Los grados"],
+          opciones: ["Los vértices", "Las aristas", "Los nombres de las rutas", "Los grados"],
           correcta: 0,
           pista: "Son los puntos que las rutas conectan.",
           explicacion: "Las ciudades son los vértices; las rutas que las unen son las aristas."
@@ -350,11 +272,11 @@ const CLASE = {
           explicacion: "En un grafo solo importan las conexiones, no la posición ni la forma del dibujo."
         },
         {
-          pregunta: "¿Quién introdujo las ideas básicas de la teoría de grafos con el problema de los puentes de Königsberg?",
-          opciones: ["Leonhard Euler", "Isaac Newton", "Pitágoras", "Alan Turing"],
+          pregunta: "En el dibujo de un grafo, dos aristas se cruzan en un punto que no está marcado. ¿Ese cruce es un vértice?",
+          opciones: ["No: los vértices son solo los puntos marcados (los elementos de V)", "Sí, todo cruce es un vértice", "Sí, y su grado es 4", "Solo si las aristas son rectas"],
           correcta: 0,
-          pista: "Fue un matemático suizo del siglo XVIII.",
-          explicacion: "Leonhard Euler usó grafos en el siglo XVIII para resolver el problema de los puentes de Königsberg."
+          pista: "¿Ese punto está en el conjunto V?",
+          explicacion: "Las aristas pueden cruzarse en el papel sin tocarse. Un cruce no es un vértice ni suma grado a nadie."
         },
         {
           pregunta: "En un grafo de conocidos, ¿cuándo se unen dos personas con una arista?",
@@ -410,21 +332,21 @@ const CLASE = {
         },
         {
           pregunta: "¿Cómo se llaman dos vértices que están unidos por una arista?",
-          opciones: ["Adyacentes (vecinos)", "Aislados", "Paralelos", "Colgantes"],
+          opciones: ["Adyacentes (vecinos)", "Aislados", "Extremos de la red", "Colgantes"],
           correcta: 0,
           pista: "Es como decir que son «vecinos».",
           explicacion: "Dos vértices son adyacentes o vecinos si hay una arista entre ellos."
         },
         {
           pregunta: "Un vértice que no está unido a ningún otro vértice se llama…",
-          opciones: ["Aislado", "Colgante", "Adyacente", "Lazo"],
+          opciones: ["Aislado", "Colgante", "Adyacente", "Vecino"],
           correcta: 0,
           pista: "Está solo, sin conexiones.",
           explicacion: "Un vértice aislado no tiene aristas: su grado es 0."
         },
         {
           pregunta: "Un vértice unido a exactamente un vértice se llama…",
-          opciones: ["Colgante u hoja", "Aislado", "Central", "Múltiple"],
+          opciones: ["Colgante u hoja", "Aislado", "Central", "Vacío"],
           correcta: 0,
           pista: "Está «colgado» de un solo vecino.",
           explicacion: "Un vértice colgante (u hoja) tiene una sola arista: su grado es 1."
@@ -434,7 +356,7 @@ const CLASE = {
     {
       titulo: "Aristas (enlaces)",
       resumen: "Las conexiones entre puntos: el conjunto E.",
-      ejemplo: "pseudo",
+      ejemplo: "red",
       modo: "general",
       contenido: `
         <p>Las <strong>aristas</strong> (también llamadas <strong>enlaces</strong>) son las <strong>conexiones entre los vértices</strong>. Cada arista une dos vértices.</p>
@@ -444,45 +366,42 @@ const CLASE = {
           <li>Si e = {u, v}, la arista e es <strong>incidente</strong> con u y con v, y decimos que <strong>conecta</strong> u y v.</li>
           <li>u y v son los <strong>extremos</strong> de la arista.</li>
         </ul>
-        <h3>Aristas especiales</h3>
-        <ul>
-          <li><strong>Aristas múltiples (o paralelas):</strong> dos o más aristas que unen el mismo par de vértices, como dos cables entre las mismas computadoras. Un grafo con aristas múltiples es un <strong>multigrafo</strong>.</li>
-          <li><strong>Lazo (o bucle):</strong> una arista que une un vértice consigo mismo. Un grafo que admite lazos es un <strong>pseudografo</strong>.</li>
-        </ul>
+        <h3>Contar aristas</h3>
+        <p>La cantidad de aristas se escribe <strong>|E|</strong>. En la red del laboratorio de abajo, cada cable es una arista: el router está unido a las cuatro computadoras y además PC1–PC2 y PC3–PC4, así que |E| = 6. La impresora todavía no tiene cable: es un vértice sin aristas.</p>
         <p>Tocá una arista del ejemplo para ver qué vértices conecta.</p>`,
       clase: [
-        "Usá un ejemplo cotidiano: en una red del liceo, cada cable entre dos computadoras es una arista; si hay dos cables entre las mismas, son aristas múltiples.",
-        "Mostrá el ejemplo con lazo y aristas múltiples y preguntá: «¿esto es un grafo simple?». (No, es un pseudografo.)",
+        "Usá un ejemplo cotidiano: en la red del laboratorio, cada cable entre dos aparatos es una arista.",
+        "Señalá una arista del ejemplo y preguntá: «¿cuáles son sus extremos? ¿con qué vértices es incidente?».",
         "Escribí E como conjunto de pares y hacé que la clase cuente |E|."
       ],
       preguntas: [
         {
           pregunta: "¿Qué representa una arista?",
-          opciones: ["Una conexión entre dos vértices", "Un punto de la red", "La cantidad de vértices", "Un grafo vacío"],
+          opciones: ["Una conexión entre dos vértices", "Un punto de la red", "La cantidad de vértices", "Un número"],
           correcta: 0,
           pista: "También se le dice «enlace».",
           explicacion: "Una arista es una conexión entre dos vértices; se escribe {u, v}."
         },
         {
           pregunta: "¿Qué relación hay entre las aristas {a, b} y {b, a}?",
-          opciones: ["Son la misma arista", "Son dos aristas distintas", "Una es un lazo", "Son aristas múltiples"],
+          opciones: ["Son la misma arista", "Son dos aristas distintas", "Una va y la otra vuelve", "No son aristas"],
           correcta: 0,
           pista: "En un conjunto, ¿importa el orden de los elementos?",
           explicacion: "Una arista es un par no ordenado, como un conjunto: {a, b} = {b, a}."
         },
         {
-          pregunta: "¿Qué es un lazo (o bucle)?",
-          opciones: ["Una arista que une un vértice consigo mismo", "Dos aristas entre los mismos vértices", "Un vértice sin aristas", "Una arista muy larga"],
+          pregunta: "Si V = {a, b, c, d} y E = {{a, b}, {a, c}, {c, d}}, ¿cuánto vale |E|?",
+          opciones: ["3", "4", "6", "2"],
           correcta: 0,
-          pista: "Sale de un vértice y vuelve al mismo.",
-          explicacion: "Un lazo conecta un vértice consigo mismo. Los grafos que los admiten se llaman pseudografos."
+          pista: "Contá los pares de E, no las letras.",
+          explicacion: "E tiene tres pares: {a, b}, {a, c} y {c, d}. Entonces |E| = 3."
         },
         {
-          pregunta: "Dos aristas distintas que unen el mismo par de vértices se llaman…",
-          opciones: ["Aristas múltiples (paralelas)", "Lazos", "Extremos", "Vértices adyacentes"],
+          pregunta: "En la red del laboratorio, ¿qué es el cable que une el router con PC1?",
+          opciones: ["Una arista", "Un vértice", "Un grado", "Un conjunto de vértices"],
           correcta: 0,
-          pista: "Son como dos cables entre las mismas dos computadoras.",
-          explicacion: "Son aristas múltiples o paralelas; un grafo que las tiene es un multigrafo."
+          pista: "Los aparatos son los puntos de la red.",
+          explicacion: "El router y PC1 son vértices; el cable que los une es la arista {Router, PC1}."
         },
         {
           pregunta: "Si e = {u, v}, se dice que la arista e es ______ con u y con v.",
@@ -493,7 +412,7 @@ const CLASE = {
         },
         {
           pregunta: "Si e = {u, v}, ¿cómo se llaman u y v respecto de la arista e?",
-          opciones: ["Sus extremos", "Sus lazos", "Sus grados", "Sus aristas múltiples"],
+          opciones: ["Sus extremos", "Sus vecinos", "Sus grados", "Sus conjuntos"],
           correcta: 0,
           pista: "Son los dos puntos donde empieza y termina la línea.",
           explicacion: "u y v son los extremos de la arista e; también se dice que e conecta u y v."
@@ -507,7 +426,9 @@ const CLASE = {
       modo: "grado",
       contenido: `
         <p>El <strong>grado</strong> de un vértice dice <strong>cuántas aristas llegan a él</strong> (cuántas aristas son incidentes con él).</p>
-        <div class="def"><span class="def-tag">Definición</span>El grado de un vértice v se escribe <strong>δ(v)</strong> y es el número de aristas incidentes con v. <strong>Un lazo cuenta dos veces</strong>, porque sus dos extremos están en v.</div>
+        <div class="def"><span class="def-tag">Definición</span>El grado de un vértice v se escribe <strong>δ(v)</strong> y es el número de aristas incidentes con v.</div>
+        <h3>El de mayor grado</h3>
+        <p>Para encontrar el vértice de mayor grado, calculá δ(v) de cada vértice y quedate con el máximo. <strong>Puede haber empate</strong>: si varios vértices llegan al máximo, todos son «de mayor grado». En el grafo G del libro el máximo es 4 y lo alcanzan b, c y f.</p>
         <h3>Ejemplo del libro</h3>
         <p>En el grafo G de abajo (el de la Figura 1 de la sección 8.2): δ(a) = 2, δ(b) = δ(c) = δ(f) = 4, δ(d) = 1, δ(e) = 3 y δ(g) = 0. Por eso g es <strong>aislado</strong> (grado 0) y d es una <strong>hoja</strong> (grado 1).</p>
         <h3>Teorema de los apretones de manos</h3>
@@ -526,17 +447,17 @@ const CLASE = {
       preguntas: [
         {
           pregunta: "¿Qué indica el grado δ(v) de un vértice?",
-          opciones: ["Cuántas aristas son incidentes con v", "Cuántos vértices tiene el grafo", "El nombre del vértice", "Cuántos lazos tiene el grafo"],
+          opciones: ["Cuántas aristas son incidentes con v", "Cuántos vértices tiene el grafo", "El nombre del vértice", "Cuántas aristas tiene el grafo"],
           correcta: 0,
           pista: "Contá las líneas que tocan ese punto.",
-          explicacion: "δ(v) es el número de aristas incidentes con v (los lazos cuentan doble)."
+          explicacion: "δ(v) es el número de aristas incidentes con v."
         },
         {
-          pregunta: "Un vértice tiene 2 aristas comunes y un lazo. ¿Cuál es su grado?",
-          opciones: ["4", "3", "2", "5"],
+          pregunta: "E = {{a, b}, {a, c}, {b, c}, {c, d}}. ¿Qué vértices tienen el grado más alto?",
+          opciones: ["Solo c", "a y b", "a, b y c", "Solo d"],
           correcta: 0,
-          pista: "Un lazo aporta dos unidades al grado.",
-          explicacion: "2 aristas aportan 2 y el lazo aporta 2 más: δ(v) = 4."
+          pista: "Calculá δ de cada vértice y buscá el máximo.",
+          explicacion: "δ(a) = 2, δ(b) = 2, δ(c) = 3 y δ(d) = 1. El máximo es 3 y solo lo alcanza c."
         },
         {
           pregunta: "Un grafo tiene vértices de grados 3, 3, 2 y 2. ¿Cuántas aristas tiene?",
@@ -554,7 +475,7 @@ const CLASE = {
         },
         {
           pregunta: "¿Puede existir un grafo cuyos vértices tengan grados 1, 2 y 2?",
-          opciones: ["No, porque la suma de los grados es impar", "Sí, siempre", "Sí, si se agrega un lazo", "No, porque tiene solo tres vértices"],
+          opciones: ["No, porque la suma de los grados es impar", "Sí, siempre", "Sí, si se dibuja de otra forma", "No, porque tiene solo tres vértices"],
           correcta: 0,
           pista: "La suma de los grados siempre es 2e.",
           explicacion: "1 + 2 + 2 = 5 es impar, pero la suma de los grados siempre es par (2e). Ese grafo no existe."
@@ -643,7 +564,7 @@ const EXAMEN = {
     {
       tema: 1,
       pregunta: "En el grafo de conocidos, Eli solo conoce a Dani. ¿Qué tipo de vértice es Eli?",
-      opciones: ["Una hoja (vértice colgante)", "Un vértice aislado", "Un lazo", "Una arista múltiple"],
+      opciones: ["Una hoja (vértice colgante)", "Un vértice aislado", "Una arista", "El vértice de mayor grado"],
       correcta: 0,
       pista: "Tiene exactamente un vecino.",
       explicacion: "Un vértice con un solo vecino tiene grado 1: es una hoja o vértice colgante."
@@ -659,7 +580,7 @@ const EXAMEN = {
     {
       tema: 1,
       pregunta: "Si un grafo cumple |V| = 6, ¿qué significa?",
-      opciones: ["Que tiene 6 vértices", "Que tiene 6 aristas", "Que cada vértice tiene grado 6", "Que tiene 6 lazos"],
+      opciones: ["Que tiene 6 vértices", "Que tiene 6 aristas", "Que cada vértice tiene grado 6", "Que la suma de los grados es 6"],
       correcta: 0,
       pista: "Las barras |…| cuentan elementos de un conjunto.",
       explicacion: "|V| es la cantidad de elementos del conjunto V, o sea, la cantidad de vértices."
@@ -684,19 +605,19 @@ const EXAMEN = {
     },
     {
       tema: 2,
-      pregunta: "Un compañero dibuja una línea que sale del vértice b y vuelve a b. ¿Cómo se llama?",
-      opciones: ["Lazo (o bucle)", "Arista múltiple", "Vértice aislado", "Hoja"],
+      pregunta: "V = {a, b, c, d} y E = {{a, b}, {b, c}, {c, d}, {a, d}, {a, c}}. ¿Cuánto vale |E|?",
+      opciones: ["5", "4", "10", "8"],
       correcta: 0,
-      pista: "Une un vértice consigo mismo.",
-      explicacion: "Una arista que une un vértice consigo mismo es un lazo o bucle."
+      pista: "Contá los pares de E.",
+      explicacion: "E tiene cinco pares, así que |E| = 5."
     },
     {
       tema: 2,
-      pregunta: "Entre dos computadoras hay dos cables. En el grafo, ¿qué son esos cables?",
-      opciones: ["Dos aristas múltiples (paralelas)", "Un lazo", "Dos vértices", "Una sola arista"],
+      pregunta: "¿Cuáles son los extremos de la arista {Montevideo, Canelones}?",
+      opciones: ["Montevideo y Canelones", "Solo Montevideo", "Todas las ciudades del mapa", "Ninguno: las aristas no tienen extremos"],
       correcta: 0,
-      pista: "Son dos aristas entre el mismo par de vértices.",
-      explicacion: "Dos o más aristas que unen el mismo par de vértices son aristas múltiples o paralelas."
+      pista: "Son los dos vértices que une.",
+      explicacion: "Los extremos de una arista son los dos vértices que une: Montevideo y Canelones."
     },
     {
       tema: 2,
@@ -710,16 +631,16 @@ const EXAMEN = {
     // Tema 3: Grado de un vértice
     {
       tema: 3,
-      pregunta: "Un compañero te pregunta por qué un lazo suma 2 al grado. ¿Qué le explicás?",
-      opciones: ["Porque los dos extremos del lazo están en el mismo vértice", "Porque el lazo es más largo", "Porque es una regla sin motivo", "Porque un lazo son dos vértices"],
+      pregunta: "En el mapa de rutas, San José y Canelones tienen grado 3 y ninguna ciudad tiene más. ¿Cuáles son los vértices de mayor grado?",
+      opciones: ["San José y Canelones", "Solo San José", "Solo Canelones", "Ninguno, porque hay empate"],
       correcta: 0,
-      pista: "Pensá en cuántas puntas de línea tocan el vértice.",
-      explicacion: "El grado cuenta extremos de aristas. El lazo sale y vuelve al mismo vértice: le aporta sus dos extremos."
+      pista: "Si hay empate en el máximo, ¿cuántos cuentan?",
+      explicacion: "Cuando varios vértices alcanzan el grado máximo, todos son de mayor grado: acá, San José y Canelones (grado 3)."
     },
     {
       tema: 3,
       pregunta: "En el grafo G del libro, δ(e) = 3. ¿Qué significa?",
-      opciones: ["Que hay 3 aristas incidentes con e", "Que e está en la posición 3", "Que e tiene 3 lazos", "Que el grafo tiene 3 vértices"],
+      opciones: ["Que hay 3 aristas incidentes con e", "Que e está en la posición 3", "Que e es el tercer vértice", "Que el grafo tiene 3 vértices"],
       correcta: 0,
       pista: "δ(v) es el grado del vértice v.",
       explicacion: "δ(e) = 3 quiere decir que tres aristas llegan al vértice e."
@@ -751,7 +672,7 @@ const EXAMEN = {
     {
       tema: 3,
       pregunta: "¿Puede un grafo tener exactamente un vértice de grado impar?",
-      opciones: ["No, siempre hay una cantidad par de vértices de grado impar", "Sí, es lo más común", "Sí, si tiene un lazo", "Solo si tiene un vértice aislado"],
+      opciones: ["No, siempre hay una cantidad par de vértices de grado impar", "Sí, es lo más común", "Sí, si tiene muchos vértices", "Solo si tiene un vértice aislado"],
       correcta: 0,
       pista: "Es una consecuencia del teorema de los apretones de manos.",
       explicacion: "Como la suma de los grados es par, los vértices de grado impar tienen que venir de a pares."
@@ -787,16 +708,16 @@ const EVALUACION = {
     },
     {
       tema: 0,
-      pregunta: "¿Qué problema famoso resolvió Euler usando grafos?",
-      opciones: ["Los puentes de Königsberg", "El teorema de Pitágoras", "La ley de gravedad", "El valor de pi"],
+      pregunta: "En el ejemplo del libro de un grafo de conocidos, ¿cuándo hay una arista entre dos personas?",
+      opciones: ["Cuando las dos personas se conocen", "Cuando tienen el mismo nombre", "Cuando viven lejos", "Nunca: las personas son aristas"],
       correcta: 0,
-      pista: "Tiene que ver con cruzar puentes de una ciudad.",
-      explicacion: "Euler usó grafos en el siglo XVIII para estudiar si se podían cruzar los puentes de Königsberg una sola vez cada uno."
+      pista: "Cada persona es un vértice.",
+      explicacion: "En un grafo de conocidos cada persona es un vértice y una arista une a dos personas que se conocen."
     },
     {
       tema: 0,
       pregunta: "Se modela la red de ómnibus de una ciudad con un grafo. ¿Qué serían las paradas?",
-      opciones: ["Los vértices", "Las aristas", "Los grados", "Los lazos"],
+      opciones: ["Los vértices", "Las aristas", "Los grados", "Los boletos"],
       correcta: 0,
       pista: "Los tramos entre paradas son las conexiones.",
       explicacion: "Cada parada es un vértice y cada tramo que une dos paradas es una arista."
@@ -806,7 +727,7 @@ const EVALUACION = {
     {
       tema: 1,
       pregunta: "¿Qué otro nombre reciben los vértices?",
-      opciones: ["Nodos", "Enlaces", "Lazos", "Grados"],
+      opciones: ["Nodos", "Enlaces", "Conjuntos", "Grados"],
       correcta: 0,
       pista: "Se usa mucho en redes de computadoras.",
       explicacion: "Vértices y nodos son lo mismo: los puntos de la red."
@@ -851,7 +772,7 @@ const EVALUACION = {
       opciones: ["2", "1", "3", "Depende del grafo"],
       correcta: 0,
       pista: "Una arista se escribe {u, v}.",
-      explicacion: "Toda arista tiene dos extremos. En un lazo los dos extremos son el mismo vértice."
+      explicacion: "Toda arista tiene dos extremos: los dos vértices que une."
     },
     {
       tema: 2,
@@ -863,11 +784,11 @@ const EVALUACION = {
     },
     {
       tema: 2,
-      pregunta: "Según el libro, ¿cómo se llama un grafo que admite lazos?",
-      opciones: ["Pseudografo", "Grafo vacío", "Vértice aislado", "Hoja"],
+      pregunta: "V = {a, b, c} y E = {{a, b}, {b, c}}. ¿Con qué vértices es incidente la arista {b, c}?",
+      opciones: ["Con b y con c", "Solo con b", "Con a, b y c", "Con ninguno"],
       correcta: 0,
-      pista: "Empieza con «pseudo».",
-      explicacion: "Un grafo con lazos (aristas de un vértice a sí mismo) es un pseudografo."
+      pista: "Una arista es incidente con sus extremos.",
+      explicacion: "La arista {b, c} es incidente con sus dos extremos: b y c."
     },
 
     // Tema 3: Grado de un vértice
@@ -881,11 +802,11 @@ const EVALUACION = {
     },
     {
       tema: 3,
-      pregunta: "Un vértice tiene un lazo y ninguna otra arista. ¿Cuál es su grado?",
-      opciones: ["2", "1", "0", "3"],
+      pregunta: "E = {{a, b}, {a, c}, {b, c}, {c, d}, {b, d}}. ¿Qué vértices tienen el grado más alto?",
+      opciones: ["b y c", "Solo b", "Solo c", "a y d"],
       correcta: 0,
-      pista: "Un lazo cuenta doble.",
-      explicacion: "Los dos extremos del lazo están en el mismo vértice, así que suma 2 al grado."
+      pista: "Calculá δ de cada vértice. Puede haber empate.",
+      explicacion: "δ(a) = 2, δ(b) = 3, δ(c) = 3 y δ(d) = 2. El máximo es 3 y lo alcanzan b y c."
     },
     {
       tema: 3,
@@ -907,11 +828,15 @@ const EVALUACION = {
 };
 
 /* Grafos de ejemplo para la clase. Las posiciones van de 0 a 100 (x) y de 0 a 60 (y).
-   Una arista repetida es una arista múltiple; una arista [v, v] es un lazo. */
+   Todos son grafos simples: cada arista une dos vértices distintos y no se repite
+   (validarGrafo avisa en la consola si no). Los grados se calculan de las aristas.
+   lados → dónde va la etiqueta de un vértice («arriba», «abajo», «izq», «der») cuando
+           la regla de siempre (arriba si y ≤ 30, abajo si no) la deja pisada por una arista. */
 const GRAFOS_EJEMPLO = {
   rutas: {
     nombre: "Mapa: rutas entre ciudades (simplificado)",
-    vertices: { Colonia: [9, 30], "San José": [29, 20], Montevideo: [40, 50], Florida: [52, 8], Canelones: [57, 34], Maldonado: [76, 50], Rocha: [92, 30] },
+    vertices: { Colonia: [9, 30], "San José": [26, 16], Montevideo: [40, 50], Florida: [52, 8], Canelones: [57, 32], Maldonado: [76, 50], Rocha: [92, 30] },
+    lados: { Colonia: "abajo", Canelones: "der" },
     aristas: [["Colonia", "San José"], ["San José", "Montevideo"], ["San José", "Florida"], ["Montevideo", "Canelones"], ["Canelones", "Florida"], ["Canelones", "Maldonado"], ["Maldonado", "Rocha"]]
   },
   amigos: {
@@ -919,10 +844,10 @@ const GRAFOS_EJEMPLO = {
     vertices: { Ana: [12, 14], Beto: [12, 48], Caro: [40, 30], Dani: [66, 14], Eli: [90, 30], Fede: [76, 50] },
     aristas: [["Ana", "Beto"], ["Ana", "Caro"], ["Beto", "Caro"], ["Caro", "Dani"], ["Dani", "Eli"]]
   },
-  pseudo: {
-    nombre: "Red con lazo y aristas múltiples (pseudografo)",
-    vertices: { x: [14, 38], y: [52, 38], z: [88, 38] },
-    aristas: [["x", "y"], ["x", "y"], ["y", "y"], ["y", "z"]]
+  red: {
+    nombre: "Red de computadoras del laboratorio",
+    vertices: { PC1: [12, 14], PC2: [12, 50], Router: [50, 32], PC3: [88, 14], PC4: [88, 50], Impresora: [50, 6] },
+    aristas: [["Router", "PC1"], ["Router", "PC2"], ["Router", "PC3"], ["Router", "PC4"], ["PC1", "PC2"], ["PC3", "PC4"]]
   },
   rosen: {
     nombre: "Grafo G del libro (sección 8.2, Figura 1)",
@@ -2352,16 +2277,15 @@ function startQuiz(lesson = null) {
   quiz.deck = mixed.slice(0, Math.min(total, pool.length)).map(prepareQuestion);
   quiz.reserve = lesson === "eval" ? mixed.slice(total) : [];
   // mini retos de grafos entre las preguntas: en la evaluación reemplazan preguntas (siguen siendo 12);
-  // en el repaso se suman, y en la práctica de un tema va el reto de ese tema
+  // en el repaso y en la partida normal se suman, y en la práctica de un tema va el reto de ese tema
   if (lesson === "eval") quiz.reserve.push(...meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, AJUSTES.retosPorEvaluacion), true));
-  else if (lesson === "todo") meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, 2), false);
+  else if (lesson === "todo" || lesson === null) meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, 2), false);
   else if (RETO_DEL_TEMA[lesson]) meterRetos(quiz.deck, [RETO_DEL_TEMA[lesson]], false);
   quiz.comodines = { rappi: true, pista: true, cambio: true, ssj: true }; // el Rescate SSJ está en todos los modos con mordiscos
   rescate.estado = "disponible";
   Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {}, busy: false, terminado: false });
   $("#hint-btn").hidden = lesson === "eval";
   $("#life-help").hidden = lesson !== "eval";
-  $("#q-card .chip-demo").hidden = lesson === "eval";
   $("#q-score").textContent = "0";
   $("#q-streak").textContent = "0";
   sound.play("start");
@@ -2565,7 +2489,7 @@ function showResults() {
     else if (ratio >= 0.7) msg = `¡Bien ahí! ${quiz.correct} de ${total}. Repasá las que fallaste y ya estás para explicarlo.`;
     else msg = `${quiz.correct} de ${total}. Volvé a leer el tema con calma y probá de nuevo. ¡Así se aprende!`;
   }
-  else if (ratio === 1) msg = "¡Perfecto! ¡10 de 10! Sos una enciclopedia con patas.";
+  else if (ratio === 1) msg = `¡Perfecto! ¡${total} de ${total}! Los grafos no tienen secretos para vos.`;
   else if (ratio >= 0.7) msg = `¡Bien ahí! ${quiz.correct} de ${total}. Repasá las que fallaste y vas por el récord.`;
   else if (ratio >= 0.4) msg = `${quiz.correct} de ${total}. ¡Vas bien! Mirá el repaso y probá de nuevo.`;
   else msg = `${quiz.correct} de ${total}. ¡Tranqui! Leé las explicaciones y la próxima sale mejor.`;
@@ -2818,8 +2742,36 @@ function graphData(key) {
   const g = GRAFOS_EJEMPLO[key];
   const names = Object.keys(g.vertices);
   const degree = Object.fromEntries(names.map((n) => [n, 0]));
-  g.aristas.forEach(([u, v]) => { degree[u]++; degree[v]++; }); // un lazo [v, v] suma 2
+  g.aristas.forEach(([u, v]) => { degree[u]++; degree[v]++; });
   return { ...g, key, names, degree };
+}
+
+// la clase usa solo grafos simples: avisa si alguien agrega un lazo, una arista repetida o un vértice que no existe
+function validarGrafo(key) {
+  const g = GRAFOS_EJEMPLO[key];
+  const vistos = new Set();
+  g.aristas.forEach(([u, v]) => {
+    const par = [u, v].sort().join("|");
+    if (!(u in g.vertices) || !(v in g.vertices)) console.error(`Grafo «${key}»: la arista {${u}, ${v}} usa un vértice que no está en V.`);
+    else if (u === v) console.error(`Grafo «${key}»: {${u}, ${v}} es un lazo; acá van grafos simples.`);
+    else if (vistos.has(par)) console.error(`Grafo «${key}»: la arista {${u}, ${v}} está repetida.`);
+    vistos.add(par);
+  });
+}
+Object.keys(GRAFOS_EJEMPLO).forEach(validarGrafo);
+
+// dónde va el nombre del vértice: arriba o abajo según la altura, salvo que el grafo diga otra cosa en «lados»
+function etiquetaVertice(g, name) {
+  const [x, y] = g.vertices[name];
+  const lado = (g.lados && g.lados[name]) || (y > 30 ? "abajo" : "arriba");
+  if (lado === "der") return { x: x + 5, y: y + 1.4, anchor: "start" };
+  if (lado === "izq") return { x: x - 5, y: y + 1.4, anchor: "end" };
+  return { x, y: lado === "abajo" ? y + 9 : y - 6, anchor: "middle" };
+}
+
+function textoEtiqueta(g, name) {
+  const p = etiquetaVertice(g, name);
+  return `<text class="g-label" x="${p.x}" y="${p.y}" text-anchor="${p.anchor}"></text>`;
 }
 
 const edgeName = ([u, v]) => `{${u}, ${v}}`;
@@ -2840,30 +2792,17 @@ function drawGraph() {
   svg.setAttribute("role", "group");
   svg.setAttribute("aria-label", g.nombre);
 
-  const pairCount = {};
   g.aristas.forEach((e, idx) => {
     const [u, v] = e;
-    const k = [u, v].sort().join("|");
-    const n = (pairCount[k] = (pairCount[k] || 0) + 1);
-    const total = g.aristas.filter((x) => [x[0], x[1]].sort().join("|") === k).length;
     const [x1, y1] = g.vertices[u];
     const [x2, y2] = g.vertices[v];
-    let d;
-    if (u === v) {
-      d = `M ${x1 - 3} ${y1 - 2} C ${x1 - 10} ${y1 - 18}, ${x1 + 10} ${y1 - 18}, ${x1 + 3} ${y1 - 2}`;
-    } else {
-      const off = total === 1 ? 0 : (n - (total + 1) / 2) * 9;
-      const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
-      const len = Math.hypot(x2 - x1, y2 - y1) || 1;
-      const cx = mx - ((y2 - y1) / len) * off * 2, cy = my + ((x2 - x1) / len) * off * 2;
-      d = `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
-    }
+    const d = `M ${x1} ${y1} L ${x2} ${y2}`;
     const active = sel && ((sel.type === "edge" && sel.idx === idx) || (sel.type === "vertex" && (u === sel.name || v === sel.name)));
     const grp = document.createElementNS(svgNS, "g");
-    grp.setAttribute("class", "g-edge" + (active ? " on" : "") + (u === v ? " loop" : ""));
+    grp.setAttribute("class", "g-edge" + (active ? " on" : ""));
     grp.setAttribute("tabindex", "0");
     grp.setAttribute("role", "button");
-    grp.setAttribute("aria-label", u === v ? `Lazo en ${u}` : `Arista ${edgeName(e)}`);
+    grp.setAttribute("aria-label", `Arista ${edgeName(e)}`);
     grp.dataset.key = "e" + idx;
     grp.innerHTML = `<path class="hit" d="${d}"/><path class="line" d="${d}"/>`;
     grp.addEventListener("click", () => selectGraph({ type: "edge", idx }));
@@ -2881,9 +2820,7 @@ function drawGraph() {
     grp.setAttribute("role", "button");
     grp.setAttribute("aria-label", `Vértice ${name}, grado ${g.degree[name]}`);
     grp.dataset.key = "v" + name;
-    const below = y > 30;
-    grp.innerHTML = `<rect x="${x - 3.2}" y="${y - 3.2}" width="6.4" height="6.4"/>` +
-      `<text class="g-label" x="${x}" y="${below ? y + 9 : y - 6}"></text>` +
+    grp.innerHTML = `<rect x="${x - 3.2}" y="${y - 3.2}" width="6.4" height="6.4"/>` + textoEtiqueta(g, name) +
       (lesson.showDegrees ? `<text class="g-degree" x="${x}" y="${y + 1.5}">${g.degree[name]}</text>` : "");
     grp.querySelector(".g-label").textContent = name;
     grp.addEventListener("click", () => selectGraph({ type: "vertex", name }));
@@ -2925,22 +2862,15 @@ function describeGraph() {
   } else if (sel.type === "vertex") {
     const n = sel.name;
     const inc = g.aristas.filter(([u, v]) => u === n || v === n);
-    const neigh = [...new Set(inc.map(([u, v]) => (u === n ? v : u)).filter((x) => x !== n))];
+    const neigh = inc.map(([u, v]) => (u === n ? v : u));
     const d = g.degree[n];
     const kind = d === 0 ? " → es un vértice <strong>aislado</strong>" : d === 1 ? " → es una <strong>hoja</strong> (colgante)" : "";
     lines.push(`<strong>Vértice ${n}</strong>: grado δ(${n}) = ${d}${kind}`);
     lines.push(`Vecinos (adyacentes): ${neigh.length ? neigh.join(", ") : "ninguno"}`);
     lines.push(`Aristas incidentes: ${inc.length ? inc.map(edgeName).join(", ") : "ninguna"}`);
-    if (inc.some(([u, v]) => u === v)) lines.push("El lazo cuenta 2 en el grado.");
   } else {
     const [u, v] = g.aristas[sel.idx];
-    if (u === v) {
-      lines.push(`<strong>Lazo {${u}, ${u}}</strong>: une ${u} consigo mismo y suma 2 al grado de ${u}.`);
-    } else {
-      const copies = g.aristas.filter(([a, b]) => (a === u && b === v) || (a === v && b === u)).length;
-      lines.push(`<strong>Arista {${u}, ${v}}</strong>: conecta ${u} con ${v}. Es incidente con sus dos extremos, que por eso son vértices adyacentes.`);
-      if (copies > 1) lines.push(`Es una <strong>arista múltiple</strong>: hay ${copies} aristas que unen ${u} con ${v}.`);
-    }
+    lines.push(`<strong>Arista {${u}, ${v}}</strong>: conecta ${u} con ${v}. Es incidente con sus dos extremos, que por eso son vértices adyacentes.`);
   }
   info.innerHTML = lines.map((l) => `<span>${l}</span>`).join("");
 }
@@ -3201,45 +3131,58 @@ function renderEval(total) {
    se tocan vértices o aristas de un grafo chiquito.
    Cuentan como una pregunta más (puntos, nota, enojo y mordidas).
    ========================================================= */
-const GRAFOS_RETO = ["rutas", "amigos", "rosen"]; // grafos simples: sin lazos ni aristas repetidas
-const TIPOS_RETO = ["grado", "vecinos", "aristas"];
-const RETO_DEL_TEMA = { 1: "vecinos", 2: "aristas", 3: "grado" }; // tema de la clase → reto que lo practica
+const GRAFOS_RETO = ["rutas", "amigos", "rosen", "red"]; // grafos simples: sin lazos ni aristas repetidas
+// «maximo»: todos los vértices de mayor grado · «gradoK»: todos los de un grado dado
+const TIPOS_RETO = ["maximo", "gradoK", "vecinos", "aristas"];
+const RETO_DEL_TEMA = { 1: "vecinos", 2: "aristas", 3: "maximo" }; // tema de la clase → reto que lo practica
 
 const lista = (xs) => (xs.length > 1 ? `${xs.slice(0, -1).join(", ")} y ${xs[xs.length - 1]}` : xs[0] || "nada");
+const gradosDe = (g) => g.names.map((n) => `δ(${n}) = ${g.degree[n]}`).join(", ");
 
-// arma un reto a partir de un grafo de ejemplo; las claves son "v:Nombre" o "e:índice"
+// arma un reto a partir de un grafo de ejemplo; las claves son "v:Nombre" o "e:índice".
+// Todo (consigna, respuesta y explicación) sale de las aristas del grafo, nunca de un texto escrito a mano.
 function armarReto(tipo) {
   const g = graphData(pick(GRAFOS_RETO));
   const base = { reto: { tipo, g, marcados: new Set(), listo: false }, mezcla: [], categoria: "Mini reto · Grafos" };
   const r = base.reto;
-  if (tipo === "grado") {
+  if (tipo === "maximo") {
     const max = Math.max(...g.names.map((n) => g.degree[n]));
     const top = g.names.filter((n) => g.degree[n] === max);
-    Object.assign(r, { elige: "v", uno: true, correctas: top.map((n) => "v:" + n) });
+    Object.assign(r, { elige: "v", correctas: top.map((n) => "v:" + n) });
     return { ...base, tema: 3,
-      pregunta: "Tocá el vértice con más aristas (el de mayor grado).",
-      pista: "Contá cuántas líneas salen de cada punto.",
-      respuesta: top.length > 1 ? `El grado más alto es ${max}: lo tienen ${lista(top)}.` : `${top[0]} tiene grado ${max}: es el más alto.`,
-      explicacion: "El grado de un vértice es la cantidad de aristas que llegan a él." };
+      pregunta: "Seleccioná todos los vértices de mayor grado y después tocá Comprobar.",
+      pista: "Contá cuántas aristas llegan a cada vértice. Puede haber uno solo o varios con el grado más alto.",
+      respuesta: `El grado máximo es ${max}. ${top.length > 1 ? "Lo alcanzan" : "Lo alcanza solo"} ${lista(top)}.`,
+      explicacion: `El grado de un vértice es la cantidad de aristas incidentes con él. En este grafo: ${gradosDe(g)}.` };
+  }
+  if (tipo === "gradoK") {
+    const k = pick([...new Set(g.names.map((n) => g.degree[n]))]);
+    const con = g.names.filter((n) => g.degree[n] === k);
+    Object.assign(r, { elige: "v", correctas: con.map((n) => "v:" + n) });
+    return { ...base, tema: 3,
+      pregunta: `Seleccioná todos los vértices de grado ${k} y después tocá Comprobar.`,
+      pista: k === 0 ? "Grado 0 quiere decir que no le llega ninguna arista." : `Buscá los vértices a los que llegan exactamente ${k} arista${k === 1 ? "" : "s"}.`,
+      respuesta: `${con.length > 1 ? "Tienen" : "Tiene"} grado ${k}: ${lista(con)}.`,
+      explicacion: `El grado de un vértice es la cantidad de aristas incidentes con él. En este grafo: ${gradosDe(g)}.` };
   }
   const x = pick(g.names.filter((n) => g.degree[n] >= 2));
   r.objetivo = x;
   if (tipo === "vecinos") {
     const vec = g.aristas.filter((e) => e.includes(x)).map(([u, v]) => (u === x ? v : u));
-    Object.assign(r, { elige: "v", uno: false, correctas: vec.map((n) => "v:" + n) });
+    Object.assign(r, { elige: "v", correctas: vec.map((n) => "v:" + n) });
     return { ...base, tema: 1,
-      pregunta: `Marcá todos los vecinos de ${x}.`,
+      pregunta: `Seleccioná todos los vecinos de ${x} y después tocá Comprobar.`,
       pista: `Los vecinos de ${x} son los que están unidos a él por una arista.`,
       respuesta: `Los vecinos de ${x} son ${lista(vec)}.`,
       explicacion: "Dos vértices son vecinos (adyacentes) cuando hay una arista que los une." };
   }
   const idx = g.aristas.map((e, i) => (e.includes(x) ? i : -1)).filter((i) => i >= 0);
-  Object.assign(r, { elige: "e", uno: false, correctas: idx.map((i) => "e:" + i) });
+  Object.assign(r, { elige: "e", correctas: idx.map((i) => "e:" + i) });
   return { ...base, tema: 2,
-    pregunta: `Marcá todas las aristas que llegan a ${x}.`,
-    pista: `Seguí las líneas que tocan a ${x}. No cuentan las que pasan cerca.`,
+    pregunta: `Seleccioná todas las aristas que llegan a ${x} y después tocá Comprobar.`,
+    pista: `Seguí las líneas que tocan a ${x}. No cuentan las que pasan cerca ni las que se cruzan con otras.`,
     respuesta: `Son ${lista(idx.map((i) => edgeName(g.aristas[i])))}: por eso el grado de ${x} es ${idx.length}.`,
-    explicacion: "Una arista es incidente a los dos vértices que une; el grado de un vértice cuenta esas aristas." };
+    explicacion: "Una arista es incidente con los dos vértices que une; el grado de un vértice cuenta esas aristas." };
 }
 
 // reparte los retos por el mazo (uno por tramo, nunca primero ni dos seguidos); si reemplazar, devuelve las preguntas que sacó
@@ -3260,19 +3203,24 @@ const retoActual = () => { // la pregunta actual, si es un mini reto
   return q && q.reto ? q : null;
 };
 
+// muestra el reto tal como está: la selección vive en q.reto, así que redibujar no la borra
 function renderReto(q) {
   const r = q.reto;
-  r.marcados.clear();
-  r.listo = false;
   $("#q-reto").hidden = false;
-  $("#reto-canvas").classList.remove("listo");
+  $("#reto-canvas").classList.toggle("listo", r.listo);
   const check = $("#reto-check");
-  check.hidden = r.uno;
-  check.disabled = true;
-  $("#reto-info").textContent = r.elige === "v"
-    ? (r.uno ? "Tocá un vértice." : "Tocá los vértices para marcarlos; tocá de nuevo para desmarcar.")
-    : "Tocá las aristas (las líneas) para marcarlas.";
+  check.hidden = r.listo;
+  check.disabled = !r.marcados.size;
+  if (!r.listo) infoReto(r);
   dibujarReto();
+}
+
+// lo que dice debajo del grafo mientras se elige (nunca cuántos hay que elegir)
+function infoReto(r) {
+  const cosa = r.elige === "v" ? "vértices" : "aristas";
+  $("#reto-info").textContent = r.marcados.size
+    ? `Seleccionaste: ${lista([...r.marcados].map((x) => nombreClave(r.g, x)))}. Cuando estés pronto, tocá Comprobar.`
+    : `Tocá los ${cosa} para seleccionarlos; tocá de nuevo para quitarlos.`;
 }
 
 function dibujarReto(enfocar) {
@@ -3283,24 +3231,32 @@ function dibujarReto(enfocar) {
   svg.setAttribute("viewBox", "-4 -6 108 70");
   svg.setAttribute("role", "group");
   svg.setAttribute("aria-label", g.nombre);
-  // antes de comprobar: marcado o no; después: bien (ok), de más (mal) o el que faltó (falta)
+  // antes de comprobar: seleccionado o no; después: bien (ok), de más (mal) o el que faltó (falta)
   const estado = (k) => {
     const marcado = r.marcados.has(k);
-    if (!r.listo) return marcado ? " on" : "";
+    if (!r.listo) return marcado ? "on" : "";
     const bien = r.correctas.includes(k);
-    return marcado ? (bien ? " ok" : " mal") : bien ? " falta" : "";
+    return marcado ? (bien ? "ok" : "mal") : bien ? "falta" : "";
   };
-  const tocable = (grp, k, label) => {
-    grp.setAttribute("tabindex", r.listo ? "-1" : "0");
+  // el resultado también va con símbolo y en palabras, no solo con color
+  const SIMBOLO = { ok: "✓", mal: "✗", falta: "!" };
+  const DICHO = { on: "seleccionado", ok: "bien seleccionado", mal: "seleccionado de más", falta: "te faltó seleccionarlo" };
+  const tocable = (grp, k, label, est) => {
+    grp.dataset.key = k;
+    if (r.listo) { // ya se comprobó: queda fijo, solo se lee
+      grp.setAttribute("role", "img");
+      grp.setAttribute("aria-label", `${label}: ${DICHO[est] || "no seleccionado"}`);
+      return;
+    }
+    grp.setAttribute("tabindex", "0");
     grp.setAttribute("role", "button");
     grp.setAttribute("aria-pressed", String(r.marcados.has(k)));
     grp.setAttribute("aria-label", label);
-    grp.dataset.key = k;
     grp.addEventListener("click", () => tocarReto(k));
     grp.addEventListener("keydown", (ev) => {
       if (ev.key !== "Enter" && ev.key !== " ") return;
       ev.preventDefault();
-      ev.stopPropagation(); // que el Enter no pase de largo a «Siguiente»
+      ev.stopPropagation(); // que el Enter no pase de largo a «Comprobar» ni a «Siguiente»
       tocarReto(k);
     });
   };
@@ -3310,10 +3266,12 @@ function dibujarReto(enfocar) {
     const [x2, y2] = g.vertices[e[1]];
     const d = `M ${x1} ${y1} L ${x2} ${y2}`;
     const k = "e:" + i;
+    const est = r.elige === "e" ? estado(k) : "";
     const grp = document.createElementNS(svgNS, "g");
-    grp.setAttribute("class", "g-edge" + (r.elige === "e" ? estado(k) : ""));
-    grp.innerHTML = `<path class="hit" d="${d}"/><path class="line" d="${d}"/>`;
-    if (r.elige === "e") tocable(grp, k, `Arista ${edgeName(e)}`);
+    grp.setAttribute("class", "g-edge" + (est ? " " + est : ""));
+    grp.innerHTML = `<path class="hit" d="${d}"/><path class="line" d="${d}"/>` +
+      (SIMBOLO[est] ? `<text class="g-mark" x="${(x1 + x2) / 2}" y="${(y1 + y2) / 2 + 1.5}">${SIMBOLO[est]}</text>` : "");
+    if (r.elige === "e") tocable(grp, k, `Arista ${edgeName(e)}`, est);
     else grp.style.pointerEvents = "none";
     svg.appendChild(grp);
   });
@@ -3323,11 +3281,17 @@ function dibujarReto(enfocar) {
     const k = "v:" + name;
     const grp = document.createElementNS(svgNS, "g");
     const esObjetivo = name === r.objetivo;
-    grp.setAttribute("class", "g-vertex" + (esObjetivo ? " objetivo" : r.elige === "v" ? estado(k) : ""));
-    grp.innerHTML = `<rect x="${x - 3.2}" y="${y - 3.2}" width="6.4" height="6.4"/><text class="g-label" x="${x}" y="${y > 30 ? y + 9 : y - 6}"></text>`;
+    const est = r.elige === "v" && !esObjetivo ? estado(k) : "";
+    grp.setAttribute("class", "g-vertex" + (esObjetivo ? " objetivo" : est ? " " + est : ""));
+    // zona de toque grande (para el dedo), anillo de foco, anillo de selección y el cuadrado
+    grp.innerHTML = `<rect class="hit" x="${x - 5.5}" y="${y - 5.5}" width="11" height="11"/>` +
+      `<rect class="foco" x="${x - 5.4}" y="${y - 5.4}" width="10.8" height="10.8" rx="1.5"/>` +
+      `<rect class="anillo" x="${x - 4.4}" y="${y - 4.4}" width="8.8" height="8.8"/>` +
+      `<rect x="${x - 3.2}" y="${y - 3.2}" width="6.4" height="6.4"/>` + textoEtiqueta(g, name) +
+      (SIMBOLO[est] ? `<text class="g-mark" x="${x}" y="${y + 1.5}">${SIMBOLO[est]}</text>` : "");
     grp.querySelector(".g-label").textContent = name;
     // sin el grado en la etiqueta: si no, se regala la respuesta
-    if (r.elige === "v" && !esObjetivo) tocable(grp, k, `Vértice ${name}`);
+    if (r.elige === "v" && !esObjetivo) tocable(grp, k, `Vértice ${name}`, est);
     else grp.style.pointerEvents = "none";
     svg.appendChild(grp);
   });
@@ -3341,24 +3305,20 @@ function dibujarReto(enfocar) {
   }
 }
 
+// tocar solo selecciona o quita: no evalúa, no suma puntos y no avanza
 function tocarReto(k) {
-  const q = quiz.deck[quiz.index];
-  if (!retoActual() || quiz.answered || quiz.busy || q.reto.listo) return;
+  const q = retoActual();
+  if (!q || quiz.answered || quiz.busy || q.reto.listo) return;
   const r = q.reto;
-  if (r.uno) {
-    r.marcados = new Set([k]);
-    comprobarReto();
-    return;
-  }
   if (r.marcados.has(k)) r.marcados.delete(k);
   else r.marcados.add(k);
   sound.play("click");
-  const n = r.marcados.size;
-  $("#reto-check").disabled = !n;
-  $("#reto-info").textContent = n ? `Marcaste ${n}: ${lista([...r.marcados].map((x) => nombreClave(r.g, x)))}.` : "No marcaste nada todavía.";
+  $("#reto-check").disabled = !r.marcados.size;
+  infoReto(r);
   dibujarReto(k);
 }
 
+// se evalúa una sola vez, al tocar Comprobar: bien solo si lo seleccionado es exactamente lo pedido
 function comprobarReto() {
   const q = retoActual();
   if (!q || quiz.answered || quiz.busy || q.reto.listo || !q.reto.marcados.size) return; // una sola vez por reto
@@ -3366,11 +3326,17 @@ function comprobarReto() {
   quiz.answered = true;
   r.listo = true;
   const ok = r.marcados.size === r.correctas.length && r.correctas.every((k) => r.marcados.has(k));
-  $("#reto-check").hidden = true;
+  const check = $("#reto-check");
+  check.disabled = true;
+  check.hidden = true;
   $("#reto-canvas").classList.add("listo");
-  $("#reto-info").textContent = ok ? "✓ ¡Todo bien marcado!" : "Verde: bien · rojo: de más · punteado: te faltó.";
-  dibujarReto();
+  const bien = [...r.marcados].filter((k) => r.correctas.includes(k));
+  const deMas = [...r.marcados].filter((k) => !r.correctas.includes(k));
+  const faltan = r.correctas.filter((k) => !r.marcados.has(k));
   const nombres = (ks) => lista(ks.map((k) => nombreClave(r.g, k)));
+  $("#reto-info").textContent = ok ? "✓ ¡Selección exacta!"
+    : [bien.length && `✓ bien: ${nombres(bien)}`, deMas.length && `✗ de más: ${nombres(deMas)}`, faltan.length && `! te faltó: ${nombres(faltan)}`].filter(Boolean).join(" · ");
+  dibujarReto();
   cerrarPregunta(ok, nombres([...r.marcados]), nombres(r.correctas), q.respuesta);
 }
 
