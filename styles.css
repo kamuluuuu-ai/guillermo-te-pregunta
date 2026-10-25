@@ -232,8 +232,10 @@ kbd {
 
 /* ---------- panel ---------- */
 .panel {
+  /* el margen interno es el «lugar para morder»: los mordiscos comunes no pasan de acá */
+  --bite-room: 40px;
   background: linear-gradient(180deg, var(--panel) 0%, var(--bg-2) 100%);
-  padding: 26px;
+  padding: var(--bite-room);
   box-shadow:
     inset 0 0 0 4px var(--line),
     0 0 0 4px var(--ink),
@@ -242,6 +244,17 @@ kbd {
   outline: none;
   position: relative;
 }
+/* con JavaScript, el fondo, el borde y la sombra los dibuja el canvas (así se pueden morder) */
+.panel.con-piel { background: none; box-shadow: none; }
+.panel-skin {
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  z-index: 0;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+.panel > .screen { position: relative; z-index: 1; }
 
 .screen.enter { animation: slide-in 0.25s ease-out both; }
 
@@ -289,7 +302,17 @@ kbd {
 }
 .demo-teal { background: var(--teal); }
 
-.menu { display: flex; flex-direction: column; gap: 14px; max-width: 380px; margin-top: 8px; }
+.menu { display: flex; flex-direction: column; gap: 14px; max-width: 380px; margin-top: 18px; }
+.menu-label {
+  margin: 8px 0 -4px;
+  font-family: var(--font-retro);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mini-rules { margin: 0 0 18px; padding-left: 22px; max-width: 60ch; }
+.mini-rules li { margin-bottom: 6px; }
 .menu-row { flex-direction: row; flex-wrap: wrap; max-width: none; margin-top: 22px; }
 
 /* ---------- botones con relieve ---------- */
@@ -698,7 +721,7 @@ kbd {
   pointer-events: none;
   filter: drop-shadow(0 4px 0 #00000088);
 }
-.rappi-rider svg, .rappi-portrait svg { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.rappi-rider svg { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 .rappi-rider::before {
   content: "¡RAPPI!";
   position: absolute;
@@ -742,20 +765,19 @@ kbd {
 }
 @keyframes skid { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 
-.rappi-card {
-  display: flex;
-  flex-wrap: wrap;
+/* ayuda breve y opcional de los comodines (reemplaza la tarjeta de Rappi del inicio) */
+.mini-help { margin-top: 12px; font-size: 15px; }
+.mini-help summary {
+  display: inline-flex;
   align-items: center;
-  gap: 16px;
-  margin: 0 0 18px;
-  padding: 14px 16px;
-  background: #3a1f14;
-  box-shadow: inset 0 0 0 3px var(--orange);
+  min-height: 44px;
+  font-weight: 900;
+  color: var(--teal);
+  cursor: pointer;
 }
-.rappi-portrait { width: 200px; max-width: 100%; aspect-ratio: 52 / 43; flex: none; }
-.rappi-text { flex: 1 1 240px; min-width: 0; }
-.rappi-text ul { margin: 0; padding-left: 20px; }
-.rappi-text li { margin-bottom: 6px; }
+.mini-help ul { margin: 4px 0 0; padding: 12px 14px 12px 32px; background: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+.mini-help li { margin-bottom: 4px; }
+.mini-help p { margin: 8px 0 0; color: var(--muted); }
 
 .field { display: flex; flex-direction: column; gap: 6px; max-width: 380px; }
 .field label { font-weight: 800; }
@@ -778,39 +800,77 @@ kbd {
 @keyframes rumble { 50% { transform: translateY(-1px); } }
 @keyframes squash { 0% { transform: scaleY(1); } 40% { transform: scaleY(0.6) translateY(4px); } 100% { transform: scaleY(1); } }
 
-/* ---------- enojo de Guillermo: mordiscones a la página ---------- */
-/* la capa va por encima de la página de la pregunta (solo Guillermo queda arriba);
-   no atrapa clics, así que lo que quedó debajo de una mordida se puede tocar igual */
-body { position: relative; }
-.bites { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 20; }
+/* ---------- enojo de Guillermo: mordiscos al panel ---------- */
+/* capa de efectos por encima de todo; nunca atrapa clics ni toques */
 .host { z-index: 26; }
-.bite {
-  position: absolute;
-  width: var(--s, 64px);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-}
-.bite.pop { animation: bite-in 0.35s steps(3) both; }
-/* Guillermo volando a morder la página */
-.chomper {
-  position: fixed;
-  left: 0;
-  top: 0;
-  aspect-ratio: 24 / 29;
-  z-index: 40;
-  pointer-events: none;
-  filter: drop-shadow(0 6px 0 #00000077);
-}
+.fx { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 40; }
+.fx > * { position: absolute; left: 0; top: 0; pointer-events: none; }
+/* la cabeza de Guillermo que sale volando a morder */
+.chomper { aspect-ratio: 24 / 21; filter: drop-shadow(0 6px 0 #00000077); will-change: transform; }
 .chomper svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; }
-.miga { position: fixed; width: 8px; height: 8px; z-index: 41; pointer-events: none; }
-.bite svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; filter: drop-shadow(0 0 0 #000) drop-shadow(3px 3px 0 #00000088); }
-.bite .hole { fill: #03040c; }
-.bite .edge { fill: var(--bad-d); }
-@keyframes bite-in {
-  0% { transform: translate(-50%, -50%) scale(0.2); }
-  60% { transform: translate(-50%, -50%) scale(1.2); }
-  100% { transform: translate(-50%, -50%) scale(1); }
+.miga { width: 8px; height: 8px; }
+.miga.chica { width: 4px; height: 4px; }
+.nam-pop {
+  font-family: var(--font-retro);
+  font-size: 16px;
+  color: var(--yellow);
+  white-space: nowrap;
+  text-shadow: 3px 0 0 var(--ink), -3px 0 0 var(--ink), 0 3px 0 var(--ink), 0 -3px 0 var(--ink), 4px 5px 0 #00000088;
 }
+.nam-pop.grande { font-size: 30px; color: var(--bad); }
+.grito {
+  padding: 6px 9px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 900;
+  font-size: 14px;
+  white-space: nowrap;
+  box-shadow: 0 0 0 3px var(--ink), 0 6px 0 3px #00000055;
+}
+.vapor { width: 12px; height: 12px; background: #e9ecff; box-shadow: 6px -6px 0 -2px #e9ecffaa; }
+.aliento { width: 8px; height: 8px; background: #fff; }
+
+/* postura: a medida que se enoja se inclina hacia el panel y se mueve más brusco */
+.mascot-wrap { transform-origin: 50% 100%; transition: transform 0.36s steps(3); }
+.host { --lean-1: rotate(3deg) translateX(3px); --lean-2: rotate(6deg) translateX(9px); --lean-3: rotate(9deg) translate(15px, 2px) scale(1.04); }
+.host[data-enojo="1"] .mascot-wrap { transform: var(--lean-1); }
+.host[data-enojo="2"] .mascot-wrap { transform: var(--lean-2); }
+.host[data-enojo="3"] .mascot-wrap { transform: var(--lean-3); }
+.host[data-enojo="1"] .mascot { animation-duration: 1.3s; }
+.host[data-enojo="2"] .mascot { animation-duration: 0.9s; }
+/* furioso: respira agitado y cada tanto le agarra un temblor corto (no todo el tiempo) */
+.host[data-enojo="3"] .mascot { animation: bob-furia 3.4s steps(1) infinite; }
+.host .mascot.jump { animation: jump 0.5s steps(4) both; }
+.host .mascot.shake { animation: shake 0.4s steps(4) both; }
+@keyframes bob-furia {
+  0%, 24%, 48%, 72% { transform: translateY(0); }
+  12%, 36%, 60% { transform: translateY(-3px); }
+  84% { transform: translate(-3px, -1px); }
+  87% { transform: translate(3px, 0); }
+  90% { transform: translate(-3px, 1px); }
+  93% { transform: translate(3px, 0); }
+  96%, 100% { transform: translateY(0); }
+}
+
+/* dientes de paciencia: cuántos errores le quedan antes del mordisco final */
+.paciencia { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px 10px; margin-top: 6px; }
+.paciencia-label { font-family: var(--font-retro); font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.paciencia-dientes { display: flex; flex-wrap: wrap; gap: 6px; }
+.diente {
+  width: 12px;
+  height: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 2px var(--ink), inset 0 -4px 0 #cfd4ee;
+}
+.diente.ultimo { background: var(--bad); box-shadow: 0 0 0 2px var(--ink), inset 0 -4px 0 var(--bad-d); }
+.diente.roto { background: var(--ink); box-shadow: 0 0 0 2px var(--line); }
+.diente.rompe { animation: rompe 0.45s steps(3) both; }
+@keyframes rompe {
+  0% { transform: none; background: var(--yellow); }
+  50% { transform: translateY(-6px) rotate(20deg); background: var(--yellow); }
+  100% { transform: none; }
+}
+
 .eaten {
   position: fixed;
   inset: 0;
@@ -830,7 +890,7 @@ body { position: relative; }
 .eaten-title { margin: 0; font-family: var(--font-retro); font-size: 20px; line-height: 1.6; color: var(--bad); text-wrap: balance; }
 .eaten-detail { margin: 0; color: var(--muted); }
 
-/* el fondo se pone rojo a medida que se enoja */
+/* el borde de la pantalla se pone rojo a medida que se enoja (quieto, para no cansar la vista) */
 body::after {
   content: "";
   position: fixed;
@@ -838,20 +898,73 @@ body::after {
   pointer-events: none;
   z-index: 30;
   opacity: 0;
-  background: radial-gradient(ellipse at center, transparent 55%, #ff2a3a 140%);
+  background: radial-gradient(ellipse at center, transparent 58%, #ff2a3a 145%);
   transition: opacity 0.4s;
 }
-body[data-rabia="2"]::after { opacity: 0.35; }
-body[data-rabia="3"]::after { opacity: 0.7; animation: rabia 1s steps(2) infinite; }
-@keyframes rabia { 50% { opacity: 0.45; } }
-body[data-rabia="3"] .mascot-wrap::before {
-  content: "💢";
-  position: absolute;
-  top: -6px;
-  right: 14%;
-  font-size: 34px;
-  z-index: 2;
+body[data-rabia="2"]::after { opacity: 0.3; }
+body[data-rabia="3"]::after { opacity: 0.55; }
+/* un solo golpe rojo cuando pierde la paciencia */
+body.estallido::after { animation: estallido 0.9s steps(3) both; }
+@keyframes estallido { 0% { opacity: 0.55; } 30% { opacity: 1; } 60% { opacity: 0.7; } 100% { opacity: 0.9; } }
+
+/* ---------- la respuesta intrusa ---------- */
+.chip-orange { background: var(--orange); }
+.options-1 { grid-template-columns: 1fr; }
+.option.reason .key { background: var(--teal); box-shadow: inset 0 -3px 0 var(--teal-d); }
+.razones { margin-top: 18px; padding-top: 16px; border-top: 3px dashed var(--line); }
+.razones-title { margin: 0 0 12px; font-weight: 900; font-size: 18px; }
+.razones-title span { color: var(--orange); }
+.review-list li.ok { box-shadow: inset 4px 0 0 var(--good), inset 0 0 0 2px var(--line); }
+.review-list .rok { color: var(--good); }
+
+/* ---------- ordená el caos ---------- */
+.caos-slots { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
+.slot {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 50px;
+  padding: 8px 12px;
+  text-align: left;
+  border: 0;
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-read);
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 3px var(--line), 0 4px 0 #00000066;
 }
+.slot:hover:not(:disabled) { box-shadow: inset 0 0 0 3px var(--bad), 0 4px 0 #00000066; }
+.slot:disabled { cursor: default; }
+.slot.vacio {
+  color: var(--muted);
+  background: repeating-linear-gradient(90deg, #0a0d2288 0 8px, transparent 8px 12px), var(--ink);
+  box-shadow: inset 0 0 0 3px #2f3d8f99;
+}
+.slot-num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  font-family: var(--font-retro);
+  font-size: 11px;
+  color: var(--ink);
+  background: var(--violet);
+  box-shadow: inset 0 -3px 0 var(--violet-d);
+}
+.slot .slot-text { flex: 1; min-width: 0; }
+.slot .mark { margin-left: auto; font-size: 13px; font-weight: 900; text-transform: uppercase; white-space: nowrap; }
+.slot.fijo { background: #13502f; box-shadow: inset 0 0 0 4px var(--good), 0 4px 0 #00000066; }
+.slot.fijo .slot-num { background: var(--good); box-shadow: none; }
+.slot.mal { background: #5a1c2a; box-shadow: inset 0 0 0 4px var(--bad), 0 4px 0 #00000066; animation: shake 0.3s steps(3); }
+.caos-hint { margin: 0 0 10px; font-size: 14px; font-weight: 800; color: var(--muted); }
+.caos-pool { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 10px; }
+.pieza { min-height: 52px; font-size: 16px; }
+.pieza .key { background: var(--violet); color: #fff; box-shadow: inset 0 -3px 0 var(--violet-d); }
+.pieza.usada { opacity: 0.28; box-shadow: inset 0 0 0 3px var(--line); }
 
 /* ---------- pie ---------- */
 .footer {
@@ -881,8 +994,8 @@ body[data-rabia="3"] .mascot-wrap::before {
   .rappi-rider svg { animation-duration: 0.12s !important; animation-iteration-count: infinite !important; }
   .option.run-over { animation-duration: 0.3s !important; }
   .option .skid { animation-duration: var(--skid-d, 0.4s) !important; }
-  /* los mordiscones también se ven: son la mecánica del enojo */
-  .bite.pop { animation-duration: 0.35s !important; }
+  /* con menos movimiento Guillermo no se inclina ni vuela: cambia de cara y el mordisco aparece de golpe */
+  .host[data-enojo] .mascot-wrap { transform: none; }
 }
 
 /* ---------- responsive ---------- */
@@ -912,7 +1025,10 @@ body[data-rabia="3"] .mascot-wrap::before {
       linear-gradient(#fff, #fff) 4px 4px / 4px 4px no-repeat;
     filter: drop-shadow(0 4px 0 var(--ink)) drop-shadow(0 -4px 0 var(--ink)) drop-shadow(-4px 0 0 var(--ink));
   }
-  .panel { padding: 18px; min-height: 0; }
+  .panel { --bite-room: 28px; min-height: 0; }
+  .paciencia { grid-column: 1 / -1; grid-row: 3; justify-content: flex-start; margin-top: 2px; }
+  /* el panel está abajo: se inclina hacia adelante, sin meterse en el globo */
+  .host { --lean-1: rotate(3deg); --lean-2: rotate(5deg) translateY(2px); --lean-3: rotate(8deg) translate(4px, 4px) scale(1.04); }
 }
 
 @media (max-width: 560px) {
@@ -920,8 +1036,13 @@ body[data-rabia="3"] .mascot-wrap::before {
   .topbar { padding: 12px 16px; }
   .records { display: none; }
   .icon-btn-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .panel { --bite-room: 24px; }
   .options { grid-template-columns: 1fr; gap: 12px; }
+  .options.options-2x2 { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .options-2x2 .option { padding: 10px; gap: 8px; }
   .option { min-height: 54px; font-size: 16px; }
+  .nam-pop { font-size: 13px; }
+  .nam-pop.grande { font-size: 22px; }
   .menu { max-width: none; }
   .menu .btn { width: 100%; }
   .actions .btn:not(.btn-ghost) { flex: 1; }
