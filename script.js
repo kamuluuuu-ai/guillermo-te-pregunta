@@ -3916,7 +3916,7 @@ function animarPixeles(px, origen, modo, ms) {
 
 async function escenaDisparo() {
   const gen = mordida.gen;
-  const reduce = reduceMotion.matches; // con menos movimiento: misma función, transición breve sin sacudidas
+  const reduce = escenaCorta(); // siempre la escena completa (con la rotura en píxeles), como la de Kamil
   const T = reduce ? TIEMPOS_ELIAS.reducido : TIEMPOS_ELIAS.normal;
   const nombre = ELIAS.nombre;
   const card = $("#q-card");
