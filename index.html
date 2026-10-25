@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=18">
+  <link rel="stylesheet" href="styles.css?v=19">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -22,8 +22,6 @@
       <span class="records" aria-label="Récords guardados">
         <span title="Mejor nota en la evaluación">🎓 <span id="best-quiz">–</span></span>
         <span title="Récord en El desafío de Guillermo">⏱ <span id="best-challenge">0</span></span>
-        <span title="Récord en La respuesta intrusa">🔍 <span id="best-intrusa">0</span></span>
-        <span title="Récord en Ordená el caos">🌀 <span id="best-caos">0</span></span>
       </span>
       <button id="sound-toggle" class="icon-btn" type="button" aria-pressed="true">
         <span aria-hidden="true" id="sound-icon">🔊</span>
@@ -64,13 +62,9 @@
         </div>
         <div class="menu">
           <button class="btn btn-yellow btn-big" type="button" data-action="start-quiz">▶ Jugar</button>
-          <p class="menu-label">Minijuegos</p>
           <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ El desafío de Guillermo</button>
-          <button class="btn btn-orange" type="button" data-action="intrusa-intro">🔍 La respuesta intrusa</button>
-          <button class="btn btn-violet" type="button" data-action="caos-intro">🌀 Ordená el caos</button>
-          <p class="menu-label">Para estudiar</p>
           <button class="btn btn-green" type="button" data-action="learn">◆ Clase: Teoría de grafos</button>
-          <button class="btn btn-ghost" type="button" data-action="instructions">? Instrucciones</button>
+          <button class="btn btn-violet" type="button" data-action="instructions">? Instrucciones</button>
         </div>
         <div class="eval-history" id="eval-history-wrap" hidden>
           <h3 class="h3">Últimas partidas en este dispositivo</h3>
@@ -88,6 +82,7 @@
             <ul>
               <li>Son <strong>12 preguntas</strong> de teoría de grafos, sin repetir.</li>
               <li>Cada una tiene 4 opciones y <strong>una sola</strong> es correcta.</li>
+              <li>Algunas son <strong>mini retos de grafos</strong>: tocás los vértices o las aristas que pide Guillermo y después <strong>✔ Comprobar</strong>. Cuentan como una pregunta más.</li>
               <li>Tenés <strong>3 comodines</strong> para toda la partida: <strong>🛵 Rappi</strong> atropella dos opciones incorrectas, <strong>💡 Pista</strong> y <strong>🔄 Cambiar pregunta</strong>.</li>
               <li>Al final sale una <strong>nota del 1 al 12</strong> (se aprueba con 6) y el repaso de lo que fallaste.</li>
               <li>Atajos: teclas <kbd>1</kbd>–<kbd>4</kbd> para responder, <kbd>P</kbd> para la pista y <kbd>Enter</kbd> para seguir.</li>
@@ -100,23 +95,6 @@
               <li>Acierto: <strong>+10</strong>, más +5 por cada acierto seguido (máximo +25).</li>
               <li>Si te equivocás se corta la racha y Guillermo te muestra la respuesta.</li>
               <li>Atajos: <kbd>V</kbd> o <kbd>←</kbd> para Verdadero, <kbd>F</kbd> o <kbd>→</kbd> para Falso.</li>
-            </ul>
-          </div>
-          <div class="rule-card">
-            <h3>🔍 La respuesta intrusa</h3>
-            <ul>
-              <li>Cuatro respuestas: <strong>tres son de la misma familia</strong> y una se coló.</li>
-              <li>Encontrá la intrusa (<strong>+100</strong>) y después elegí <strong>por qué</strong> no va (<strong>+50</strong>).</li>
-              <li>Atajos: <kbd>1</kbd>–<kbd>4</kbd> para elegir, <kbd>P</kbd> para la pista y <kbd>Enter</kbd> para seguir.</li>
-            </ul>
-          </div>
-          <div class="rule-card">
-            <h3>🌀 Ordená el caos</h3>
-            <ul>
-              <li>Tocá las tarjetas <strong>en el orden correcto</strong>; tocá una de arriba para sacarla.</li>
-              <li>Mientras pensás, Guillermo <strong>se va comiendo el marco</strong>. Si se lo termina, perdés ese marco.</li>
-              <li>Si te equivocás, quedan fijas las que estaban bien y perdés 5 segundos.</li>
-              <li>Atajos: <kbd>A</kbd>–<kbd>E</kbd> para elegir, <kbd>⌫</kbd> para deshacer y <kbd>Enter</kbd> para comprobar.</li>
             </ul>
           </div>
           <div class="rule-card">
@@ -151,6 +129,11 @@
           </div>
           <h2 class="question" id="q-text" tabindex="-1">Pregunta</h2>
           <div class="options" id="q-options" role="group" aria-label="Opciones de respuesta"></div>
+          <div class="reto" id="q-reto" hidden>
+            <div class="graph-canvas reto-canvas" id="reto-canvas"></div>
+            <p class="reto-info" id="reto-info" aria-live="polite"></p>
+            <button class="btn btn-yellow btn-small" type="button" id="reto-check" data-action="reto-check" hidden>✔ Comprobar</button>
+          </div>
         </div>
 
         <div class="feedback" id="q-feedback" hidden>
@@ -259,146 +242,6 @@
         </div>
       </div>
 
-      <!-- LA RESPUESTA INTRUSA: INTRO -->
-      <div class="screen" id="screen-intrusa-intro" data-screen hidden>
-        <p class="demo-badge demo-orange">Minijuego</p>
-        <h2 class="title title-sm">La respuesta<br><span>intrusa</span></h2>
-        <p class="lead">Guillermo mezcló cuatro respuestas: tres son de la misma familia y <strong>una se coló</strong>. Encontrala y después decí <strong>por qué</strong> no va.</p>
-        <ul class="mini-rules">
-          <li>Intrusa encontrada: <strong>+100</strong>. Razón correcta: <strong>+50</strong>.</li>
-          <li>💡 Pista: −30 puntos; te dice qué tienen en común las otras tres.</li>
-          <li>Cada error le da un mordisco al panel. Si se le acaba la paciencia, se lo come entero.</li>
-        </ul>
-        <p class="lead small">Tu récord: <strong id="i-best-intro">0</strong> puntos</p>
-        <div class="menu menu-row">
-          <button class="btn btn-yellow btn-big" type="button" data-action="start-intrusa">▶ Empezar</button>
-          <button class="btn btn-ghost" type="button" data-action="home">← Volver</button>
-        </div>
-      </div>
-
-      <!-- LA RESPUESTA INTRUSA: JUEGO -->
-      <div class="screen" id="screen-intrusa" data-screen hidden>
-        <div class="hud" aria-label="Estado de la partida">
-          <div class="hud-item"><span class="hud-label">Ronda</span><span class="hud-value" id="i-progress">1/8</span></div>
-          <div class="hud-item"><span class="hud-label">Puntos</span><span class="hud-value" id="i-score">0</span></div>
-          <div class="hud-item"><span class="hud-label">Razones</span><span class="hud-value" id="i-reasons">0</span></div>
-        </div>
-        <div class="progress" aria-hidden="true"><div class="progress-fill" id="i-bar"></div></div>
-
-        <div class="question-card" id="i-card">
-          <div class="q-meta">
-            <span class="chip chip-orange" id="i-tema">Grafos</span>
-            <span class="chip chip-demo" id="i-step">Paso 1 de 2</span>
-          </div>
-          <h2 class="question" id="i-text" tabindex="-1">¿Cuál no va con las demás?</h2>
-          <div class="options options-2x2" id="i-options" role="group" aria-label="Respuestas: una es la intrusa"></div>
-          <div class="razones" id="i-razones" hidden>
-            <p class="razones-title">¿Por qué no va «<span id="i-elegida"></span>»?</p>
-            <div class="options options-1" id="i-razones-list" role="group" aria-label="Razones"></div>
-          </div>
-        </div>
-
-        <div class="feedback" id="i-feedback" hidden>
-          <p class="feedback-title" id="i-feedback-title"></p>
-          <p class="feedback-answer" id="i-feedback-answer"></p>
-          <p class="feedback-expl" id="i-feedback-expl"></p>
-        </div>
-
-        <div class="actions">
-          <button class="btn btn-violet" type="button" id="i-hint" data-action="intrusa-hint">💡 Pista (−30)</button>
-          <button class="btn btn-yellow" type="button" id="i-next" data-action="intrusa-next" hidden>Siguiente ▶</button>
-          <button class="btn btn-ghost btn-small" type="button" data-action="intrusa-intro">Salir</button>
-        </div>
-      </div>
-
-      <!-- LA RESPUESTA INTRUSA: RESULTADO -->
-      <div class="screen" id="screen-intrusa-results" data-screen hidden>
-        <h2 class="h2" id="ir-title">¡Se terminaron las intrusas!</h2>
-        <div class="score-board">
-          <div class="score-box"><span class="hud-label">Puntaje</span><span class="score-big" id="ir-score">0</span></div>
-          <div class="score-box"><span class="hud-label">Intrusas</span><span class="score-big" id="ir-found">0/8</span></div>
-          <div class="score-box"><span class="hud-label">Razones</span><span class="score-big" id="ir-reasons">0</span></div>
-        </div>
-        <p class="record-msg" id="ir-record" hidden>★ ¡Nuevo récord! ★</p>
-        <div class="review">
-          <h3 class="h3">Repaso de las rondas</h3>
-          <ol class="review-list" id="ir-review"></ol>
-        </div>
-        <div class="menu menu-row">
-          <button class="btn btn-yellow" type="button" data-action="start-intrusa">↻ Jugar de nuevo</button>
-          <button class="btn btn-violet" type="button" data-action="caos-intro">🌀 Ordená el caos</button>
-          <button class="btn btn-ghost" type="button" data-action="home">Menú</button>
-        </div>
-      </div>
-
-      <!-- ORDENÁ EL CAOS: INTRO -->
-      <div class="screen" id="screen-caos-intro" data-screen hidden>
-        <p class="demo-badge">Minijuego</p>
-        <h2 class="title title-sm">Ordená<br><span>el caos</span></h2>
-        <p class="lead">Guillermo desordenó pasos, fechas y valores. <strong>Ponelos en orden</strong> antes de que termine de comerse el marco.</p>
-        <ul class="mini-rules">
-          <li>Tocá las tarjetas de abajo <strong>en el orden correcto</strong>. Para sacar una, tocala arriba.</li>
-          <li>Cada tanto Guillermo le da un mordisco al marco. Cuando se le acaba la paciencia, se lo come entero.</li>
-          <li>Marco salvado: <strong>+100</strong> y <strong>+5</strong> por cada segundo que sobre. Si fallás, quedan fijas las bien puestas y perdés 5 segundos.</li>
-        </ul>
-        <p class="lead small">Tu récord: <strong id="k-best-intro">0</strong> puntos</p>
-        <div class="menu menu-row">
-          <button class="btn btn-yellow btn-big" type="button" data-action="start-caos">▶ Empezar</button>
-          <button class="btn btn-ghost" type="button" data-action="home">← Volver</button>
-        </div>
-      </div>
-
-      <!-- ORDENÁ EL CAOS: JUEGO -->
-      <div class="screen" id="screen-caos" data-screen hidden>
-        <div class="hud" aria-label="Estado de la partida">
-          <div class="hud-item"><span class="hud-label">Marco</span><span class="hud-value" id="k-progress">1/5</span></div>
-          <div class="hud-item"><span class="hud-label">Puntos</span><span class="hud-value" id="k-score">0</span></div>
-          <div class="hud-item"><span class="hud-label">Tiempo</span><span class="hud-value" id="k-time">40</span></div>
-        </div>
-        <div class="progress progress-time" aria-hidden="true"><div class="progress-fill" id="k-bar"></div></div>
-
-        <div class="question-card" id="k-card">
-          <div class="q-meta"><span class="chip" id="k-tema">Grafos</span></div>
-          <h2 class="question" id="k-text" tabindex="-1">Consigna</h2>
-          <ol class="caos-slots" id="k-slots" aria-label="Tu orden"></ol>
-          <p class="caos-hint" id="k-hint">Tocá las tarjetas en orden:</p>
-          <div class="caos-pool" id="k-pool" role="group" aria-label="Tarjetas para ordenar"></div>
-        </div>
-
-        <div class="feedback" id="k-feedback" hidden>
-          <p class="feedback-title" id="k-feedback-title"></p>
-          <p class="feedback-answer" id="k-feedback-answer"></p>
-          <p class="feedback-expl" id="k-feedback-expl"></p>
-        </div>
-
-        <div class="actions">
-          <button class="btn btn-yellow" type="button" id="k-check" data-action="caos-check" disabled>✔ ¡Listo!</button>
-          <button class="btn btn-violet btn-small" type="button" id="k-undo" data-action="caos-undo" disabled>↺ Deshacer</button>
-          <button class="btn btn-yellow" type="button" id="k-next" data-action="caos-next" hidden>Siguiente marco ▶</button>
-          <button class="btn btn-ghost btn-small" type="button" data-action="caos-intro">Salir</button>
-        </div>
-      </div>
-
-      <!-- ORDENÁ EL CAOS: RESULTADO -->
-      <div class="screen" id="screen-caos-results" data-screen hidden>
-        <h2 class="h2">¡Se terminaron los marcos!</h2>
-        <div class="score-board">
-          <div class="score-box"><span class="hud-label">Puntaje</span><span class="score-big" id="kr-score">0</span></div>
-          <div class="score-box"><span class="hud-label">Salvados</span><span class="score-big" id="kr-saved">0/5</span></div>
-          <div class="score-box"><span class="hud-label">Récord</span><span class="score-big" id="kr-best">0</span></div>
-        </div>
-        <p class="record-msg" id="kr-record" hidden>★ ¡Nuevo récord! ★</p>
-        <div class="review">
-          <h3 class="h3">Así era cada orden</h3>
-          <ol class="review-list" id="kr-review"></ol>
-        </div>
-        <div class="menu menu-row">
-          <button class="btn btn-yellow" type="button" data-action="start-caos">↻ Jugar de nuevo</button>
-          <button class="btn btn-orange" type="button" data-action="intrusa-intro">🔍 La intrusa</button>
-          <button class="btn btn-ghost" type="button" data-action="home">Menú</button>
-        </div>
-      </div>
-
       <!-- CLASE: LISTA DE TEMAS -->
       <div class="screen" id="screen-learn" data-screen hidden>
         <p class="demo-badge demo-green">Clase del 26/10/26</p>
@@ -467,6 +310,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=18"></script>
+  <script src="script.js?v=19"></script>
 </body>
 </html>

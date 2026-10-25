@@ -4,8 +4,6 @@
    ¿Querés cambiar las preguntas? Editá solo estas listas:
      1) PREGUNTAS    → modo principal (4 opciones, 1 correcta)
      2) AFIRMACIONES → minijuego de verdadero o falso
-     2b) INTRUSAS    → minijuego «La respuesta intrusa»
-     2c) CAOS        → minijuego «Ordená el caos»
    ========================================================= */
 
 /* ---------------------------------------------------------
@@ -281,182 +279,6 @@ const AFIRMACIONES = [
   { texto: "A nivel del mar, el agua hierve a 50 °C.", v: false },
   { texto: "Un litro equivale a 1000 mililitros.", v: true },
   { texto: "La Antártida es el continente más frío.", v: true }
-];
-
-/* ---------------------------------------------------------
-   2b) LA RESPUESTA INTRUSA
-   items       → 4 textos; tres son de la misma familia
-   intrusa     → posición de la que no va (0 a 3)
-   grupo       → lo que tienen en común las otras tres (es la pista)
-   razones     → 3 explicaciones; la correcta es la de la posición «razon»
-   explicacion → se muestra al final de la ronda
-   Los items y las razones se mezclan solos.
-   --------------------------------------------------------- */
-const INTRUSAS = [
-  {
-    tema: "Grafos",
-    items: ["Vértice", "Nodo", "Punto de la red", "Arista"],
-    intrusa: 3,
-    grupo: "nombres de los puntos de un grafo",
-    razones: ["Es una conexión entre dos puntos, no un punto", "Es un grafo que tiene lazos", "Es la cantidad de vértices"],
-    razon: 0,
-    explicacion: "Vértice, nodo y punto de la red son lo mismo. Una arista es la línea que une dos vértices."
-  },
-  {
-    tema: "Grafos",
-    items: ["Lazo", "Arista múltiple", "Enlace", "Vértice aislado"],
-    intrusa: 3,
-    grupo: "clases de aristas",
-    razones: ["Es un vértice, no una arista", "Es una arista muy larga", "Es un grafo sin vértices"],
-    razon: 0,
-    explicacion: "Lazo, arista múltiple y enlace son aristas. Un vértice aislado es un punto sin ninguna arista: su grado es 0."
-  },
-  {
-    tema: "Grafos",
-    items: ["Grados 2, 2, 2", "Grados 1, 1", "Grados 3, 3, 2, 2", "Grados 3, 3, 3"],
-    intrusa: 3,
-    grupo: "listas de grados que pueden existir en un grafo",
-    razones: ["Suman 9, y la suma de los grados siempre es par", "Un grafo no puede tener tres vértices", "Todos los grados son iguales"],
-    razon: 0,
-    explicacion: "2 + 2 + 2 = 6, 1 + 1 = 2 y 3 + 3 + 2 + 2 = 10 son pares. 3 + 3 + 3 = 9 es impar, pero la suma de los grados siempre es 2e."
-  },
-  {
-    tema: "Grafos",
-    items: ["Amigos que se conocen", "Ciudades unidas por rutas", "Computadoras y sus cables", "La temperatura de hoy"],
-    intrusa: 3,
-    grupo: "cosas que se pueden dibujar como un grafo",
-    razones: ["Es un solo dato: no hay cosas conectadas", "Cambia a lo largo del día", "Se mide con un termómetro"],
-    razon: 0,
-    explicacion: "En las otras tres hay elementos (personas, ciudades, computadoras) y conexiones entre ellos. La temperatura es un número, no una red."
-  },
-  {
-    tema: "Grafos",
-    items: ["5 aristas → suma de grados 10", "7 aristas → suma de grados 14", "3 aristas → suma de grados 6", "4 aristas → suma de grados 6"],
-    intrusa: 3,
-    grupo: "casos que cumplen el teorema de los apretones de manos",
-    razones: ["Con 4 aristas la suma tendría que dar 2 · 4 = 8", "4 es un número par", "Un grafo no puede tener 4 aristas"],
-    razon: 0,
-    explicacion: "La suma de los grados siempre es 2e: 2 · 5 = 10, 2 · 7 = 14 y 2 · 3 = 6. Con 4 aristas tiene que dar 8, no 6."
-  },
-  {
-    tema: "Grafos",
-    items: ["Vértice aislado: grado 0", "Hoja: grado 1", "Un lazo suma 2 al grado", "Hoja: grado 3"],
-    intrusa: 3,
-    grupo: "datos correctos sobre el grado",
-    razones: ["Una hoja tiene un solo vecino: su grado es 1", "Las hojas no tienen grado", "Ningún vértice puede tener grado 3"],
-    razon: 0,
-    explicacion: "Aislado = grado 0, hoja (colgante) = grado 1 y el lazo cuenta doble. Una hoja nunca tiene grado 3."
-  },
-  {
-    tema: "Grafos",
-    items: ["Leonhard Euler", "Königsberg", "Los siete puentes", "Pitágoras"],
-    intrusa: 3,
-    grupo: "cosas del origen de la teoría de grafos",
-    razones: ["Vivió en la Grecia antigua y es famoso por los triángulos", "No era matemático", "Fue el que construyó los puentes"],
-    razon: 0,
-    explicacion: "En el siglo XVIII Euler estudió si se podían cruzar los siete puentes de Königsberg una sola vez cada uno. Pitágoras vivió mucho antes y su teorema es sobre triángulos rectángulos."
-  },
-  {
-    tema: "Ciencia",
-    items: ["Mercurio", "Venus", "Marte", "La Luna"],
-    intrusa: 3,
-    grupo: "planetas del sistema solar",
-    razones: ["Es un satélite: gira alrededor de la Tierra", "Es más grande que Marte", "Está más lejos del Sol que Marte"],
-    razon: 0,
-    explicacion: "Mercurio, Venus y Marte son planetas que giran alrededor del Sol. La Luna es el satélite natural de la Tierra."
-  },
-  {
-    tema: "Informática",
-    items: ["Teclado", "Mouse", "Micrófono", "Impresora"],
-    intrusa: 3,
-    grupo: "dispositivos de entrada",
-    razones: ["Es de salida: saca información de la computadora", "Funciona sin electricidad", "No se puede conectar por USB"],
-    razon: 0,
-    explicacion: "Teclado, mouse y micrófono le mandan datos a la computadora (entrada). La impresora saca datos de la computadora (salida)."
-  },
-  {
-    tema: "Matemática",
-    items: ["2", "3", "5", "9"],
-    intrusa: 3,
-    grupo: "números primos",
-    razones: ["Se divide por 3: 9 = 3 × 3", "Es el único número impar", "Es mayor que 5"],
-    razon: 0,
-    explicacion: "2, 3 y 5 solo se dividen por 1 y por sí mismos. El 9 también se divide por 3, así que no es primo."
-  },
-  {
-    tema: "Ciencia",
-    items: ["Ballena", "Delfín", "Murciélago", "Pingüino"],
-    intrusa: 3,
-    grupo: "mamíferos",
-    razones: ["Es un ave: tiene plumas y pone huevos", "Vive en el agua", "No puede volar"],
-    razon: 0,
-    explicacion: "La ballena, el delfín y el murciélago toman leche de su madre: son mamíferos. El pingüino es un ave que no vuela."
-  },
-  {
-    tema: "Informática",
-    items: ["HTML", "CSS", "JavaScript", "Excel"],
-    intrusa: 3,
-    grupo: "lenguajes para hacer páginas web",
-    razones: ["Es un programa de planillas, no un lenguaje web", "Es más nuevo que los otros", "Solo funciona en celulares"],
-    razon: 0,
-    explicacion: "Con HTML (estructura), CSS (estilo) y JavaScript (comportamiento) se hacen páginas como esta. Excel es un programa de planillas de cálculo."
-  }
-];
-
-/* ---------------------------------------------------------
-   2c) ORDENÁ EL CAOS
-   items → en el ORDEN CORRECTO (en el juego se desordenan solos)
-   consigna, explicacion → lo que se lee antes y después
-   --------------------------------------------------------- */
-const CAOS = [
-  {
-    tema: "Informática",
-    consigna: "Ordená las unidades de la más chica a la más grande.",
-    items: ["Bit", "Byte", "Kilobyte", "Megabyte", "Gigabyte"],
-    explicacion: "Un byte son 8 bits; un kilobyte, unos mil bytes; un megabyte, unos mil kilobytes; y un gigabyte, unos mil megabytes."
-  },
-  {
-    tema: "Ciencia",
-    consigna: "Ordená los planetas del más cercano al más lejano del Sol.",
-    items: ["Mercurio", "Venus", "Tierra", "Marte", "Júpiter"],
-    explicacion: "Mercurio es el primero y Júpiter, el más grande, viene después de Marte."
-  },
-  {
-    tema: "Historia",
-    consigna: "Ordená los hechos del más antiguo al más reciente.",
-    items: ["Colón llega a América", "Cervantes publica el Quijote", "Euler resuelve los puentes de Königsberg", "Uruguay gana el primer Mundial"],
-    explicacion: "1492: Colón. 1605: primera parte del Quijote. 1736: Euler y los puentes, el origen de los grafos. 1930: la Celeste campeona."
-  },
-  {
-    tema: "Grafos",
-    consigna: "Ordená los vértices de menor a mayor grado.",
-    items: ["Un vértice aislado", "Una hoja", "Un vértice con solo un lazo", "Un vértice con 3 aristas comunes", "Un vértice con 2 aristas y un lazo"],
-    explicacion: "Aislado: 0. Hoja: 1. Un lazo cuenta doble: 2. Tres aristas: 3. Dos aristas más un lazo: 2 + 2 = 4."
-  },
-  {
-    tema: "Grafos",
-    consigna: "Ordená los pasos para saber cuántas aristas tiene un grafo con 10 vértices de grado 6.",
-    items: ["Ver cuántos vértices hay: 10", "Sumar los grados: 10 × 6 = 60", "Usar el teorema: la suma es 2e", "Despejar: e = 60 ÷ 2 = 30"],
-    explicacion: "Primero la suma de los grados (60) y después el teorema de los apretones de manos: 60 = 2e, así que hay 30 aristas."
-  },
-  {
-    tema: "Grafos",
-    consigna: "Ordená los pasos para armar el grafo de un mapa de rutas.",
-    items: ["Hacer la lista de ciudades (V)", "Dibujar un punto por cada ciudad", "Unir con una línea las ciudades que tienen ruta (E)", "Contar las líneas que llegan a cada punto (grado)"],
-    explicacion: "Primero los vértices, después las aristas que los unen, y recién ahí se puede calcular el grado de cada uno."
-  },
-  {
-    tema: "Matemática",
-    consigna: "Ordená de menor a mayor.",
-    items: ["3/4", "0,8", "El 10 en binario", "La raíz cuadrada de 81", "7 × 8"],
-    explicacion: "3/4 = 0,75 < 0,8 < 2 (el 10 en binario) < 9 (√81) < 56 (7 × 8)."
-  },
-  {
-    tema: "Grafos",
-    consigna: "Ordená de menos a más aristas.",
-    items: ["Suma de grados 4", "3 vértices de grado 2", "Suma de grados 10", "4 vértices de grado 3", "10 vértices de grado 6"],
-    explicacion: "Las aristas son la mitad de la suma de los grados: 4 → 2, 6 → 3, 10 → 5, 12 → 6 y 60 → 30."
-  }
 ];
 
 /* ---------------------------------------------------------
@@ -1122,18 +944,7 @@ const AJUSTES = {
   puntosDesafio: 10,
   bonusDesafio: 5,
   bonusDesafioMax: 25,
-  // La respuesta intrusa
-  rondasIntrusa: 8,
-  puntosIntrusa: 100,
-  puntosRazon: 50,
-  costoPistaIntrusa: 30,
-  // Ordená el caos
-  marcosCaos: 5,
-  segundosPorTarjeta: 9,   // 4 tarjetas → 36 s, 5 tarjetas → 45 s
-  mordidasCaos: [0.25, 0.5, 0.75], // en qué parte del tiempo muerde el marco (después viene el final)
-  penalidadCaos: 5,        // segundos que se pierden al comprobar mal
-  puntosCaos: 100,
-  bonusSegundoCaos: 5
+  retosPorEvaluacion: 2   // mini retos de grafos que reemplazan preguntas en la evaluación
 };
 
 /* ---------------------------------------------------------
@@ -1167,28 +978,9 @@ const FRASES = {
     grito: { 1: ["¡Ñam!", "¡Crunch!"], 2: ["¡ÑAM!", "¡CRUNCH!"], 3: ["¡ÑAAAM!", "¡GRRR!"] },
     // una correcta lo calma un rato (lo mordido no vuelve)
     alivio: ["Fiuu… bueno, esa sí. Se me pasa un poquito.", "Ah, mirá vos. Así me gusta… respiro hondo.", "Bien ahí. Uno, dos, tres… me calmo un cachito.", "¡Eso! Se me baja la presión. Un poco."],
-    comido: "¡ÑAAAM! Me comí todo el panel. …Estaba rico, eh.",
-    salvado: ["¡¿Eh?! ¡Me lo sacaste de la boca!", "¡Por un pelo! Ya tenía los dientes afuera."]
+    comido: "¡ÑAAAM! Me comí todo el panel. …Estaba rico, eh."
   },
   amenaza: ["A ver esta… que tengo hambre.", "Pensala bien, que todavía me queda lugar para otro mordisco.", "Esta sacala bien, ¿eh? Te estoy mirando."],
-  intrusa: {
-    intro: "Mezclé cuatro respuestas y una se coló. ¿La encontrás? Y después decime por qué no va.",
-    pregunta: ["¿Cuál no va con las demás?", "Una de estas es una colada…", "Mirá bien: hay una intrusa.", "Tres son primas. ¿Cuál es la vecina?"],
-    bien: ["¡Esa! Ahora decime por qué no va.", "¡La cazaste! ¿Y por qué?", "¡Bien ahí! ¿Por qué no pertenece?"],
-    razonBien: ["¡Y además sabés por qué! Crack.", "¡Exacto! Lo explicás mejor que yo.", "¡Esa es la razón! +50 para vos."],
-    razonMal: ["La intrusa la tenías, pero la razón era otra. Leé abajo.", "Casi: no va por otra cosa. Mirá la explicación."],
-    pista: "Pista: tres de estas son {g}.",
-    fin: "¡Se acabaron las intrusas! Mirá el repaso."
-  },
-  caos: {
-    intro: "¡Te desordené todo! Ordenalo antes de que me coma el marco. Tic, tac…",
-    arranque: ["¡Dale, que el marco no se cuida solo!", "Ordená tranqui… bueno, no tan tranqui.", "Marco nuevito. Lo miro con cariño… y con hambre."],
-    mordida: ["¡Tic tac! Me como un borde mientras pensás.", "Este marco se está quedando flaquito…", "¡Apurate, que tengo hambre!", "Mmm, marco al punto."],
-    mal: ["¡Eso es un caos! Dejé fijas las que estaban bien. −5 segundos.", "Casi… las verdes se quedan, las otras volvieron. Te robo 5 segundos.", "¡Nop! Algunas estaban bien: esas no se mueven. −5 segundos."],
-    bien: ["¡Ordenadito! Así da gusto.", "¡Perfecto! Me quedé con las ganas.", "¡Joya! Ese marco se salvó."],
-    perdido: ["Ñam… estaba rico. Mirá cómo era el orden.", "Me comí el marco, pero te dejo la respuesta. Soy así de bueno."],
-    fin: "¡Se terminaron los marcos! Mirá cómo te fue."
-  },
   desafioIntro: "¡Este es mi desafío! 60 segundos de verdadero o falso. ¿Estás pronto?",
   desafioArranque: "¡Ya! ¿Verdadero o falso?",
   desafioAcierto: ["¡Bien!", "¡Eso!", "¡Sí!", "¡Joya!"],
@@ -1282,8 +1074,7 @@ const sound = {
       growl: [[70, 0, 0.3, "sawtooth", 0.07], [90, 0.3, 0.3, "sawtooth", 0.08], [120, 0.6, 0.3, "sawtooth", 0.09], [160, 0.9, 0.35, "sawtooth", 0.1]],
       nam: [[210, 0, 0.03, "square", 0.11], [120, 0.03, 0.07, "square", 0.12], [260, 0.1, 0.03, "square", 0.08], [90, 0.13, 0.08, "triangle", 0.1]],
       namBig: [[120, 0, 0.1, "square", 0.14], [60, 0.08, 0.28, "triangle", 0.16], [200, 0.12, 0.04, "square", 0.1]],
-      relief: [[660, 0, 0.12, "triangle", 0.05], [520, 0.12, 0.22, "triangle", 0.05]],
-      saved: [[880, 0, 0.08], [660, 0.08, 0.08], [990, 0.16, 0.18]]
+      relief: [[660, 0, 0.12, "triangle", 0.05], [520, 0.12, 0.22, "triangle", 0.05]]
     }[name];
     if (seq) seq.forEach(([f, s, d, t, v]) => this.tone(f, s, d, t, v));
   }
@@ -1663,7 +1454,7 @@ let current = "start";
 /* =========================================================
    ENOJO DE GUILLERMO Y MORDISCOS AL PANEL
    ---------------------------------------------------------
-   Cada error (o el reloj, en «Ordená el caos») enoja a Guillermo
+   Cada error (también en los mini retos de grafos) enoja a Guillermo
    y le arranca un pedazo al panel principal (#panel).
    · El panel se dibuja en un canvas aparte (#panel-skin) que va
      DEBAJO del contenido: los mordiscos le sacan pedazos de verdad
@@ -2341,15 +2132,12 @@ async function actuacionMordida(b) {
    EL MORDISCO FINAL: el punto máximo del enojo
    Una anticipación larga (tiembla, se pone rojo, abre la boca
    gigante) y tres bocados que se comen el panel entero.
-   b.confirmar(): se llama justo antes del primer bocado. Si
-   devuelve false (porque el jugador respondió a tiempo), Guillermo
-   se frena con la boca abierta. Ese es el instante de cierre: lo
-   que llega antes se acepta; lo que llega después, no.
+   La respuesta que lo dispara ya quedó contada: el mordisco final
+   es solo la reacción, y después quedan los resultados.
    ========================================================= */
 async function actuacionFinal(b) {
   mordida.actuando = true;
   const reduce = reduceMotion.matches;
-  const sigue = () => !b.confirmar || b.confirmar("mirar");
   const c0 = panelCaja();
   const g = guillermo.el.getBoundingClientRect();
   // entra por el lado más cercano a Guillermo que se vea
@@ -2378,10 +2166,8 @@ async function actuacionFinal(b) {
     })), { duration: 900, easing: "steps(12)", fill: "forwards" });
   }
   if (!(await esperar(b.rapido ? 450 : 900))) return;
-  if (!sigue()) return frenarFinal(b);
   guillermo.set(bocaza);
   if (!(await esperar(reduce ? 200 : 380))) return;
-  if (!sigue()) return frenarFinal(b);
 
   // 2) se lanza con la boca gigante
   let cabeza = null, inicio = null;
@@ -2397,8 +2183,6 @@ async function actuacionFinal(b) {
     mover(cabeza, fin, 120, "ease-in");
     if (!(await esperar(120))) return;
   }
-  // instante de cierre: si el jugador respondió a tiempo, se frena acá
-  if (b.confirmar && !b.confirmar("morder")) return frenarFinal(b, cabeza, inicio);
 
   // 3) tres bocados que se comen todo
   paciencia.marcar(Infinity, true);
@@ -2455,24 +2239,6 @@ async function actuacionFinal(b) {
   if (b.alTerminar) b.alTerminar();
 }
 
-// el jugador respondió justo antes del bocado: Guillermo se queda con las ganas
-async function frenarFinal(b, cabeza, inicio) {
-  guillermo.el.getAnimations && guillermo.el.getAnimations().forEach((a) => { if (mordida.anims.has(a)) a.cancel(); });
-  document.body.classList.remove("estallido");
-  sound.play("saved");
-  if (cabeza) {
-    caraCabeza(cabeza, "sorpresa");
-    mover(cabeza, pose(cabeza._pose.x, cabeza._pose.y, 0, cabeza._pose.s * 0.9), 120, "ease-out");
-    if (!(await esperar(260))) return;
-    mover(cabeza, inicio.p, 320, "ease-in");
-    if (!(await esperar(320))) return;
-    quitarNodo(cabeza);
-  }
-  guillermo.el.style.visibility = "";
-  terminarActuacion(pickSin(FRASES.enojo.salvado), "sorpresa", "jump");
-  if (b.alFrenar) b.alFrenar();
-}
-
 // después del mordisco final de una partida: Guillermo se comió todo y quedan los resultados
 function comioTodo(detalle, alVerResultados) {
   const o = $("#eaten");
@@ -2497,7 +2263,6 @@ function show(name, focusEl) {
   enojoApagar();
   guillermo.set("espera"); // si se cortó una mordida, no queda con cara de ataque
   if (name !== "challenge") stopChallenge();
-  if (name !== "caos") stopCaos();
   document.querySelectorAll("[data-screen]").forEach((s) => { s.hidden = true; s.classList.remove("enter"); });
   const screen = $("#screen-" + name);
   screen.hidden = false;
@@ -2512,8 +2277,6 @@ function updateRecords() {
   $("#best-quiz").textContent = notas.length ? Math.max(...notas) : "–";
   $("#best-challenge").textContent = store.get("bestChallenge", 0);
   $("#c-best-intro").textContent = store.get("bestChallenge", 0);
-  $("#best-intrusa").textContent = $("#i-best-intro").textContent = store.get("bestIntrusa", 0);
-  $("#best-caos").textContent = $("#k-best-intro").textContent = store.get("bestCaos", 0);
 }
 
 function bump(el, value) {
@@ -2554,6 +2317,11 @@ function startQuiz(lesson = null) {
   const mixed = shuffle(pool);
   quiz.deck = mixed.slice(0, Math.min(total, pool.length)).map(prepareQuestion);
   quiz.reserve = lesson === "eval" ? mixed.slice(total) : [];
+  // mini retos de grafos entre las preguntas: en la evaluación reemplazan preguntas (siguen siendo 12);
+  // en el repaso se suman, y en la práctica de un tema va el reto de ese tema
+  if (lesson === "eval") quiz.reserve.push(...meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, AJUSTES.retosPorEvaluacion), true));
+  else if (lesson === "todo") meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, 2), false);
+  else if (RETO_DEL_TEMA[lesson]) meterRetos(quiz.deck, [RETO_DEL_TEMA[lesson]], false);
   quiz.comodines = { rappi: true, pista: true, cambio: true };
   Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {}, busy: false, terminado: false });
   $("#hint-btn").hidden = lesson === "eval";
@@ -2578,6 +2346,7 @@ function renderQuestion(intro) {
   $("#q-progress").textContent = `${quiz.index + 1}/${total}`;
   $("#q-bar").style.width = `${(quiz.index / total) * 100}%`;
   $("#q-category").textContent = q.categoria;
+  $("#q-category").classList.toggle("chip-reto", !!q.reto);
   $("#q-text").textContent = q.pregunta;
   $("#q-feedback").hidden = true;
   $("#next-btn").hidden = true;
@@ -2598,6 +2367,9 @@ function renderQuestion(intro) {
     b.addEventListener("click", () => answerQuestion(i));
     box.appendChild(b);
   });
+  box.hidden = !!q.reto;
+  $("#q-reto").hidden = true;
+  if (q.reto) renderReto(q);
 
   quiz.busy = false;
   $("#rappi-rider").hidden = true;
@@ -2624,18 +2396,25 @@ function answerQuestion(i) {
     else if (j === i) { b.classList.add("wrong"); b.querySelector(".mark").textContent = "✗ Tu respuesta"; }
     else b.classList.add("dim");
   });
+  cerrarPregunta(chosen.ok, chosen.texto, right.texto);
+}
+
+// lo que pasa después de responder, sea una pregunta de opciones o un mini reto de grafos
+// respuesta: texto propio para la línea de la respuesta (si no, se arma con «correcta»)
+function cerrarPregunta(ok, elegida, correcta, respuesta) {
+  const q = quiz.deck[quiz.index];
   $("#hint-btn").disabled = true;
   renderLifelines();
 
   if (q.tema !== undefined) {
     const t = (quiz.porTema[q.tema] = quiz.porTema[q.tema] || { ok: 0, total: 0 });
     t.total++;
-    if (chosen.ok) t.ok++;
+    if (ok) t.ok++;
   }
 
   const fb = $("#q-feedback");
   fb.hidden = false;
-  if (chosen.ok) {
+  if (ok) {
     quiz.streak++;
     quiz.correct++;
     quiz.bestStreak = Math.max(quiz.bestStreak, quiz.streak);
@@ -2646,17 +2425,17 @@ function answerQuestion(i) {
     const extras = [bonus && `+${bonus} de racha`, cost && `−${cost} por la pista`].filter(Boolean);
     fb.className = "feedback good";
     $("#q-feedback-title").textContent = `✔ ¡Correcto! +${earned}` + (extras.length ? ` (${extras.join(", ")})` : "");
-    $("#q-feedback-answer").textContent = `La respuesta es: ${right.texto}`;
+    $("#q-feedback-answer").textContent = respuesta || `La respuesta es: ${correcta}`;
     sound.play("good");
     // si estaba enojado, una correcta lo calma un momento
     if (enojo.nivel >= 1) aliviar(pickSin(FRASES.enojo.alivio));
     else guillermo.say(quiz.streak >= 3 ? fill(pick(FRASES.racha), { n: quiz.streak }) : pickSin(FRASES.acierto), "alegria", "jump");
   } else {
     quiz.streak = 0;
-    quiz.mistakes.push({ pregunta: q.pregunta, elegida: chosen.texto, correcta: right.texto, explicacion: q.explicacion });
+    quiz.mistakes.push({ pregunta: q.pregunta, elegida, correcta, explicacion: q.explicacion });
     fb.className = "feedback bad";
-    $("#q-feedback-title").textContent = "✘ Esta no era";
-    $("#q-feedback-answer").textContent = `La respuesta correcta es: ${right.texto}`;
+    $("#q-feedback-title").textContent = q.reto ? "✘ No era así" : "✘ Esta no era";
+    $("#q-feedback-answer").textContent = respuesta || `La respuesta correcta es: ${correcta}`;
     sound.play("bad");
     // la respuesta ya quedó contada; el mordisco es solo la reacción y no frena el juego
     const b = nuevoError();
@@ -3189,7 +2968,7 @@ function renderLifelines() {
     const used = !quiz.comodines[k];
     b.textContent = used ? COMODINES[k].usado : COMODINES[k].label;
     b.classList.toggle("used", used);
-    b.disabled = used || quiz.answered || quiz.busy || (k === "cambio" && !quiz.reserve.length);
+    b.disabled = used || quiz.answered || quiz.busy || (k === "cambio" && !quiz.reserve.length) || (k === "rappi" && !!quiz.deck[quiz.index].reto);
   });
 }
 
@@ -3306,7 +3085,7 @@ function rappiPass(row, targets, card, rider) {
 }
 
 async function llamarRappi() {
-  if (quiz.lesson !== "eval" || !quiz.comodines.rappi || quiz.answered || quiz.busy) return;
+  if (quiz.lesson !== "eval" || !quiz.comodines.rappi || quiz.answered || quiz.busy || quiz.deck[quiz.index].reto) return;
   quiz.comodines.rappi = false;
   quiz.busy = true;
   renderLifelines();
@@ -3377,533 +3156,182 @@ function renderEval(total) {
 }
 
 /* =========================================================
-   MINIJUEGO: LA RESPUESTA INTRUSA
-   Paso 1: elegir cuál de las cuatro no pertenece al grupo.
-   Paso 2 (si acertó): elegir por qué no pertenece.
-   Errar el paso 1 enoja a Guillermo y le cuesta un mordisco al panel.
+   MINI RETOS DE GRAFOS
+   Se cuelan entre las preguntas: en vez de elegir una opción,
+   se tocan vértices o aristas de un grafo chiquito.
+   Cuentan como una pregunta más (puntos, nota, enojo y mordidas).
    ========================================================= */
-const intr = { deck: [], index: 0, score: 0, encontradas: 0, razones: 0, estado: "off", pistaUsada: false, ganados: 0, repaso: [], terminado: false };
+const GRAFOS_RETO = ["rutas", "amigos", "rosen"]; // grafos simples: sin lazos ni aristas repetidas
+const TIPOS_RETO = ["grado", "vecinos", "aristas"];
+const RETO_DEL_TEMA = { 1: "vecinos", 2: "aristas", 3: "grado" }; // tema de la clase → reto que lo practica
 
-function intrusaIntro() {
-  updateRecords();
-  show("intrusa-intro");
-  guillermo.say(FRASES.intrusa.intro, "pensando");
+const lista = (xs) => (xs.length > 1 ? `${xs.slice(0, -1).join(", ")} y ${xs[xs.length - 1]}` : xs[0] || "nada");
+
+// arma un reto a partir de un grafo de ejemplo; las claves son "v:Nombre" o "e:índice"
+function armarReto(tipo) {
+  const g = graphData(pick(GRAFOS_RETO));
+  const base = { reto: { tipo, g, marcados: new Set(), listo: false }, mezcla: [], categoria: "Mini reto · Grafos" };
+  const r = base.reto;
+  if (tipo === "grado") {
+    const max = Math.max(...g.names.map((n) => g.degree[n]));
+    const top = g.names.filter((n) => g.degree[n] === max);
+    Object.assign(r, { elige: "v", uno: true, correctas: top.map((n) => "v:" + n) });
+    return { ...base, tema: 3,
+      pregunta: "Tocá el vértice con más aristas (el de mayor grado).",
+      pista: "Contá cuántas líneas salen de cada punto.",
+      respuesta: top.length > 1 ? `El grado más alto es ${max}: lo tienen ${lista(top)}.` : `${top[0]} tiene grado ${max}: es el más alto.`,
+      explicacion: "El grado de un vértice es la cantidad de aristas que llegan a él." };
+  }
+  const x = pick(g.names.filter((n) => g.degree[n] >= 2));
+  r.objetivo = x;
+  if (tipo === "vecinos") {
+    const vec = g.aristas.filter((e) => e.includes(x)).map(([u, v]) => (u === x ? v : u));
+    Object.assign(r, { elige: "v", uno: false, correctas: vec.map((n) => "v:" + n) });
+    return { ...base, tema: 1,
+      pregunta: `Marcá todos los vecinos de ${x}.`,
+      pista: `Los vecinos de ${x} son los que están unidos a él por una arista.`,
+      respuesta: `Los vecinos de ${x} son ${lista(vec)}.`,
+      explicacion: "Dos vértices son vecinos (adyacentes) cuando hay una arista que los une." };
+  }
+  const idx = g.aristas.map((e, i) => (e.includes(x) ? i : -1)).filter((i) => i >= 0);
+  Object.assign(r, { elige: "e", uno: false, correctas: idx.map((i) => "e:" + i) });
+  return { ...base, tema: 2,
+    pregunta: `Marcá todas las aristas que llegan a ${x}.`,
+    pista: `Seguí las líneas que tocan a ${x}. No cuentan las que pasan cerca.`,
+    respuesta: `Son ${lista(idx.map((i) => edgeName(g.aristas[i])))}: por eso el grado de ${x} es ${idx.length}.`,
+    explicacion: "Una arista es incidente a los dos vértices que une; el grado de un vértice cuenta esas aristas." };
 }
 
-function startIntrusa() {
-  intr.deck = shuffle(INTRUSAS).slice(0, AJUSTES.rondasIntrusa).map((r) => ({
-    ...r,
-    mezcla: shuffle(r.items.map((texto, i) => ({ texto, intrusa: i === r.intrusa }))),
-    motivos: shuffle(r.razones.map((texto, i) => ({ texto, ok: i === r.razon })))
-  }));
-  Object.assign(intr, { index: 0, score: 0, encontradas: 0, razones: 0, estado: "off", repaso: [], terminado: false });
-  $("#i-score").textContent = "0";
-  $("#i-reasons").textContent = "0";
-  sound.play("start");
-  show("intrusa", $("#i-text"));
-  enojoIniciar(limitePara(intr.deck.length));
-  renderIntrusa("¡Arrancamos! " + pickSin(FRASES.intrusa.pregunta));
+// reparte los retos por el mazo (uno por tramo, nunca primero ni dos seguidos); si reemplazar, devuelve las preguntas que sacó
+function meterRetos(deck, tipos, reemplazar) {
+  const tramo = Math.floor((deck.length - 1) / tipos.length);
+  const sacadas = [];
+  tipos.forEach((tipo, k) => {
+    const pos = 1 + tramo * k + Math.floor(Math.random() * Math.max(1, tramo - 1)); // nunca dos retos seguidos
+    if (reemplazar) sacadas.push(deck.splice(pos, 1, armarReto(tipo))[0]);
+    else deck.splice(pos + k, 0, armarReto(tipo));
+  });
+  return sacadas;
 }
 
-function botonOpcion(clase, tecla, texto, onClick) {
-  const b = document.createElement("button");
-  b.type = "button";
-  b.className = clase;
-  b.innerHTML = `<span class="key" aria-hidden="true">${tecla}</span><span class="label"></span><span class="mark"></span>`;
-  b.querySelector(".label").textContent = texto;
-  b.addEventListener("click", onClick);
-  return b;
+const nombreClave = (g, k) => (k[0] === "v" ? k.slice(2) : edgeName(g.aristas[Number(k.slice(2))]));
+const retoActual = () => { // la pregunta actual, si es un mini reto
+  const q = current === "quiz" && quiz.deck[quiz.index];
+  return q && q.reto ? q : null;
+};
+
+function renderReto(q) {
+  const r = q.reto;
+  r.marcados.clear();
+  r.listo = false;
+  $("#q-reto").hidden = false;
+  $("#reto-canvas").classList.remove("listo");
+  const check = $("#reto-check");
+  check.hidden = r.uno;
+  check.disabled = true;
+  $("#reto-info").textContent = r.elige === "v"
+    ? (r.uno ? "Tocá un vértice." : "Tocá los vértices para marcarlos; tocá de nuevo para desmarcar.")
+    : "Tocá las aristas (las líneas) para marcarlas.";
+  dibujarReto();
 }
 
-function renderIntrusa(intro) {
-  const r = intr.deck[intr.index];
-  const total = intr.deck.length;
-  intr.estado = "elegir";
-  intr.pistaUsada = false;
-  $("#i-progress").textContent = `${intr.index + 1}/${total}`;
-  $("#i-bar").style.width = `${(intr.index / total) * 100}%`;
-  $("#i-tema").textContent = r.tema;
-  $("#i-step").textContent = "Paso 1 de 2";
-  $("#i-text").textContent = "¿Cuál no va con las demás?";
-  $("#i-feedback").hidden = true;
-  $("#i-next").hidden = true;
-  $("#i-razones").hidden = true;
-  const hint = $("#i-hint");
-  hint.disabled = false;
-  hint.textContent = `💡 Pista (−${AJUSTES.costoPistaIntrusa})`;
-  const box = $("#i-options");
+function dibujarReto(enfocar) {
+  const r = retoActual().reto;
+  const g = r.g;
+  const svgNS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(svgNS, "svg");
+  svg.setAttribute("viewBox", "-4 -6 108 70");
+  svg.setAttribute("role", "group");
+  svg.setAttribute("aria-label", g.nombre);
+  // antes de comprobar: marcado o no; después: bien (ok), de más (mal) o el que faltó (falta)
+  const estado = (k) => {
+    const marcado = r.marcados.has(k);
+    if (!r.listo) return marcado ? " on" : "";
+    const bien = r.correctas.includes(k);
+    return marcado ? (bien ? " ok" : " mal") : bien ? " falta" : "";
+  };
+  const tocable = (grp, k, label) => {
+    grp.setAttribute("tabindex", r.listo ? "-1" : "0");
+    grp.setAttribute("role", "button");
+    grp.setAttribute("aria-pressed", String(r.marcados.has(k)));
+    grp.setAttribute("aria-label", label);
+    grp.dataset.key = k;
+    grp.addEventListener("click", () => tocarReto(k));
+    grp.addEventListener("keydown", (ev) => {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      ev.preventDefault();
+      ev.stopPropagation(); // que el Enter no pase de largo a «Siguiente»
+      tocarReto(k);
+    });
+  };
+
+  g.aristas.forEach((e, i) => {
+    const [x1, y1] = g.vertices[e[0]];
+    const [x2, y2] = g.vertices[e[1]];
+    const d = `M ${x1} ${y1} L ${x2} ${y2}`;
+    const k = "e:" + i;
+    const grp = document.createElementNS(svgNS, "g");
+    grp.setAttribute("class", "g-edge" + (r.elige === "e" ? estado(k) : ""));
+    grp.innerHTML = `<path class="hit" d="${d}"/><path class="line" d="${d}"/>`;
+    if (r.elige === "e") tocable(grp, k, `Arista ${edgeName(e)}`);
+    else grp.style.pointerEvents = "none";
+    svg.appendChild(grp);
+  });
+
+  g.names.forEach((name) => {
+    const [x, y] = g.vertices[name];
+    const k = "v:" + name;
+    const grp = document.createElementNS(svgNS, "g");
+    const esObjetivo = name === r.objetivo;
+    grp.setAttribute("class", "g-vertex" + (esObjetivo ? " objetivo" : r.elige === "v" ? estado(k) : ""));
+    grp.innerHTML = `<rect x="${x - 3.2}" y="${y - 3.2}" width="6.4" height="6.4"/><text class="g-label" x="${x}" y="${y > 30 ? y + 9 : y - 6}"></text>`;
+    grp.querySelector(".g-label").textContent = name;
+    // sin el grado en la etiqueta: si no, se regala la respuesta
+    if (r.elige === "v" && !esObjetivo) tocable(grp, k, `Vértice ${name}`);
+    else grp.style.pointerEvents = "none";
+    svg.appendChild(grp);
+  });
+
+  const box = $("#reto-canvas");
   box.innerHTML = "";
-  r.mezcla.forEach((it, i) => box.appendChild(botonOpcion("option", i + 1, it.texto, () => elegirIntrusa(i))));
-  guillermo.say(intro || pickSin(enojo.nivel >= 2 ? FRASES.amenaza : FRASES.intrusa.pregunta), caraBase());
-  $("#i-text").focus({ preventScroll: true });
-}
-
-function elegirIntrusa(i) {
-  if (intr.estado !== "elegir" || current !== "intrusa") return; // una sola elección por ronda
-  const r = intr.deck[intr.index];
-  const it = r.mezcla[i];
-  if (!it) return;
-  const correcta = r.mezcla.find((x) => x.intrusa);
-  $("#i-options").querySelectorAll(".option").forEach((b, j) => {
-    b.disabled = true;
-    if (r.mezcla[j].intrusa) { b.classList.add("correct"); b.querySelector(".mark").textContent = "✓ Intrusa"; }
-    else if (j === i) { b.classList.add("wrong"); b.querySelector(".mark").textContent = "✗ Sí va"; }
-    else b.classList.add("dim");
-  });
-  $("#i-hint").disabled = true;
-
-  if (it.intrusa) {
-    intr.estado = "razon";
-    intr.ganados = AJUSTES.puntosIntrusa - (intr.pistaUsada ? AJUSTES.costoPistaIntrusa : 0);
-    intr.score += intr.ganados;
-    intr.encontradas++;
-    bump($("#i-score"), intr.score);
-    sound.play("good");
-    $("#i-step").textContent = "Paso 2 de 2";
-    $("#i-elegida").textContent = it.texto;
-    const list = $("#i-razones-list");
-    list.innerHTML = "";
-    r.motivos.forEach((mo, j) => list.appendChild(botonOpcion("option reason", j + 1, mo.texto, () => elegirRazon(j))));
-    $("#i-razones").hidden = false;
-    if (enojo.nivel >= 1) aliviar(pickSin(FRASES.enojo.alivio));
-    else guillermo.say(pickSin(FRASES.intrusa.bien), "alegria", "jump");
-    list.firstChild.focus({ preventScroll: true });
-  } else {
-    intr.repaso.push({ r, elegida: it.texto, ok: false, razonOk: false });
-    sound.play("bad");
-    const b = nuevoError(); // primero se cuenta el error: si es el final, no aparece «Siguiente»
-    if (b.final) {
-      b.alTerminar = () => comioTodo(
-        `Se te colaron ${enojo.errores} intrusas y en la ronda ${intr.index + 1} de ${intr.deck.length} me comí el panel entero.`,
-        resultadosIntrusa
-      );
-    }
-    cerrarRondaIntrusa(false, `✘ «${it.texto}» sí es de la familia`, `La intrusa era «${correcta.texto}». Las otras tres son ${r.grupo}.`);
-    morderPanel(b);
+  box.appendChild(svg);
+  if (enfocar) {
+    const el = [...box.querySelectorAll("[data-key]")].find((n) => n.dataset.key === enfocar);
+    if (el) el.focus({ preventScroll: true });
   }
 }
 
-function elegirRazon(j) {
-  if (intr.estado !== "razon" || current !== "intrusa") return;
-  const r = intr.deck[intr.index];
-  const mo = r.motivos[j];
-  if (!mo) return;
-  const bien = r.motivos.find((m) => m.ok);
-  $("#i-razones-list").querySelectorAll(".option").forEach((b, k) => {
-    b.disabled = true;
-    if (r.motivos[k].ok) { b.classList.add("correct"); b.querySelector(".mark").textContent = "✓"; }
-    else if (k === j) { b.classList.add("wrong"); b.querySelector(".mark").textContent = "✗"; }
-    else b.classList.add("dim");
-  });
-  intr.repaso.push({ r, elegida: r.mezcla.find((x) => x.intrusa).texto, ok: true, razonOk: mo.ok });
-  if (mo.ok) {
-    intr.score += AJUSTES.puntosRazon;
-    intr.razones++;
-    bump($("#i-score"), intr.score);
-    bump($("#i-reasons"), intr.razones);
-    sound.play("good");
-    cerrarRondaIntrusa(true, `✔ ¡Intrusa y razón! +${intr.ganados + AJUSTES.puntosRazon}`, `No va porque: ${bien.texto}.`);
-    guillermo.say(pickSin(FRASES.intrusa.razonBien), "alegria", "jump");
-  } else {
-    sound.play("hint");
-    cerrarRondaIntrusa(true, `✔ Intrusa encontrada: +${intr.ganados}. La razón era otra.`, `No va porque: ${bien.texto}.`);
-    guillermo.say(pickSin(FRASES.intrusa.razonMal), "pensando");
+function tocarReto(k) {
+  const q = quiz.deck[quiz.index];
+  if (!retoActual() || quiz.answered || quiz.busy || q.reto.listo) return;
+  const r = q.reto;
+  if (r.uno) {
+    r.marcados = new Set([k]);
+    comprobarReto();
+    return;
   }
-}
-
-function cerrarRondaIntrusa(bien, titulo, respuesta) {
-  const r = intr.deck[intr.index];
-  intr.estado = "feedback";
-  const fb = $("#i-feedback");
-  fb.hidden = false;
-  fb.className = "feedback " + (bien ? "good" : "bad");
-  $("#i-feedback-title").textContent = titulo;
-  $("#i-feedback-answer").textContent = respuesta;
-  $("#i-feedback-expl").textContent = r.explicacion;
-  $("#i-bar").style.width = `${((intr.index + 1) / intr.deck.length) * 100}%`;
-  const next = $("#i-next");
-  next.textContent = intr.index + 1 < intr.deck.length ? "Siguiente ▶" : "Ver resultados ▶";
-  next.hidden = enojo.final; // si se come el panel, solo quedan los resultados
-  if (!enojo.final) next.focus({ preventScroll: true });
-}
-
-function siguienteIntrusa() {
-  if (intr.estado !== "feedback" || current !== "intrusa" || enojo.final) return;
+  if (r.marcados.has(k)) r.marcados.delete(k);
+  else r.marcados.add(k);
   sound.play("click");
-  intr.index++;
-  if (intr.index < intr.deck.length) renderIntrusa();
-  else resultadosIntrusa();
+  const n = r.marcados.size;
+  $("#reto-check").disabled = !n;
+  $("#reto-info").textContent = n ? `Marcaste ${n}: ${lista([...r.marcados].map((x) => nombreClave(r.g, x)))}.` : "No marcaste nada todavía.";
+  dibujarReto(k);
 }
 
-function intrusaPista() {
-  if (intr.estado !== "elegir" || intr.pistaUsada || current !== "intrusa") return;
-  intr.pistaUsada = true;
-  const hint = $("#i-hint");
-  hint.disabled = true;
-  hint.textContent = "💡 Pista usada";
-  sound.play("hint");
-  guillermo.say(fill(FRASES.intrusa.pista, { g: intr.deck[intr.index].grupo }), "pensando", null, true);
-}
-
-function resultadosIntrusa() {
-  if (intr.terminado) return;
-  intr.terminado = true;
-  const comido = enojo.final;
-  const total = intr.deck.length;
-  const best = store.get("bestIntrusa", 0);
-  const isRecord = intr.score > best;
-  if (isRecord) store.set("bestIntrusa", intr.score);
-  updateRecords();
-
-  $("#ir-title").textContent = comido ? "¡Guillermo se comió las intrusas!" : "¡Se terminaron las intrusas!";
-  $("#ir-score").textContent = intr.score;
-  $("#ir-found").textContent = `${intr.encontradas}/${total}`;
-  $("#ir-reasons").textContent = `${intr.razones}/${intr.encontradas}`;
-  $("#ir-record").hidden = !isRecord;
-
-  const list = $("#ir-review");
-  list.innerHTML = "";
-  const jugadas = intr.repaso.map((x) => x.r);
-  const filas = intr.repaso.concat(intr.deck.filter((r) => !jugadas.includes(r)).map((r) => ({ r, sinJugar: true })));
-  filas.forEach((x) => {
-    const li = document.createElement("li");
-    li.className = x.ok ? "ok" : "";
-    li.innerHTML = `<p class="rq"></p><p class="ra"></p><p class="re"></p>`;
-    const intrusa = x.r.items[x.r.intrusa];
-    li.querySelector(".rq").textContent = x.r.items.join(" · ");
-    const ra = li.querySelector(".ra");
-    if (x.sinJugar) ra.innerHTML = `<span class="rx">— No llegaste: Guillermo ya se había comido el panel.</span><br>La intrusa era: <strong></strong>`;
-    else if (!x.ok) ra.innerHTML = `<span class="rx"></span><br>La intrusa era: <strong></strong>`;
-    else ra.innerHTML = `<span class="rok"></span><br>Razón: <strong></strong>`;
-    if (ra.querySelector(".rx") && !x.sinJugar) ra.querySelector(".rx").textContent = `✘ Elegiste: ${x.elegida}`;
-    if (ra.querySelector(".rok")) ra.querySelector(".rok").textContent = `✔ Encontraste «${intrusa}»` + (x.razonOk ? " y la razón" : "; la razón no era esa");
-    ra.querySelector("strong").textContent = x.ok ? x.r.razones[x.r.razon] : intrusa;
-    li.querySelector(".re").textContent = x.r.explicacion;
-    list.appendChild(li);
-  });
-
-  const ratio = intr.encontradas / total;
-  let msg;
-  if (ratio === 1 && intr.razones === total) msg = `¡Todas las intrusas y todas las razones! No se te escapa ni una.`;
-  else if (ratio >= 0.75) msg = `¡Bien ahí! Encontraste ${intr.encontradas} de ${total}. Tenés ojo de detective.`;
-  else if (ratio >= 0.5) msg = `${intr.encontradas} de ${total}. Vas bien: leé el repaso para ver qué tenían en común.`;
-  else msg = `${intr.encontradas} de ${total}. Tranqui, mirá el repaso y probá de nuevo.`;
-  if (comido) msg += " Y sí… me comí el panel. Ya le volvió a crecer.";
-  sound.play("end");
-  show("intrusa-results");
-  guillermo.say(isRecord ? msg + " ¡Nuevo récord!" : msg, comido ? "lleno" : ratio >= 0.5 ? "alegria" : "animo", "jump");
-}
-
-/* =========================================================
-   MINIJUEGO: ORDENÁ EL CAOS
-   Se tocan las tarjetas en el orden correcto (no hace falta
-   arrastrar). El reloj es el hambre de Guillermo: a ciertos tiempos
-   le da un mordisco al marco y, cuando se acaba, viene el final.
-   Cuándo se acepta una respuesta: «¡Listo!» cuenta si llega antes
-   del primer bocado del mordisco final, aunque Guillermo ya se esté
-   preparando (¡salvado por un pelo!). Después de ese instante se
-   ignora. Cada marco se resuelve una sola vez.
-   estado: "jugando" → "resuelto", o "jugando" → "ultimo" → ("resuelto" | "comido")
-   ========================================================= */
-const caos = { deck: [], index: 0, score: 0, salvados: 0, estado: "off", slots: [], fijos: [], historial: [], endAt: 0, duracion: 0, timer: null, mordidas: 0, lastSecond: 0, repaso: [] };
-const LETRAS = "ABCDE";
-const caosJugable = () => (caos.estado === "jugando" || caos.estado === "ultimo") && current === "caos";
-
-function caosIntro() {
-  updateRecords();
-  show("caos-intro");
-  guillermo.say(FRASES.caos.intro, "pensando");
-}
-
-function startCaos() {
-  caos.deck = shuffle(CAOS).slice(0, AJUSTES.marcosCaos).map((r) => {
-    let mezcla;
-    do { mezcla = shuffle(r.items.map((texto, pos) => ({ texto, pos }))); } while (mezcla.every((x, i) => x.pos === i));
-    return { ...r, mezcla };
-  });
-  Object.assign(caos, { index: 0, score: 0, salvados: 0, repaso: [] });
-  $("#k-score").textContent = "0";
-  sound.play("start");
-  show("caos", $("#k-text"));
-  renderCaos(pickSin(FRASES.caos.arranque));
-}
-
-function pararRelojCaos() {
-  clearInterval(caos.timer);
-  caos.timer = null;
-}
-
-function stopCaos() {
-  pararRelojCaos();
-  caos.estado = "off";
-}
-
-function renderCaos(intro) {
-  limpiarMordidas(); // marco nuevo y sano
-  pararRelojCaos();
-  const r = caos.deck[caos.index];
-  const n = r.items.length;
-  Object.assign(caos, { estado: "jugando", slots: Array(n).fill(null), fijos: Array(n).fill(false), historial: [], mordidas: 0 });
-  caos.duracion = n * AJUSTES.segundosPorTarjeta * 1000;
-  caos.endAt = performance.now() + caos.duracion;
-  caos.lastSecond = Math.ceil(caos.duracion / 1000);
-  enojoIniciar(AJUSTES.mordidasCaos.length + 1, "mordisco");
-
-  $("#k-progress").textContent = `${caos.index + 1}/${caos.deck.length}`;
-  $("#k-tema").textContent = r.tema;
-  $("#k-text").textContent = r.consigna;
-  $("#k-feedback").hidden = true;
-  $("#k-next").hidden = true;
-  $("#k-check").hidden = false;
-  $("#k-undo").hidden = false;
-  $("#k-hint").hidden = false;
-  $("#k-pool").hidden = false;
-  dibujarCaos();
-  guillermo.say(intro || pickSin(FRASES.caos.arranque), "espera");
-  tickCaos();
-  caos.timer = setInterval(tickCaos, 100);
-  $("#k-text").focus({ preventScroll: true });
-}
-
-function dibujarCaos(enfocar) {
-  const r = caos.deck[caos.index];
-  const jugable = caosJugable();
-  const slots = $("#k-slots");
-  slots.innerHTML = "";
-  caos.slots.forEach((m, s) => {
-    const it = m === null ? null : r.mezcla[m];
-    const li = document.createElement("li");
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "slot " + (!it ? "vacio" : caos.fijos[s] ? "fijo" : "lleno");
-    b.innerHTML = `<span class="slot-num" aria-hidden="true">${s + 1}</span><span class="slot-text"></span><span class="mark"></span>`;
-    b.querySelector(".slot-text").textContent = it ? it.texto : "…";
-    if (caos.fijos[s]) b.querySelector(".mark").textContent = "✓";
-    b.disabled = !it || caos.fijos[s] || !jugable;
-    b.setAttribute("aria-label", `Lugar ${s + 1}: ${it ? it.texto + (caos.fijos[s] ? ", bien puesta" : jugable ? ". Tocá para sacarla" : "") : "vacío"}`);
-    b.addEventListener("click", () => sacarCaos(s));
-    li.appendChild(b);
-    slots.appendChild(li);
-  });
-  const pool = $("#k-pool");
-  pool.innerHTML = "";
-  r.mezcla.forEach((it, m) => {
-    const usada = caos.slots.includes(m);
-    const b = botonOpcion("option pieza" + (usada ? " usada" : ""), LETRAS[m], it.texto, () => ponerCaos(m));
-    b.disabled = usada || !jugable;
-    pool.appendChild(b);
-  });
-  const lleno = caos.slots.every((x) => x !== null);
-  $("#k-check").disabled = !lleno || !jugable;
-  $("#k-undo").disabled = !caos.historial.length || !jugable;
-  if (enfocar && jugable) {
-    // el foco sigue a la próxima tarjeta (o a «¡Listo!») para jugar cómodo con teclado
-    const libre = pool.querySelector(".pieza:not(:disabled)");
-    (lleno ? $("#k-check") : libre || $("#k-check")).focus({ preventScroll: true });
-  }
-}
-
-function ponerCaos(m) {
-  if (!caosJugable()) return;
-  const r = caos.deck[caos.index];
-  if (m < 0 || m >= r.mezcla.length || caos.slots.includes(m)) return;
-  const s = caos.slots.indexOf(null);
-  if (s < 0) return;
-  caos.slots[s] = m;
-  caos.historial.push(s);
-  sound.play("click");
-  dibujarCaos(true);
-}
-
-function sacarCaos(s) {
-  if (!caosJugable() || caos.fijos[s] || caos.slots[s] === null) return;
-  caos.slots[s] = null;
-  caos.historial = caos.historial.filter((x) => x !== s);
-  sound.play("click");
-  dibujarCaos(true);
-}
-
-function deshacerCaos() {
-  if (!caosJugable() || !caos.historial.length) return;
-  caos.slots[caos.historial.pop()] = null;
-  sound.play("click");
-  dibujarCaos(true);
-}
-
-function comprobarCaos() {
-  if (!caosJugable() || caos.slots.some((x) => x === null)) return;
-  const r = caos.deck[caos.index];
-  const bien = caos.slots.map((m, s) => r.mezcla[m].pos === s);
-  if (bien.every(Boolean)) { resolverCaos(); return; }
-
-  // mal: quedan fijas las bien puestas y las otras vuelven abajo
-  const malas = [];
-  bien.forEach((ok, s) => {
-    if (ok) caos.fijos[s] = true;
-    else malas.push({ s, texto: r.mezcla[caos.slots[s]].texto });
-  });
-  malas.forEach(({ s }) => { caos.slots[s] = null; });
-  caos.historial = caos.historial.filter((s) => caos.slots[s] !== null && !caos.fijos[s]);
-  sound.play("bad");
-  if (caos.estado === "jugando") caos.endAt -= AJUSTES.penalidadCaos * 1000;
-  dibujarCaos(true);
-  // muestra un instante en rojo lo que estaba mal (se borra al próximo toque)
-  const botones = $("#k-slots").querySelectorAll(".slot");
-  malas.forEach(({ s, texto }) => {
-    botones[s].classList.add("mal");
-    botones[s].querySelector(".slot-text").textContent = texto;
-    botones[s].querySelector(".mark").textContent = "✗";
-  });
-  guillermo.say(pickSin(FRASES.caos.mal), enojo.nivel >= 2 ? "enojado" : "molesto", "shake");
-  tickCaos();
-}
-
-function tickCaos() {
-  if (caos.estado !== "jugando") return;
-  const left = Math.max(0, caos.endAt - performance.now());
-  const secs = Math.ceil(left / 1000);
-  const timeEl = $("#k-time");
-  timeEl.textContent = secs;
-  $("#k-bar").style.width = `${(left / caos.duracion) * 100}%`;
-  const low = secs <= 8;
-  timeEl.classList.toggle("low", low);
-  $("#k-bar").parentElement.classList.toggle("low", low);
-  if (secs !== caos.lastSecond) {
-    caos.lastSecond = secs;
-    if (secs <= 5 && secs > 0) sound.play("tick");
-  }
-  // el hambre de Guillermo va con el reloj
-  const usado = 1 - left / caos.duracion;
-  while (caos.mordidas < AJUSTES.mordidasCaos.length && usado >= AJUSTES.mordidasCaos[caos.mordidas]) {
-    caos.mordidas++;
-    morderPanel(nuevoError(pickSin(FRASES.caos.mordida)));
-  }
-  if (left <= 0) {
-    // se acabó el tiempo: Guillermo se prepara para el final, pero todavía se puede comprobar
-    caos.estado = "ultimo";
-    pararRelojCaos();
-    timeEl.textContent = "0";
-    while (enojo.errores < enojo.limite - 1) nuevoError(); // por si no llegó a morder antes
-    const b = nuevoError(pickSin(FRASES.caos.perdido));
-    b.confirmar = (fase) => {
-      if (caos.estado !== "ultimo") return false; // el jugador lo resolvió a tiempo
-      if (fase === "morder") { caos.estado = "comido"; dibujarCaos(); } // instante de cierre
-      return true;
-    };
-    b.alTerminar = perderCaos;
-    morderPanel(b);
-  }
-}
-
-function solucionCaos(r) {
-  return r.items.map((t, i) => `${i + 1}. ${t}`).join("  ·  ");
-}
-
-function resolverCaos() {
-  const porUnPelo = caos.estado === "ultimo";
-  caos.estado = "resuelto"; // una sola vez: lo que llegue después se ignora
-  pararRelojCaos();
-  mordida.cola.length = 0; // los mordiscos que faltaban ya no van
-  const r = caos.deck[caos.index];
-  const segundos = porUnPelo ? 0 : Math.ceil(Math.max(0, caos.endAt - performance.now()) / 1000);
-  const ganados = AJUSTES.puntosCaos + segundos * AJUSTES.bonusSegundoCaos;
-  caos.score += ganados;
-  caos.salvados++;
-  caos.repaso.push({ r, ok: true });
-  caos.fijos = caos.fijos.map(() => true);
-  dibujarCaos();
-  bump($("#k-score"), caos.score);
-  $("#k-pool").hidden = true;
-  $("#k-hint").hidden = true;
-  $("#k-check").hidden = true;
-  $("#k-undo").hidden = true;
-  const fb = $("#k-feedback");
-  fb.hidden = false;
-  fb.className = "feedback good";
-  $("#k-feedback-title").textContent = porUnPelo ? `✔ ¡Salvado por un pelo! +${ganados}` : `✔ ¡Marco salvado! +${ganados}` + (segundos ? ` (${segundos} s de sobra)` : "");
-  $("#k-feedback-answer").textContent = solucionCaos(r);
-  $("#k-feedback-expl").textContent = r.explicacion;
-  sound.play("good");
-  mostrarSiguienteCaos();
-  // resolver el marco sí lo calma del todo: el próximo marco viene nuevo
-  const nivel = enojo.nivel;
-  enojo.nivel = 0;
-  if (nivel >= 1 || porUnPelo) aliviar(pickSin(FRASES.caos.bien), 0);
-  else guillermo.say(pickSin(FRASES.caos.bien), "alegria", "jump");
-}
-
-function perderCaos() {
-  const r = caos.deck[caos.index];
-  caos.repaso.push({ r, ok: false });
-  limpiarMordidas(); // el marco vuelve a crecer, con la respuesta
-  enojo.nivel = 0;
-  fijarPostura(0);
-  caos.slots = r.items.map((_, s) => r.mezcla.findIndex((x) => x.pos === s));
-  caos.fijos = caos.fijos.map(() => false);
-  dibujarCaos();
-  $("#k-pool").hidden = true;
-  $("#k-hint").hidden = true;
-  $("#k-check").hidden = true;
-  $("#k-undo").hidden = true;
-  const fb = $("#k-feedback");
-  fb.hidden = false;
-  fb.className = "feedback bad";
-  $("#k-feedback-title").textContent = "✘ Guillermo se comió el marco";
-  $("#k-feedback-answer").textContent = "Así era: " + solucionCaos(r);
-  $("#k-feedback-expl").textContent = r.explicacion;
-  if (!reduceMotion.matches && piel.panel.animate) {
-    piel.panel.animate([{ transform: "scale(0.94)", opacity: 0.4 }, { transform: "none", opacity: 1 }], { duration: 360, easing: "steps(4)" });
-  }
-  mostrarSiguienteCaos();
-}
-
-function mostrarSiguienteCaos() {
-  const next = $("#k-next");
-  next.textContent = caos.index + 1 < caos.deck.length ? "Siguiente marco ▶" : "Ver resultados ▶";
-  next.hidden = false;
-  next.focus({ preventScroll: true });
-}
-
-function siguienteCaos() {
-  if (current !== "caos" || $("#k-next").hidden || !["resuelto", "comido"].includes(caos.estado)) return;
-  sound.play("click");
-  caos.index++;
-  if (caos.index < caos.deck.length) renderCaos();
-  else resultadosCaos();
-}
-
-function resultadosCaos() {
-  const total = caos.deck.length;
-  const best = store.get("bestCaos", 0);
-  const isRecord = caos.score > best;
-  if (isRecord) store.set("bestCaos", caos.score);
-  updateRecords();
-  $("#kr-score").textContent = caos.score;
-  $("#kr-saved").textContent = `${caos.salvados}/${total}`;
-  $("#kr-best").textContent = Math.max(best, caos.score);
-  $("#kr-record").hidden = !isRecord;
-  const list = $("#kr-review");
-  list.innerHTML = "";
-  caos.repaso.forEach(({ r, ok }) => {
-    const li = document.createElement("li");
-    li.className = ok ? "ok" : "";
-    li.innerHTML = `<p class="rq"></p><p class="ra"><span></span><br><strong></strong></p><p class="re"></p>`;
-    li.querySelector(".rq").textContent = r.consigna;
-    const s = li.querySelector(".ra span");
-    s.className = ok ? "rok" : "rx";
-    s.textContent = ok ? "✔ Marco salvado" : "✘ Se lo comió Guillermo";
-    li.querySelector("strong").textContent = r.items.join(" → ");
-    li.querySelector(".re").textContent = r.explicacion;
-    list.appendChild(li);
-  });
-  const ratio = caos.salvados / total;
-  let msg;
-  if (ratio === 1) msg = `¡${total} de ${total} marcos salvados! Me quedé con hambre, pero orgulloso.`;
-  else if (ratio >= 0.6) msg = `¡Bien ahí! Salvaste ${caos.salvados} de ${total} marcos.`;
-  else msg = `Salvaste ${caos.salvados} de ${total}. Mirá cómo era cada orden y la revancha sale mejor.`;
-  sound.play("end");
-  show("caos-results");
-  guillermo.say(isRecord ? msg + " ¡Nuevo récord!" : msg, ratio >= 0.6 ? "alegria" : "lleno", "jump");
+function comprobarReto() {
+  const q = retoActual();
+  if (!q || quiz.answered || quiz.busy || q.reto.listo || !q.reto.marcados.size) return; // una sola vez por reto
+  const r = q.reto;
+  quiz.answered = true;
+  r.listo = true;
+  const ok = r.marcados.size === r.correctas.length && r.correctas.every((k) => r.marcados.has(k));
+  $("#reto-check").hidden = true;
+  $("#reto-canvas").classList.add("listo");
+  $("#reto-info").textContent = ok ? "✓ ¡Todo bien marcado!" : "Verde: bien · rojo: de más · punteado: te faltó.";
+  dibujarReto();
+  const nombres = (ks) => lista(ks.map((k) => nombreClave(r.g, k)));
+  cerrarPregunta(ok, nombres([...r.marcados]), nombres(r.correctas), q.respuesta);
 }
 
 /* =========================================================
@@ -3939,15 +3367,7 @@ const actions = {
   "quit-challenge": challengeIntro,
   "answer-true": () => answerStatement(true),
   "answer-false": () => answerStatement(false),
-  "intrusa-intro": intrusaIntro,
-  "start-intrusa": startIntrusa,
-  "intrusa-hint": intrusaPista,
-  "intrusa-next": siguienteIntrusa,
-  "caos-intro": caosIntro,
-  "start-caos": startCaos,
-  "caos-check": comprobarCaos,
-  "caos-undo": deshacerCaos,
-  "caos-next": siguienteCaos
+  "reto-check": comprobarReto
 };
 
 document.addEventListener("click", (e) => {
@@ -3955,8 +3375,7 @@ document.addEventListener("click", (e) => {
   if (!btn || btn.disabled) return;
   const fn = actions[btn.dataset.action];
   if (!fn) return;
-  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-pista", "life-cambio",
-    "start-intrusa", "intrusa-hint", "intrusa-next", "start-caos", "caos-check", "caos-undo", "caos-next"].includes(btn.dataset.action)) sound.play("click");
+  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-pista", "life-cambio", "reto-check"].includes(btn.dataset.action)) sound.play("click");
   fn();
 });
 
@@ -3972,30 +3391,14 @@ document.addEventListener("keydown", (e) => {
     } else if (key === "p") {
       e.preventDefault(); useHint();
     } else if (key === "enter" && !onButton) {
-      e.preventDefault(); nextQuestion();
+      e.preventDefault();
+      const q = retoActual();
+      if (q && !quiz.answered) comprobarReto(); // en un mini reto, Enter comprueba
+      else nextQuestion();
     }
   } else if (current === "challenge") {
     if (key === "v" || key === "arrowleft") { e.preventDefault(); answerStatement(true); }
     else if (key === "f" || key === "arrowright") { e.preventDefault(); answerStatement(false); }
-  } else if (current === "intrusa") {
-    if (["1", "2", "3", "4"].includes(key)) {
-      e.preventDefault();
-      if (intr.estado === "elegir") elegirIntrusa(Number(key) - 1);
-      else if (intr.estado === "razon") elegirRazon(Number(key) - 1);
-    } else if (key === "p") {
-      e.preventDefault(); intrusaPista();
-    } else if (key === "enter" && !onButton) {
-      e.preventDefault(); siguienteIntrusa();
-    }
-  } else if (current === "caos") {
-    const letra = key.length === 1 ? LETRAS.toLowerCase().indexOf(key) : -1;
-    if (letra >= 0) { e.preventDefault(); ponerCaos(letra); }
-    else if (key === "backspace") { e.preventDefault(); deshacerCaos(); }
-    else if (key === "enter" && !onButton) {
-      e.preventDefault();
-      if (!$("#k-next").hidden) siguienteCaos();
-      else comprobarCaos();
-    }
   }
 });
 
