@@ -201,8 +201,8 @@ kbd {
 .mascot-wrap { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; margin-top: 10px; }
 
 .mascot {
-  width: min(240px, 70%);
-  aspect-ratio: var(--guille-w, 312) / var(--guille-h, 306);
+  width: calc(var(--guille-w, 52) * 4px); /* escala entera: 4 píxeles de pantalla por píxel del dibujo */
+  aspect-ratio: var(--guille-w, 52) / var(--guille-h, 52);
   animation: bob 1.6s steps(2) infinite;
   filter: drop-shadow(0 6px 0 #00000055);
 }
@@ -210,7 +210,7 @@ kbd {
 .guille-cara {
   display: block;
   width: 100%;
-  aspect-ratio: var(--guille-w, 312) / var(--guille-h, 306);
+  aspect-ratio: var(--guille-w, 52) / var(--guille-h, 52);
   background: url("assets/guillermo/caras.png") 0 0 / 1600% 100% no-repeat;
   image-rendering: pixelated;
 }
@@ -794,7 +794,7 @@ kbd {
 .fx { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 40; }
 .fx > * { position: absolute; left: 0; top: 0; pointer-events: none; }
 /* la cabeza de Guillermo que sale volando a morder */
-.chomper { aspect-ratio: var(--guille-w, 312) / var(--guille-cabeza, 262); overflow: hidden; filter: drop-shadow(0 6px 0 #00000077); will-change: transform; }
+.chomper { aspect-ratio: var(--guille-w, 52) / var(--guille-cabeza, 45); overflow: hidden; filter: drop-shadow(0 6px 0 #00000077); will-change: transform; }
 /* solo la cabeza: el cuadro entero, cortado a la altura del cuello de la capucha */
 .miga { width: 8px; height: 8px; }
 .miga.chica { width: 4px; height: 4px; }
@@ -873,7 +873,7 @@ kbd {
   overflow-y: auto;
 }
 .eaten-box { display: grid; gap: 16px; justify-items: center; max-width: 520px; }
-.eaten-guillermo { width: 170px; }
+.eaten-guillermo { width: calc(var(--guille-w, 52) * 3px); }
 .eaten-title { margin: 0; font-family: var(--font-retro); font-size: 20px; line-height: 1.6; color: var(--bad); text-wrap: balance; }
 .eaten-detail { margin: 0; color: var(--muted); }
 
@@ -969,7 +969,7 @@ body.estallido::after { animation: estallido 0.9s steps(3) both; }
     row-gap: 6px;
   }
   .mascot-wrap { grid-column: 1; grid-row: 1; margin-top: 0; }
-  .mascot { width: 100%; }
+  .mascot { width: calc(var(--guille-w, 52) * 2px); }
   .nametag { grid-column: 1; grid-row: 2; font-size: 9px; padding: 6px 6px; justify-self: center; letter-spacing: 0; }
   .nametag span { display: none; }
   .bubble { grid-column: 2; grid-row: 1 / span 2; min-height: 0; font-size: 15px; }
@@ -1006,7 +1006,7 @@ body.estallido::after { animation: estallido 0.9s steps(3) both; }
   .hud-value { font-size: 14px; }
   .btn-tf { min-height: 68px; font-size: 18px; }
   .btn-tf kbd { display: none; }
-  .host { grid-template-columns: 92px 1fr; }
+  .host { grid-template-columns: 104px 1fr; column-gap: 12px; }
   .rappi-rider { width: 140px; }
 }
 

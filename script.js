@@ -1037,19 +1037,21 @@ const sound = {
 
 /* =========================================================
    GUILLERMO EN PIXEL ART
-   Las 16 caras salen de la hoja aprobada, recortadas y
-   alineadas en una tira (assets/guillermo/caras.png, ver
-   preparar-sprites.py). Todas comparten el mismo cuadro:
-   cambiar de cara no mueve ni agranda la cabeza.
+   Las 16 caras salen de la hoja aprobada, llevadas a su
+   grilla de píxeles y alineadas en una tira de 52 × 52 por
+   cara (assets/guillermo/caras.png, ver preparar-sprites.py).
+   Se muestran a escala entera para que se vean nítidas.
+   Todas comparten el mismo cuadro: cambiar de cara no mueve
+   ni agranda la cabeza.
    ========================================================= */
 const GUILLE = {
   src: "assets/guillermo/caras.png",
-  w: 312, h: 306,                // un cuadro de la tira, en píxeles de la hoja
+  w: 52, h: 52,                  // un cuadro de la tira, en píxeles del dibujo
   caras: ["espera", "parpadeo", "alegria", "animo", "pensando", "sorpresa", "molesto", "enojado",
     "furioso", "mordida", "mordidaFinal", "lleno", "alivio", "nervioso", "asustado", "aturdido"],
-  cabeza: 262,                   // recorte de la cabeza que sale volando: hasta el cuello de la capucha
-  cara: [158, 186],              // centro de la cara (entre los ojos y la boca)
-  boca: { mordida: [154, 216], mordidaFinal: [156, 208], alivio: [150, 212] }
+  cabeza: 45,                    // recorte de la cabeza que sale volando: hasta el cuello de la capucha
+  cara: [26, 31],                // centro de la cara (entre los ojos y la boca)
+  boca: { mordida: [26.5, 37.5], mordidaFinal: [28.5, 37.5], alivio: [27.5, 38.5] }
 };
 
 const EXPRESIONES = {
@@ -1680,7 +1682,7 @@ function estaVisible(el) {
 }
 
 /* ---------- la cabeza que sale volando ---------- */
-const anchoCabeza = () => (window.innerWidth <= 560 ? 72 : 96);
+const anchoCabeza = () => (window.innerWidth <= 560 ? 78 : 104); // 1,5 y 2 píxeles de pantalla por píxel del dibujo
 const pose = (x, y, r = 0, s = 1, sx = 1, sy = 1) => ({ x, y, r, s, sx, sy });
 const poseCSS = (p) => `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) rotate(${p.r}deg) scale(${p.s * p.sx}, ${p.s * p.sy})`;
 
