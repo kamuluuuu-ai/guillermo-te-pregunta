@@ -1008,6 +1008,12 @@ const sound = {
       ssjTransforma: [[523, 0, 0.5, "triangle", 0.06], [659, 0.05, 0.5, "triangle", 0.05], [784, 0.1, 0.55, "triangle", 0.05], [1047, 0.18, 0.6, "triangle", 0.04], [65, 0, 0.6, "sawtooth", 0.05]],
       ssjImpacto: [[1200, 0, 0.05, "square", 0.08], [200, 0.04, 0.2, "triangle", 0.12], [90, 0.1, 0.25, "triangle", 0.1]],
       restore: [[880, 0, 0.07, "square", 0.04], [1175, 0.07, 0.07, "square", 0.04], [1397, 0.14, 0.07, "square", 0.04], [1760, 0.21, 0.16, "square", 0.04]],
+      // Elías: entra, prepara el arma, dispara (volumen moderado), rompe la pregunta y se arma la nueva
+      eliasEntra: [[392, 0, 0.05], [494, 0.09, 0.05], [587, 0.18, 0.07]],
+      eliasCarga: [[1400, 0, 0.025, "square", 0.04], [900, 0.09, 0.03, "square", 0.045]],
+      eliasDisparo: [[1600, 0, 0.03, "square", 0.07], [220, 0.02, 0.09, "square", 0.08], [70, 0.05, 0.22, "triangle", 0.1]],
+      eliasRompe: [880, 740, 622, 523, 440, 370, 311, 262].map((f, i) => [f, i * 0.045, 0.05, "square", 0.04]),
+      eliasArma: [[523, 0, 0.06, "square", 0.035], [659, 0.06, 0.06, "square", 0.035], [784, 0.12, 0.1, "square", 0.035]],
       ssjVictoria: [[784, 0, 0.08], [988, 0.08, 0.08], [1175, 0.16, 0.08], [1568, 0.26, 0.22]]
     }[name];
     const destino = enCanal ? this.abrirCanal() : null;
@@ -1565,6 +1571,7 @@ function cortarActuacion() {
   mordida.nodos.clear();
   Object.assign(mordida, { cola: [], corriendo: false, actuando: false, diferido: null, alComido: null });
   cortarRescate();
+  cortarDisparo();
   guillermo.el.style.visibility = "";
   document.body.classList.remove("estallido");
   document.querySelectorAll("[data-screen]").forEach((s) => { s.inert = false; });
@@ -1592,6 +1599,7 @@ async function procesarCola() {
     await (b.final ? actuacionFinal(b) : actuacionMordida(b));
   }
   if (gen === mordida.gen) mordida.corriendo = false;
+  if (current === "quiz") renderLifelines(); // terminó el mordisco: se habilita lo que corresponda (p. ej. el cambio)
 }
 
 /* =========================================================
@@ -2281,7 +2289,7 @@ function startQuiz(lesson = null) {
   if (lesson === "eval") quiz.reserve.push(...meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, AJUSTES.retosPorEvaluacion), true));
   else if (lesson === "todo" || lesson === null) meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, 2), false);
   else if (RETO_DEL_TEMA[lesson]) meterRetos(quiz.deck, [RETO_DEL_TEMA[lesson]], false);
-  quiz.comodines = { rappi: true, pista: true, cambio: true, ssj: true }; // el Rescate SSJ está en todos los modos con mordiscos
+  quiz.comodines = { rappi: true, cambio: true, ssj: true }; // el Rescate SSJ está en todos los modos con mordiscos
   rescate.estado = "disponible";
   Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {}, busy: false, terminado: false });
   $("#hint-btn").hidden = lesson === "eval";
@@ -2292,7 +2300,7 @@ function startQuiz(lesson = null) {
   show("quiz", $("#q-text"));
   enojoIniciar(limitePara(quiz.deck.length));
   renderQuestion(lesson === "eval"
-    ? `¡Arranca la evaluación${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 4 comodines: Rappi, Pista, Cambio y Llamar a Kamil. Usalos bien.`
+    ? `¡Arranca la evaluación${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 3 comodines: Rappi, ${ELIAS.nombre} (cambia la pregunta) y Kamil. Usalos bien.`
     : pick(FRASES.arranque));
 }
 
@@ -2419,7 +2427,7 @@ function cerrarPregunta(ok, elegida, correcta, respuesta) {
 }
 
 function useHint() {
-  if (quiz.lesson === "eval") return usarPista();
+  if (quiz.lesson === "eval") return; // en la evaluación no hay pista
   if (quiz.answered || quiz.hintUsed || quiz.busy || current !== "quiz") return;
   quiz.hintUsed = true; // el costo se descuenta de los puntos de esta pregunta si la acertás
   const hint = $("#hint-btn");
@@ -2885,9 +2893,7 @@ $("#graph-degrees").addEventListener("change", (e) => { lesson.showDegrees = e.t
 EVALUACION.preguntas.forEach((p) => { p.categoria = "Evaluación · " + CLASE.temas[p.tema].titulo; });
 
 const COMODINES = {
-  rappi: { label: "🛵 Llamar a Rappi", usado: "🛵 Rappi ya pasó" },
-  pista: { label: "💡 Pista de Guillermo", usado: "💡 Pista usada" },
-  cambio: { label: "🔄 Cambiar pregunta", usado: "🔄 Cambio usado" }
+  rappi: { label: "🛵 Llamar a Rappi", usado: "🛵 Rappi ya pasó" }
 };
 
 function renderEvalHistory() {
@@ -2930,6 +2936,8 @@ function renderLifelines() {
   const evaluacion = quiz.lesson === "eval";
   box.hidden = false;
   renderRescate();
+  $(".elias-comodin").hidden = !evaluacion;
+  if (evaluacion) renderCambio();
   Object.keys(COMODINES).forEach((k) => {
     const b = $("#life-" + k);
     b.hidden = !evaluacion;
@@ -2937,25 +2945,8 @@ function renderLifelines() {
     const used = !quiz.comodines[k];
     b.textContent = used ? COMODINES[k].usado : COMODINES[k].label;
     b.classList.toggle("used", used);
-    b.disabled = used || quiz.answered || quiz.busy || (k === "cambio" && !quiz.reserve.length) || (k === "rappi" && !!quiz.deck[quiz.index].reto);
+    b.disabled = used || quiz.answered || quiz.busy || disparo.enEscena || (k === "rappi" && !!quiz.deck[quiz.index].reto);
   });
-}
-
-function usarPista() {
-  if (quiz.lesson !== "eval" || !quiz.comodines.pista || quiz.answered || quiz.busy) return;
-  quiz.comodines.pista = false;
-  quiz.hintUsed = true;
-  sound.play("hint");
-  guillermo.say("Pista: " + quiz.deck[quiz.index].pista, "pensando", null, true);
-  renderLifelines();
-}
-
-function cambiarPregunta() {
-  if (quiz.lesson !== "eval" || !quiz.comodines.cambio || quiz.answered || quiz.busy || !quiz.reserve.length) return;
-  quiz.comodines.cambio = false;
-  quiz.deck[quiz.index] = prepareQuestion(quiz.reserve.pop());
-  sound.play("click");
-  renderQuestion("¡Cambiamos la pregunta! Vamos con esta.");
 }
 
 // Rappi siempre se anima (aunque el sistema pida menos movimiento): es el chiste del comodín.
@@ -3094,6 +3085,7 @@ function renderEval(total) {
   const nota = Math.max(1, Math.round((quiz.correct / total) * 12));
   const aprobado = nota >= 6;
   const usados = Object.keys(COMODINES).filter((k) => !quiz.comodines[k]).map((k) => COMODINES[k].label.replace(/^\S+\s/, ""));
+  if (!quiz.comodines.cambio) usados.push("Llamar a " + ELIAS.nombre);
   if (!quiz.comodines.ssj) usados.push("Llamar a Kamil");
   const fecha = new Date().toLocaleString("es-UY", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
   const hist = store.get("evaluaciones", []);
@@ -3141,8 +3133,8 @@ const gradosDe = (g) => g.names.map((n) => `δ(${n}) = ${g.degree[n]}`).join(", 
 
 // arma un reto a partir de un grafo de ejemplo; las claves son "v:Nombre" o "e:índice".
 // Todo (consigna, respuesta y explicación) sale de las aristas del grafo, nunca de un texto escrito a mano.
-function armarReto(tipo) {
-  const g = graphData(pick(GRAFOS_RETO));
+function armarReto(tipo, grafo = pick(GRAFOS_RETO)) {
+  const g = graphData(grafo);
   const base = { reto: { tipo, g, marcados: new Set(), listo: false }, mezcla: [], categoria: "Mini reto · Grafos" };
   const r = base.reto;
   if (tipo === "maximo") {
@@ -3695,6 +3687,390 @@ const CARAS_RESCATE = {
   aturdido: cara({ cejas: "alta", ojos: "x", boca: "mastica" }, "Guillermo, mareado, con los ojos en cruz")
 };
 
+/* =========================================================
+   COMODÍN «CAMBIAR PREGUNTA» (LLAMAR A ELÍAS)
+   Una vez por evaluación, con la pregunta todavía sin responder.
+   Elías entra, apunta al panel de la pregunta y le dispara: la
+   pregunta se rompe en píxeles y se arma otra en su lugar.
+   · La reemplazada no cuenta: no cambian puntos, racha, enojo,
+     número de pregunta ni el repaso del final.
+   · El reemplazo se elige ANTES de gastar el uso: una pregunta de
+     la reserva que no se mostró, del mismo tema si hay; un mini reto
+     se cambia por otro mini reto del mismo tema con otro grafo.
+   · No repara el panel ni calma a Guillermo (eso es de Kamil).
+   · No se superpone con un mordisco, Rappi ni Kamil. Todo corre con
+     esperar/tarea/animar/nodoFx: salir o reiniciar corta la escena.
+   ========================================================= */
+// hoja de poses ya preparada (assets/cambio-disparo/preparar-sprites.py): 4 cuadros de 604 × 599
+// alineados por los pies. El dibujo mira a la derecha y el fogonazo ya viene en la pose «disparando».
+const ELIAS = {
+  nombre: "Elías", // se puede cambiar: los textos del comodín salen de acá
+  src: "assets/cambio-disparo/poses.png",
+  w: 604, h: 599,
+  ancla: [194, 598],  // punto medio entre los championes, sobre el piso
+  boca: [466, 296],   // boca del caño (donde nace el fogonazo)
+  atras: 190,         // cuánto ocupa el cuerpo detrás del ancla…
+  adelante: 140,      // …y adelante (sin contar el brazo con el arma)
+  poses: ["reposo", "preparacion", "apuntando", "disparando"],
+  img: null
+};
+
+// tiempos de cada momento (ms): la versión completa dura unos 3,5 s
+const TIEMPOS_ELIAS = {
+  normal: { entrada: 420, plantado: 220, prepara: 420, apunta: 620, retroceso: 110, bala: 80, rompe: 720, arma: 520, baja: 240, salida: 380 },
+  reducido: { entrada: 200, plantado: 0, prepara: 0, apunta: 450, retroceso: 0, bala: 0, rompe: 260, arma: 260, baja: 0, salida: 200 }
+};
+
+const TEMA_DEL_RETO = { maximo: 3, gradoK: 3, vecinos: 1, aristas: 2 };
+const disparo = { enEscena: false, raf: 0, reemplazo: null };
+
+function hojaElias() {
+  if (!ELIAS.img) {
+    ELIAS.img = new Image();
+    ELIAS.img.src = ELIAS.src;
+    ELIAS.lista = (ELIAS.img.decode ? ELIAS.img.decode() : Promise.resolve()).then(() => true, () => false);
+  }
+  return Promise.race([ELIAS.lista, new Promise((r) => setTimeout(() => r(false), 1500))]);
+}
+
+// la pregunta que va a entrar, o null si no hay ninguna válida (entonces no se gasta el uso)
+function elegirReemplazo() {
+  const q = quiz.deck[quiz.index];
+  if (!q) return null;
+  if (q.reto) { // otro ejercicio interactivo del mismo tema, con otro grafo o de otro tipo
+    const usados = new Set(quiz.deck.filter((x) => x.reto).map((x) => x.reto.tipo + "|" + x.reto.g.key));
+    const opciones = [];
+    Object.keys(TEMA_DEL_RETO).filter((t) => TEMA_DEL_RETO[t] === q.tema)
+      .forEach((t) => GRAFOS_RETO.forEach((g) => { if (!usados.has(t + "|" + g)) opciones.push([t, g]); }));
+    return opciones.length ? { reto: pick(opciones) } : null;
+  }
+  const vistas = new Set(quiz.deck.map((x) => x.pregunta));
+  const libres = quiz.reserve.filter((x) => !vistas.has(x.pregunta));
+  const mismoTema = libres.filter((x) => x.tema === q.tema);
+  const elegida = pick(mismoTema.length ? mismoTema : libres);
+  return elegida ? { pregunta: elegida } : null;
+}
+
+function cambioDisponible() {
+  return current === "quiz" && quiz.lesson === "eval" && quiz.comodines.cambio && !disparo.enEscena &&
+    !quiz.answered && !quiz.busy && !quiz.terminado && !enojo.final &&
+    !mordida.corriendo && !mordida.actuando && !rescateEnEscena() && !!elegirReemplazo();
+}
+
+function renderCambio() {
+  const b = $("#life-cambio");
+  const usado = !quiz.comodines.cambio;
+  $("#cambio-usos").textContent = usado ? "Usado" : "1 uso";
+  b.classList.toggle("used", usado);
+  b.disabled = !cambioDisponible();
+}
+
+function activarCambio() {
+  if (!cambioDisponible()) return;
+  const reemplazo = elegirReemplazo();
+  if (!reemplazo) return;
+  quiz.comodines.cambio = false; // se gasta en cuanto se acepta: no hay doble uso
+  quiz.busy = true;              // pausa: no se responde ni se usan otros comodines
+  disparo.enEscena = true;
+  disparo.reemplazo = reemplazo;
+  if (reemplazo.pregunta) quiz.reserve.splice(quiz.reserve.indexOf(reemplazo.pregunta), 1);
+  escenaDisparo();
+}
+
+// lo llama cortarActuacion (salir, reiniciar, cambiar de pantalla): no deja nada colgado
+function cortarDisparo() {
+  if (disparo.raf) cancelAnimationFrame(disparo.raf);
+  disparo.raf = 0;
+  if (disparo.enEscena) {
+    disparo.enEscena = false;
+    quiz.busy = false;
+  }
+  disparo.reemplazo = null;
+  const card = $("#q-card");
+  card.style.opacity = "";
+  card.style.visibility = "";
+}
+
+// pone la pregunta nueva en el mazo (misma posición: el número de pregunta no cambia)
+function ponerReemplazo() {
+  const r = disparo.reemplazo;
+  quiz.deck[quiz.index] = r.reto ? armarReto(r.reto[0], r.reto[1]) : prepareQuestion(r.pregunta);
+  disparo.reemplazo = null;
+}
+
+// dónde se para Elías y a dónde dispara, medido con la pantalla de ahora (compu o celular)
+function medirDisparo(alto) {
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const card = $("#q-card").getBoundingClientRect();
+  const texto = $("#q-text").getBoundingClientRect();
+  const s = alto / ELIAS.h;
+  const atras = ELIAS.atras * s, adelante = ELIAS.adelante * s;
+  const caño = (ELIAS.boca[0] - ELIAS.ancla[0]) * s;  // de los pies a la boca del caño, en x…
+  const altura = (ELIAS.ancla[1] - ELIAS.boca[1]) * s; // …y en y
+  const g = guillermo.el.getBoundingClientRect();
+  const choca = (x0, x1, y0, y1) => g.right > x0 && g.left < x1 && g.bottom > y0 && g.top < y1;
+  const yTexto = Math.min(card.bottom - 20, Math.max(card.top + 20, texto.top + texto.height / 2));
+  let modo, x, y, dir, blanco;
+  y = Math.min(vh - 6, Math.max(alto + 6, yTexto + altura));
+  // 1) al costado del panel, si entra sin pisar a Guillermo (mira hacia la pregunta)
+  const xDer = Math.min(vw - 8 - atras, card.right + adelante + 14);
+  const xIzq = Math.max(8 + atras, card.left - adelante - 14);
+  if (xDer - adelante >= card.right - 4 && !choca(xDer - adelante, xDer + atras, y - alto, y)) {
+    modo = "costado"; x = xDer; dir = -1;
+  } else if (xIzq + adelante <= card.left + 4 && !choca(xIzq - atras, xIzq + adelante, y - alto, y)) {
+    modo = "costado"; x = xIzq; dir = 1;
+  } else {
+    // 2) celular: no hay lugar al costado; se para abajo a la izquierda, sobre la esquina del panel,
+    //    y dispara de costado hacia el lado derecho de la pregunta (que no tapa)
+    modo = "esquina"; dir = 1; x = 8 + atras;
+    y = Math.min(vh - 6, card.bottom - 18 + altura);
+  }
+  const boca = { x: x + dir * caño, y: y - altura };
+  blanco = modo === "costado"
+    ? { x: card.left + card.width / 2, y: boca.y }
+    : { x: Math.max(boca.x + 40, card.left + card.width * 0.72), y: boca.y };
+  return { vw, vh, card, s, x, y, dir, espejo: dir < 0, boca, blanco, modo, atras, adelante };
+}
+
+// pinta la pregunta como una grilla de píxeles (muestreando lo que hay debajo) en un canvas de la capa de efectos
+function pixelesDe(card) {
+  const r = card.getBoundingClientRect();
+  const c = Math.max(7, Math.round(Math.sqrt((r.width * r.height) / 1500)));
+  const estilos = new Map();
+  const fondo = (el) => {
+    for (let n = el; n && n !== document.body; n = n.parentElement) {
+      if (!estilos.has(n)) estilos.set(n, getComputedStyle(n));
+      const bg = estilos.get(n).backgroundColor;
+      if (bg && bg !== "transparent" && !/rgba\(.*,\s*0\)$/.test(bg)) return bg;
+      if (n === card) break;
+    }
+    return "#0f1640";
+  };
+  const conTexto = (el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim());
+  const celdas = [];
+  const inerte = card.inert;
+  card.inert = false; // solo para medir (es sincrónico: nadie llega a tocar nada)
+  for (let y = r.top; y < r.bottom - 1; y += c) {
+    for (let x = r.left; x < r.right - 1; x += c) {
+      const el = document.elementFromPoint(x + c / 2, y + c / 2);
+      if (!el || !card.contains(el)) continue;
+      const color = conTexto(el) && Math.random() < 0.3 ? getComputedStyle(el).color : fondo(el);
+      celdas.push({ x, y, color });
+    }
+  }
+  card.inert = inerte;
+  return { c, celdas, r };
+}
+
+function lienzoFx() {
+  const cv = nodoFx("pixeles");
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  cv.remove(); // nodoFx crea un div: lo cambiamos por un canvas
+  mordida.nodos.delete(cv);
+  const canvas = document.createElement("canvas");
+  canvas.className = "pixeles";
+  canvas.width = Math.round(window.innerWidth * dpr);
+  canvas.height = Math.round(window.innerHeight * dpr);
+  canvas.style.width = `${window.innerWidth}px`;
+  canvas.style.height = `${window.innerHeight}px`;
+  $("#fx").appendChild(canvas);
+  mordida.nodos.add(canvas);
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { canvas, ctx };
+}
+
+// anima la grilla: «rompe» (salen volando desde el impacto) o «arma» (vuelven a su lugar)
+function animarPixeles(px, origen, modo, ms) {
+  const gen = mordida.gen;
+  const { canvas, ctx } = lienzoFx();
+  const parts = px.celdas.map((p) => {
+    const dx = p.x - origen.x, dy = p.y - origen.y;
+    const d = Math.hypot(dx, dy) || 1;
+    const fuerza = (260 + Math.random() * 420) * (modo === "rompe" ? 1 : 0.6);
+    return { ...p, vx: (dx / d) * fuerza + (Math.random() - 0.5) * 120, vy: (dy / d) * fuerza - 120 - Math.random() * 160,
+      demora: modo === "rompe" ? Math.min(0.35, d / 1400) : Math.random() * 0.35 };
+  });
+  return new Promise((resolve) => {
+    const t0 = performance.now();
+    const cuadro = (ahora) => {
+      if (gen !== mordida.gen) return resolve(false);
+      const t = (ahora - t0) / ms;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      parts.forEach((p) => {
+        // de a saltos de 1/12: se mueve «a cuadritos», como el resto del juego
+        const k = Math.floor(Math.max(0, Math.min(1, (t - p.demora) / (1 - p.demora))) * 12) / 12;
+        const u = modo === "rompe" ? k : 1 - k; // 0 = en su lugar, 1 = lejos
+        const s = u * 0.9;
+        const x = p.x + p.vx * s, y = p.y + p.vy * s + 700 * s * s;
+        ctx.globalAlpha = modo === "rompe" ? 1 - u * u : 1 - u;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(Math.round(x), Math.round(y), px.c, px.c);
+      });
+      if (t < 1) disparo.raf = requestAnimationFrame(cuadro);
+      else { disparo.raf = 0; quitarNodo(canvas); resolve(true); }
+    };
+    disparo.raf = requestAnimationFrame(cuadro);
+  });
+}
+
+async function escenaDisparo() {
+  const gen = mordida.gen;
+  const reduce = reduceMotion.matches; // con menos movimiento: misma función, transición breve sin sacudidas
+  const T = reduce ? TIEMPOS_ELIAS.reducido : TIEMPOS_ELIAS.normal;
+  const nombre = ELIAS.nombre;
+  const card = $("#q-card");
+  renderLifelines();
+  pausarPregunta(true);
+  delete document.body.dataset.rescate; // la pregunta no se oscurece: es el blanco y se tiene que ver
+  $("#ssj-aviso").textContent = `${nombre} va a cambiar la pregunta: queda en pausa unos segundos. No cuenta como error.`;
+  if (document.activeElement && document.activeElement.closest("[inert]")) $("#panel").focus({ preventScroll: true });
+
+  // primero se ve el blanco: la pregunta entera en pantalla (en celular, con lugar abajo para Elías)
+  const alto = Math.round(Math.min(210, Math.max(130, window.innerHeight * 0.26)));
+  const scrollAntes = window.scrollY;
+  const rc = card.getBoundingClientRect();
+  const arriba = rc.height + alto * 0.55 + 24 <= window.innerHeight ? rc.top - 12 : rc.bottom - (window.innerHeight - alto * 0.55 - 12);
+  if (Math.abs(arriba) > 4 && (rc.top < 8 || rc.bottom > window.innerHeight - 8 || window.innerWidth <= 820)) {
+    window.scrollBy({ top: arriba, behavior: reduce ? "auto" : "smooth" });
+    if (!(await esperar(reduce ? 60 : 420))) return;
+  }
+  await hojaElias();
+  if (gen !== mordida.gen) return;
+
+  const E = medirDisparo(alto);
+  const { s, dir } = E;
+  const actor = nodoFx("elias-actor");
+  actor.style.width = `${ELIAS.w * s}px`;
+  actor.style.height = `${ELIAS.h * s}px`;
+  actor.innerHTML = `<div class="elias-sprite"></div>`;
+  const sprite = actor.firstChild;
+  sprite.style.transformOrigin = `${ELIAS.ancla[0] * s}px 100%`;
+  sprite.style.backgroundImage = `url("${ELIAS.src}")`;
+  sprite.style.backgroundSize = `${ELIAS.w * s * ELIAS.poses.length}px ${ELIAS.h * s}px`;
+  const mirar = (d) => { sprite.style.transform = d < 0 ? "scaleX(-1)" : "none"; };
+  const poner = (pose) => { sprite.style.backgroundPosition = `${-ELIAS.poses.indexOf(pose) * ELIAS.w * s}px 0`; };
+  const lugar = (dx = 0, dy = 0) => `translate(${E.x - ELIAS.ancla[0] * s + dx}px, ${E.y - ELIAS.ancla[1] * s + dy}px)`;
+  mirar(dir);
+  actor.style.transform = lugar();
+  const g0 = guillermo.el.getBoundingClientRect();
+  const haciaElias = Math.sign(E.x - (g0.left + g0.width / 2)) || 1;
+
+  // 1) ENTRADA: aparece junto al panel en reposo (entra a saltitos desde su borde de la pantalla)
+  poner("reposo");
+  sound.play("eliasEntra", true);
+  if (reduce) animar(actor, [{ opacity: 0 }, { opacity: 1 }], { duration: T.entrada, fill: "forwards" });
+  else {
+    const desde = dir < 0 ? E.vw + ELIAS.atras * s + 10 - E.x : -(E.x + ELIAS.atras * s + 10);
+    animar(actor, [0, 1, 2, 3, 4].map((k) => ({ transform: lugar(desde * (1 - k / 4), k % 2 ? -12 * s : 0) })),
+      { duration: T.entrada, easing: "linear", fill: "forwards" });
+  }
+  if (!(await esperar(T.entrada + T.plantado))) return;
+
+  // 2) PREPARACIÓN: saca el arma; un instante de anticipación para que se entienda qué va a hacer
+  if (!reduce) {
+    poner("preparacion");
+    sound.play("eliasCarga", true);
+    guillermo.set(CARAS_DISPARO.mira(haciaElias));
+    guillermo.decir(`¿${nombre}? ¿Qué hacés con eso?`);
+    animar(sprite, [{ transform: `${dir < 0 ? "scaleX(-1) " : ""}scale(1.03, 0.96)` }, { transform: dir < 0 ? "scaleX(-1)" : "none" }],
+      { duration: T.prepara, easing: "steps(3)" });
+    if (!(await esperar(T.prepara))) return;
+  }
+
+  // 3) APUNTADO: la pose queda quieta un momento bien visible
+  poner("apuntando");
+  guillermo.set(CARAS_DISPARO.asustado(haciaElias));
+  if (reduce) guillermo.decir(`¿${nombre}? ¿Qué vas a hacer?`);
+  if (!(await esperar(T.apunta))) return;
+
+  // 4) DISPARO: pose con fogonazo (ya viene dibujado), retroceso corto y la bala hasta el panel
+  const px = pixelesDe(card); // se muestrea antes de romperla
+  poner("disparando");
+  sound.play("eliasDisparo", true);
+  if (!reduce) {
+    animar(actor, [{ transform: lugar(-dir * 60 * s, 0) }, { transform: lugar() }], { duration: T.retroceso * 2, easing: "steps(2)", fill: "forwards" });
+    const bala = nodoFx("elias-bala");
+    const dx = E.blanco.x - E.boca.x, dy = E.blanco.y - E.boca.y;
+    bala.style.transform = `translate(${E.boca.x}px, ${E.boca.y - 2}px) rotate(${Math.atan2(dy, dx)}rad)`;
+    efimero(bala, animar(bala, [{ width: "0px", opacity: 1 }, { width: `${Math.hypot(dx, dy)}px`, opacity: 1, offset: 0.6 }, { width: `${Math.hypot(dx, dy)}px`, opacity: 0 }],
+      { duration: T.bala * 2.5, easing: "steps(4)", fill: "forwards" }), T.bala * 2.5);
+    if (!(await esperar(T.bala))) return;
+  }
+
+  // 5) CAMBIO: impacto → la pregunta se rompe en píxeles; se arma la nueva en el mismo lugar
+  sound.play("eliasRompe", true);
+  guillermo.set(CARAS_DISPARO.sorpresa(haciaElias));
+  guillermo.decir("¡¿Le disparó a la pregunta?!");
+  $("#ssj-aviso").textContent = "La pregunta se rompió. Ahora aparece otra.";
+  if (reduce) {
+    await animar(card, [{ opacity: 1 }, { opacity: 0 }], { duration: T.rompe, fill: "forwards" })?.finished.catch(() => {});
+  } else {
+    card.style.opacity = "0";
+    tarea(() => poner("apuntando"), 240);
+    if (!(await animarPixeles(px, E.blanco, "rompe", T.rompe))) return;
+  }
+  if (gen !== mordida.gen) return;
+  card.getAnimations().forEach((a) => a.cancel());
+  card.style.opacity = "0";
+  ponerReemplazo();
+  renderQuestion(`Bueno… ${nombre} cambió la pregunta. Vamos con esta.`);
+  quiz.busy = true; // renderQuestion la deja lista para responder: sigue en pausa hasta que se vaya Elías
+  renderLifelines();
+  pausarPregunta(true);
+  delete document.body.dataset.rescate;
+  if (reduce) {
+    card.style.opacity = "";
+    animar(card, [{ opacity: 0 }, { opacity: 1 }], { duration: T.arma });
+    if (!(await esperar(T.arma))) return;
+  } else {
+    const nueva = pixelesDe(card); // con opacidad 0 igual se puede muestrear
+    if (!(await animarPixeles(nueva, E.blanco, "arma", T.arma))) return;
+    card.style.opacity = "";
+  }
+  sound.play("eliasArma", true);
+
+  // 6) SALIDA: baja el arma con las poses que hay y se va por donde vino
+  if (!reduce) {
+    poner("preparacion");
+    if (!(await esperar(T.baja))) return;
+    poner("reposo");
+    mirar(-dir);
+    const hasta = dir < 0 ? E.vw + ELIAS.atras * s + 10 - E.x : -(E.x + ELIAS.atras * s + 10);
+    animar(actor, [0, 1, 2, 3, 4].map((k) => ({ transform: lugar(hasta * (k / 4), k % 2 ? -12 * s : 0) })), { duration: T.salida, easing: "linear", fill: "forwards" });
+  } else {
+    poner("reposo");
+    animar(actor, [{ opacity: 1 }, { opacity: 0 }], { duration: T.salida, fill: "forwards" });
+  }
+  if (!(await esperar(T.salida))) return;
+  terminarDisparo(actor, scrollAntes);
+}
+
+// cierre: la pregunta nueva queda lista; el daño del panel y el enojo siguen como estaban
+function terminarDisparo(actor, scrollAntes) {
+  quitarNodo(actor);
+  disparo.enEscena = false;
+  quiz.busy = false;
+  pausarPregunta(false);
+  $("#q-card").style.opacity = "";
+  guillermo.set(caraBase());
+  renderLifelines();
+  $("#ssj-aviso").textContent = `Listo: ${ELIAS.nombre} cambió la pregunta. No cuenta como error y seguís en la misma pregunta número ${quiz.index + 1}.`;
+  if (window.innerWidth > 820 && scrollAntes !== window.scrollY) window.scrollTo({ top: scrollAntes, behavior: "auto" });
+  $("#q-text").focus({ preventScroll: true });
+}
+
+// caras de Guillermo mientras Elías dispara (no le apunta a él)
+const CARAS_DISPARO = {
+  mira: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "fiu" }, "Guillermo, sorprendido, mira a quien llegó"),
+  asustado: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "triste", sudor: true }, "Guillermo, asustado, ve que apunta a la pregunta"),
+  sorpresa: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "abierta" }, "Guillermo, con la boca abierta, ve la pregunta hecha pedazos")
+};
+
+// los textos del comodín usan el nombre configurado
+document.querySelectorAll("[data-nombre-elias]").forEach((n) => { n.textContent = ELIAS.nombre; });
+hojaElias(); // precarga las poses
+
 // llama hecha con píxeles (dos cuadros que se alternan); es una capa aparte, sin fondo
 function auraSVG(cuadro) {
   const W = 30, H = 40;
@@ -3854,8 +4230,7 @@ const actions = {
     $("#eaten").hidden = true;
     if (fn) fn();
   },
-  "life-pista": usarPista,
-  "life-cambio": cambiarPregunta,
+  "life-cambio": activarCambio,
   "life-ssj": activarRescate,
   "lesson-exam": () => startQuiz("examen"),
   learn: showLearn,
@@ -3878,7 +4253,7 @@ document.addEventListener("click", (e) => {
   if (!btn || btn.disabled) return;
   const fn = actions[btn.dataset.action];
   if (!fn) return;
-  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-pista", "life-cambio", "life-ssj", "reto-check"].includes(btn.dataset.action)) sound.play("click");
+  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-cambio", "life-ssj", "reto-check"].includes(btn.dataset.action)) sound.play("click");
   fn();
 });
 
