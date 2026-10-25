@@ -1001,3 +1001,137 @@ body.estallido::after { animation: estallido 0.9s steps(3) both; }
   .host { grid-template-columns: 92px 1fr; }
   .rappi-rider { width: 140px; }
 }
+
+
+/* =========================================================
+   COMODÍN «RESCATE SSJ»
+   ========================================================= */
+.btn-ssj { --c: #ffb627; --cd: #c27800; --fg: var(--ink); }
+.ssj-comodin { flex: 1 1 220px; display: flex; flex-direction: column; gap: 8px; }
+.lifelines .btn.life-ssj { flex: none; justify-content: flex-start; gap: 10px; padding-left: 10px; }
+.ssj-retrato { flex: none; width: 40px; height: 40px; image-rendering: pixelated; background: #ffffff55; box-shadow: 0 0 0 2px var(--ink); }
+.ssj-texto { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; text-align: left; }
+.ssj-usos {
+  margin-top: 3px;
+  padding: 2px 6px;
+  font-family: var(--font-retro);
+  font-size: 8px;
+  color: var(--yellow);
+  background: var(--ink);
+}
+.ssj-desc { margin: 0; font-size: 13px; font-weight: 800; color: var(--muted); }
+/* usado: queda gris, con el sello «Usado» bien visible */
+.lifelines .btn.life-ssj.used { text-decoration: none; filter: grayscale(1) brightness(0.7); }
+.life-ssj.used .ssj-retrato { opacity: 0.6; }
+.life-ssj.used .ssj-usos { color: #fff; background: var(--bad, #e8505a); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* pausa del rescate: la pregunta se apaga un poco (Salir sigue andando) y hay un cartel claro */
+body[data-rescate] #q-card,
+body[data-rescate] #q-feedback,
+body[data-rescate] #lifelines,
+body[data-rescate] #hint-btn,
+body[data-rescate] #next-btn { filter: saturate(0.5) brightness(0.75); transition: filter 0.2s steps(2); }
+.ssj-pausa {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 10px;
+  background: var(--ink);
+  color: var(--yellow);
+  font-family: var(--font-retro);
+  font-size: 10px;
+  white-space: nowrap;
+  box-shadow: 0 0 0 3px var(--yellow), 0 6px 0 3px #00000077;
+}
+.ssj-pausa span + span { color: #fff; }
+
+/* el rescatista: el aura es una capa propia detrás del sprite; nada pinta un rectángulo de fondo */
+.ssj-actor { z-index: 2; will-change: transform; }
+.ssj-brillo { z-index: 1; }
+.ssj-cuerpo, .ssj-sprite { position: absolute; inset: 0; }
+.ssj-sprite { background-repeat: no-repeat; image-rendering: pixelated; filter: drop-shadow(0 5px 0 #00000055); }
+.ssj-aura {
+  position: absolute;
+  left: 8%;
+  width: 77%;
+  bottom: -2%;
+  height: 104%;
+  opacity: 0;
+  transform: scale(0.5, 0.35);
+  transform-origin: 50% 100%;
+  transition: opacity 0.3s steps(3), transform 0.35s steps(4);
+}
+.ssj-aura.junta { opacity: 0.45; transform: scale(0.8, 0.7); }
+.ssj-aura.ssj { opacity: 1; transform: scale(1.04, 1.06); }
+.ssj-aura.apaga { opacity: 0.35; transform: scale(0.85, 0.75); }
+.ssj-aura > div { position: absolute; inset: 0; }
+.ssj-aura svg { display: block; width: 100%; height: 100%; shape-rendering: crispEdges; }
+.ssj-aura .aura-a { animation: aura-a 0.3s steps(1) infinite; }
+.ssj-aura .aura-b { animation: aura-b 0.3s steps(1) infinite; }
+@keyframes aura-a { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes aura-b { 0%, 49% { opacity: 0; } 50%, 100% { opacity: 1; } }
+.chispa { width: 6px; height: 6px; }
+.chispa.chica { width: 4px; height: 4px; }
+
+.ssj-globo {
+  max-width: 220px;
+  padding: 8px 10px;
+  background: #fff;
+  color: var(--ink);
+  font-weight: 900;
+  font-size: 14px;
+  line-height: 1.25;
+  box-shadow: 0 0 0 3px var(--ink), 0 6px 0 3px #00000055;
+}
+.nam-pop.ssj-grito { color: #fff4a8; }
+.nam-pop.kame-txt { color: #bfe9ff; font-size: 13px; }
+.nam-pop.kame-txt.grande { font-size: 24px; }
+.nam-pop.ssj-calma { color: var(--teal); font-size: 15px; }
+
+/* esfera y Kamehameha: bandas de color duras, como píxeles grandes */
+.kame-bola {
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 34%, #bfe9ff 34% 52%, #4fb8ff 52% 70%, #2a6cff 70% 100%);
+  box-shadow: 0 0 0 3px #ffffff55, 0 0 22px 6px #4fb8ff99;
+}
+.kame-luz { border-radius: 50%; background: radial-gradient(circle, #9fe2ff77 0 30%, #4fb8ff33 30% 55%, transparent 55%); }
+.rayo { transform-origin: 0 50%; width: 0; }
+.rayo-cuerpo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#2a6cff 0 14%, #4fb8ff 14% 30%, #bfe9ff 30% 40%, #fff 40% 60%, #bfe9ff 60% 70%, #4fb8ff 70% 86%, #2a6cff 86% 100%);
+  box-shadow: 0 0 16px 3px #4fb8ff99;
+}
+.rayo-cabeza {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  height: 200%;
+  aspect-ratio: 1;
+  transform: translate(45%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 38%, #bfe9ff 38% 56%, #4fb8ff 56% 74%, #2a6cff 74% 100%);
+  box-shadow: 0 0 22px 8px #4fb8ff99;
+}
+.ssj-brillo { border-radius: 50%; background: radial-gradient(circle, var(--c) 0 30%, #ffd23f55 30% 55%, transparent 55%); }
+/* impacto: anillo de bloques (dos aros punteados) */
+.ssj-impacto {
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fff 0 18%, transparent 18%),
+    repeating-conic-gradient(#bfe9ff 0 10deg, transparent 10deg 30deg);
+  -webkit-mask: radial-gradient(circle, #000 0 20%, transparent 20% 34%, #000 34% 50%, transparent 50%);
+  mask: radial-gradient(circle, #000 0 20%, transparent 20% 34%, #000 34% 50%, transparent 50%);
+}
+.estrella {
+  width: 6px;
+  height: 6px;
+  background: var(--yellow);
+  box-shadow: 6px 0 0 var(--yellow), -6px 0 0 var(--yellow), 0 6px 0 var(--yellow), 0 -6px 0 var(--yellow);
+}
+
+@media (max-width: 560px) {
+  .ssj-globo { max-width: 150px; font-size: 12px; }
+  .ssj-pausa { font-size: 8px; }
+}

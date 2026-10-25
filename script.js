@@ -1043,7 +1043,7 @@ const sound = {
     if (this.ctx.state === "suspended") this.ctx.resume();
     return this.ctx;
   },
-  tone(freq, start, dur, type = "square", vol = 0.06) {
+  tone(freq, start, dur, type = "square", vol = 0.06, destino) {
     const ctx = this.ctx;
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -1052,11 +1052,11 @@ const sound = {
     const t = ctx.currentTime + start;
     gain.gain.setValueAtTime(vol, t);
     gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    osc.connect(gain).connect(ctx.destination);
+    osc.connect(gain).connect(destino || ctx.destination);
     osc.start(t);
     osc.stop(t + dur + 0.02);
   },
-  play(name) {
+  play(name, enCanal) {
     if (!this.on || !this.ensure()) return;
     const seq = {
       click: [[660, 0, 0.05]],
@@ -1074,9 +1074,33 @@ const sound = {
       growl: [[70, 0, 0.3, "sawtooth", 0.07], [90, 0.3, 0.3, "sawtooth", 0.08], [120, 0.6, 0.3, "sawtooth", 0.09], [160, 0.9, 0.35, "sawtooth", 0.1]],
       nam: [[210, 0, 0.03, "square", 0.11], [120, 0.03, 0.07, "square", 0.12], [260, 0.1, 0.03, "square", 0.08], [90, 0.13, 0.08, "triangle", 0.1]],
       namBig: [[120, 0, 0.1, "square", 0.14], [60, 0.08, 0.28, "triangle", 0.16], [200, 0.12, 0.04, "square", 0.1]],
-      relief: [[660, 0, 0.12, "triangle", 0.05], [520, 0.12, 0.22, "triangle", 0.05]]
+      relief: [[660, 0, 0.12, "triangle", 0.05], [520, 0.12, 0.22, "triangle", 0.05]],
+      // Rescate SSJ: entra, junta energía, se transforma, carga, dispara, impacta, el panel se arma y festeja
+      ssjEntra: [[330, 0, 0.05], [392, 0.1, 0.05], [330, 0.2, 0.05], [392, 0.3, 0.05], [523, 0.42, 0.1]],
+      ssjAura: [110, 131, 147, 165, 196, 220, 262, 294, 330, 392, 440, 523].map((f, i) => [f, i * 0.1, 0.12, "sawtooth", 0.045]),
+      kame: [[294, 0, 0.22, "triangle", 0.07], [330, 0.3, 0.22, "triangle", 0.07], [370, 0.6, 0.22, "triangle", 0.07], [392, 0.9, 0.3, "triangle", 0.07], [110, 0, 1.25, "sawtooth", 0.02]],
+      beam: [[880, 0, 0.08, "sawtooth", 0.06], [660, 0.06, 0.5, "sawtooth", 0.07], [520, 0.4, 0.45, "square", 0.05]],
+      ssjTransforma: [[523, 0, 0.5, "triangle", 0.06], [659, 0.05, 0.5, "triangle", 0.05], [784, 0.1, 0.55, "triangle", 0.05], [1047, 0.18, 0.6, "triangle", 0.04], [65, 0, 0.6, "sawtooth", 0.05]],
+      ssjImpacto: [[1200, 0, 0.05, "square", 0.08], [200, 0.04, 0.2, "triangle", 0.12], [90, 0.1, 0.25, "triangle", 0.1]],
+      restore: [[880, 0, 0.07, "square", 0.04], [1175, 0.07, 0.07, "square", 0.04], [1397, 0.14, 0.07, "square", 0.04], [1760, 0.21, 0.16, "square", 0.04]],
+      ssjVictoria: [[784, 0, 0.08], [988, 0.08, 0.08], [1175, 0.16, 0.08], [1568, 0.26, 0.22]]
     }[name];
-    if (seq) seq.forEach(([f, s, d, t, v]) => this.tone(f, s, d, t, v));
+    const destino = enCanal ? this.abrirCanal() : null;
+    if (seq) seq.forEach(([f, s, d, t, v]) => this.tone(f, s, d, t, v, destino));
+  },
+  // canal aparte para la escena del Rescate SSJ: al cortarlo se callan también los sonidos ya programados
+  canal: null,
+  abrirCanal() {
+    if (!this.canal) {
+      this.canal = this.ctx.createGain();
+      this.canal.connect(this.ctx.destination);
+    }
+    return this.canal;
+  },
+  callar() {
+    if (!this.canal) return;
+    this.canal.disconnect();
+    this.canal = null;
   }
 };
 
@@ -1229,7 +1253,8 @@ const CARA = {
     rendija: { 12: "SSSSSSSSSSSSSSSSSSSS", 13: "SSSSEEWSSSSSSWEESSSS" },
     abiertos: { 12: "SSSWEEWSSSSSSWEEWSSS", 13: "SSSWEEWSSSSSSWEEWSSS" },
     felices: { 12: "SSSSSESSSSSSSSESSSSS", 13: "SSSSESESSSSSSESESSSS" },
-    cerrados: { 12: "SSSSSSSSSSSSSSSSSSSS", 13: "SSSSEEESSSSSSEEESSSS" }
+    cerrados: { 12: "SSSSSSSSSSSSSSSSSSSS", 13: "SSSSEEESSSSSSEEESSSS" },
+    x: { 11: "SSSSESESSSSSSESESSSS", 12: "SSSSSESSSSSSSSESSSSS", 13: "SSSSESESSSSSSESESSSS" } // aturdido
   },
   cachetes: { 15: "_PP______________PP_" },
   bocas: {
@@ -1604,8 +1629,8 @@ function efimero(n, anim, ms) {
   setTimeout(() => quitarNodo(n), ms + 300); // por si la pestaña no anima (segundo plano)
 }
 
-// deja todo como nuevo: corta temporizadores y animaciones, borra migas y daño, el panel vuelve a crecer
-function limpiarMordidas() {
+// corta cualquier actuación (mordisco o rescate) y sus efectos, pero deja lo que ya se mordió
+function cortarActuacion() {
   mordida.gen++;
   mordida.timers.forEach(clearTimeout);
   mordida.timers.clear();
@@ -1613,11 +1638,18 @@ function limpiarMordidas() {
   mordida.anims.clear();
   mordida.nodos.forEach((n) => n.remove());
   mordida.nodos.clear();
-  Object.assign(mordida, { cola: [], corriendo: false, actuando: false, diferido: null, marcas: [], bocados: [], siguiente: 0, alComido: null });
+  Object.assign(mordida, { cola: [], corriendo: false, actuando: false, diferido: null, alComido: null });
+  cortarRescate();
   guillermo.el.style.visibility = "";
   document.body.classList.remove("estallido");
   document.querySelectorAll("[data-screen]").forEach((s) => { s.inert = false; });
   $("#eaten").hidden = true;
+}
+
+// deja todo como nuevo: corta temporizadores y animaciones, borra migas y daño, el panel vuelve a crecer
+function limpiarMordidas() {
+  cortarActuacion();
+  Object.assign(mordida, { marcas: [], bocados: [], siguiente: 0 });
   piel.dibujar();
 }
 
@@ -1816,7 +1848,9 @@ function formaMordida(m, W, H, R0) {
     if (!nx && !ny) ny = 1;
     r = Math.min(26, Math.max(10, Rt * 0.1));
   }
+  if (m.cura) { Rt *= 1 - m.cura; r *= 1 - m.cura * 0.5; } // el Rescate SSJ lo va cerrando
   const Rc = Rt - r;
+  if (Rc <= 0.5) return { m, x0: 0, x1: -1, y0: 0, y1: -1, dentro: () => false };
   const paso = (r * 2.05) / Rc;          // separación entre dientes (se ve cada diente)
   const base = Math.atan2(ny, nx);       // el diente del medio apunta hacia adentro
   const azar = (j) => { const s = Math.sin((j + m.semilla) * 12.9898) * 43758.5453; return s - Math.floor(s); };
@@ -2322,7 +2356,8 @@ function startQuiz(lesson = null) {
   if (lesson === "eval") quiz.reserve.push(...meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, AJUSTES.retosPorEvaluacion), true));
   else if (lesson === "todo") meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, 2), false);
   else if (RETO_DEL_TEMA[lesson]) meterRetos(quiz.deck, [RETO_DEL_TEMA[lesson]], false);
-  quiz.comodines = { rappi: true, pista: true, cambio: true };
+  quiz.comodines = { rappi: true, pista: true, cambio: true, ssj: true }; // el Rescate SSJ está en todos los modos con mordiscos
+  rescate.estado = "disponible";
   Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {}, busy: false, terminado: false });
   $("#hint-btn").hidden = lesson === "eval";
   $("#life-help").hidden = lesson !== "eval";
@@ -2333,7 +2368,7 @@ function startQuiz(lesson = null) {
   show("quiz", $("#q-text"));
   enojoIniciar(limitePara(quiz.deck.length));
   renderQuestion(lesson === "eval"
-    ? `¡Arranca la evaluación${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 3 comodines: Rappi, Pista y Cambio. Usalos bien.`
+    ? `¡Arranca la evaluación${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 4 comodines: Rappi, Pista, Cambio y Rescate SSJ. Usalos bien.`
     : pick(FRASES.arranque));
 }
 
@@ -2439,6 +2474,7 @@ function cerrarPregunta(ok, elegida, correcta, respuesta) {
     sound.play("bad");
     // la respuesta ya quedó contada; el mordisco es solo la reacción y no frena el juego
     const b = nuevoError();
+    renderRescate();
     if (b.final) {
       b.alTerminar = () => comioTodo(
         `Erraste ${enojo.errores} preguntas y en la ${quiz.index + 1} de ${quiz.deck.length} me comí el panel entero. Las que faltaban cuentan como no respondidas.`,
@@ -2460,7 +2496,7 @@ function cerrarPregunta(ok, elegida, correcta, respuesta) {
 
 function useHint() {
   if (quiz.lesson === "eval") return usarPista();
-  if (quiz.answered || quiz.hintUsed || current !== "quiz") return;
+  if (quiz.answered || quiz.hintUsed || quiz.busy || current !== "quiz") return;
   quiz.hintUsed = true; // el costo se descuenta de los puntos de esta pregunta si la acertás
   const hint = $("#hint-btn");
   hint.disabled = true;
@@ -2470,7 +2506,7 @@ function useHint() {
 }
 
 function nextQuestion() {
-  if (!quiz.answered || current !== "quiz" || enojo.final) return; // si se comió la página, solo quedan los resultados
+  if (!quiz.answered || quiz.busy || current !== "quiz" || enojo.final) return; // si se comió la página, solo quedan los resultados
   sound.play("click");
   quiz.index++;
   if (quiz.index < quiz.deck.length) renderQuestion();
@@ -2961,10 +2997,13 @@ function startEval() {
 
 function renderLifelines() {
   const box = $("#lifelines");
-  box.hidden = quiz.lesson !== "eval";
-  if (box.hidden) return;
+  const evaluacion = quiz.lesson === "eval";
+  box.hidden = false;
+  renderRescate();
   Object.keys(COMODINES).forEach((k) => {
     const b = $("#life-" + k);
+    b.hidden = !evaluacion;
+    if (!evaluacion) return;
     const used = !quiz.comodines[k];
     b.textContent = used ? COMODINES[k].usado : COMODINES[k].label;
     b.classList.toggle("used", used);
@@ -3125,6 +3164,7 @@ function renderEval(total) {
   const nota = Math.max(1, Math.round((quiz.correct / total) * 12));
   const aprobado = nota >= 6;
   const usados = Object.keys(COMODINES).filter((k) => !quiz.comodines[k]).map((k) => COMODINES[k].label.replace(/^\S+\s/, ""));
+  if (!quiz.comodines.ssj) usados.push("Rescate SSJ");
   const fecha = new Date().toLocaleString("es-UY", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
   const hist = store.get("evaluaciones", []);
   hist.push({ nombre: quiz.alumno, nota, correctas: quiz.correct, total, fecha });
@@ -3335,6 +3375,498 @@ function comprobarReto() {
 }
 
 /* =========================================================
+   COMODÍN «RESCATE SSJ»
+   Una vez por partida, en todos los modos con enojo y mordiscos,
+   mientras la ronda sigue y antes del mordisco final. El rescatista
+   entra, se transforma en Super Saiyajin, le tira un Kamehameha a
+   Guillermo y:
+   · el enojo baja al mínimo y la paciencia vuelve a estar llena
+     (el próximo mordisco necesita otra vez todos los errores);
+   · los mordiscos del panel se reconstruyen;
+   · la pregunta, las opciones, el puntaje y el avance no cambian.
+   Estados: disponible → entrada → transformacion → carga → disparo
+   → impacto → recuperacion → usado.
+   Durante la escena la pregunta queda en pausa (única excepción a
+   «se sigue respondiendo mientras muerde»). Todo corre con
+   esperar/tarea/animar/nodoFx y los sonidos van por su propio
+   canal: salir o reiniciar corta la escena sin dejar nada.
+   ========================================================= */
+// hoja de poses ya preparada (assets/rescate-ssj/preparar-sprites.py): 8 cuadros de 396 × 486
+// alineados por los pies. El dibujo mira a la derecha.
+const SSJ = {
+  src: "assets/rescate-ssj/poses.png",
+  w: 396, h: 486,
+  ancla: [182, 485], // punto medio entre los championes, sobre el piso
+  poses: ["reposo", "entrada", "preparacion", "ssj", "carga", "disparo", "recuperacion", "victoria"],
+  manos: { carga: [126, 304], disparo: [374, 262] }, // dónde está la energía, en píxeles del cuadro
+  img: null
+};
+
+// tiempos de cada momento (ms); con menos movimiento va la versión corta
+const TIEMPOS_SSJ = {
+  normal: { entrada: 550, plantado: 240, prepara: 600, anticipa: 140, transforma: 650, carga: 1000, viaje: 260, impacto: 800, recupera: 400, victoria: 550, salida: 360 },
+  reducido: { entrada: 0, plantado: 250, prepara: 0, anticipa: 0, transforma: 550, carga: 0, viaje: 0, impacto: 600, recupera: 0, victoria: 550, salida: 0 }
+};
+
+const FASES_SSJ = {
+  entrada: "Llega el rescate",
+  transformacion: "Transformación",
+  carga: "Carga el Kamehameha",
+  disparo: "¡Kamehameha!",
+  impacto: "Guillermo se calma",
+  recuperacion: "Panel restaurado"
+};
+
+const rescate = { estado: "disponible", pausa: null };
+const rescateEnEscena = () => !["disponible", "usado"].includes(rescate.estado);
+
+// carga la hoja una sola vez; la escena espera hasta 1,5 s a que esté lista
+function hojaSSJ() {
+  if (!SSJ.img) {
+    SSJ.img = new Image();
+    SSJ.img.src = SSJ.src;
+    SSJ.lista = (SSJ.img.decode ? SSJ.img.decode() : Promise.resolve()).then(() => true, () => false);
+  }
+  return Promise.race([SSJ.lista, new Promise((r) => setTimeout(() => r(false), 1500))]);
+}
+
+function rescateDisponible() {
+  return current === "quiz" && quiz.comodines.ssj && rescate.estado === "disponible" &&
+    !quiz.busy && !quiz.terminado && !enojo.final;
+}
+
+function renderRescate() {
+  const b = $("#life-ssj");
+  const usado = !quiz.comodines.ssj;
+  $("#ssj-usos").textContent = usado ? "Usado" : "1 uso";
+  b.classList.toggle("used", usado);
+  b.disabled = !rescateDisponible();
+}
+
+// pausa de la pregunta: solo queda activo «Salir» (y la barra de arriba)
+function pausarPregunta(si) {
+  ["#q-card", "#lifelines", "#hint-btn", "#next-btn", "#life-help"].forEach((s) => { $(s).inert = si; });
+  if (si) document.body.dataset.rescate = rescate.estado;
+  else delete document.body.dataset.rescate;
+}
+
+function faseRescate(estado) {
+  rescate.estado = estado;
+  document.body.dataset.rescate = estado;
+  if (rescate.pausa) rescate.pausa.lastChild.textContent = FASES_SSJ[estado] || "";
+}
+
+// lo llama cortarActuacion: deja el comodín en un estado real y saca la pausa
+function cortarRescate() {
+  sound.callar();
+  if (rescateEnEscena()) {
+    rescate.estado = quiz.comodines.ssj ? "disponible" : "usado";
+    quiz.busy = false;
+  }
+  rescate.pausa = null;
+  pausarPregunta(false);
+}
+
+function activarRescate() {
+  if (!rescateDisponible()) return;
+  quiz.comodines.ssj = false; // se gasta en cuanto se acepta: no hay doble uso
+  quiz.busy = true;           // pausa: no se responde ni se usan otros comodines
+  escenaRescate();
+}
+
+// dónde va cada uno, medido con la pantalla de ahora (compu o celular)
+function medirEscena() {
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const g = guillermo.el.getBoundingClientRect();
+  const blanco = { x: g.left + g.width / 2, y: g.top + g.height * (10.5 / 29) }; // la cara de Guillermo
+  const dir = blanco.x < vw / 2 ? 1 : -1;  // de qué lado de Guillermo se planta
+  const espejo = dir > 0;                  // el dibujo mira a la derecha: si queda a la derecha, se da vuelta
+  const alto = Math.min(Math.max(g.height * 1.25, 150), 300, vh * 0.45);
+  const s = alto / SSJ.h;
+  const [ax, ay] = SSJ.ancla;
+  const ext = espejo ? [(SSJ.w - ax) * s, ax * s] : [ax * s, (SSJ.w - ax) * s]; // cuánto ocupa a cada lado del ancla
+  const borde = dir > 0 ? g.right : g.left;
+  const x = Math.min(vw - 8 - ext[1], Math.max(8 + ext[0], borde + dir * (alto * 0.9 + 20)));
+  let y = Math.min(vh - 6, Math.max(g.bottom, 6 + ay * s));
+  // en celular el globo está al lado de Guillermo: se para más abajo para no taparlo
+  const globo = guillermo.bubble.getBoundingClientRect();
+  if (globo.right > x - ext[0] && globo.left < x + ext[1] && globo.bottom > y - alto) y = Math.min(vh - 6, globo.bottom + alto + 4);
+  // un punto del cuadro (en píxeles de la hoja) llevado a la pantalla
+  const punto = ([px, py]) => ({ x: x + (px - ax) * s * (espejo ? -1 : 1), y: y - (ay - py) * s });
+  return { vw, vh, g, blanco, dir, espejo, s, x, y, ext, punto };
+}
+
+async function escenaRescate() {
+  cortarActuacion(); // corta el mordisco en curso o en cola; lo mordido se repara en la escena
+  const gen = mordida.gen;
+  mordida.actuando = true; // Guillermo está ocupado: lo que tenga que decir espera
+  const reduce = reduceMotion.matches;
+  const T = reduce ? TIEMPOS_SSJ.reducido : TIEMPOS_SSJ.normal;
+  rescate.estado = "entrada";
+  renderLifelines();
+  pausarPregunta(true);
+  $("#ssj-aviso").textContent = "Rescate SSJ en curso: la pregunta queda en pausa unos segundos.";
+  if (document.activeElement && document.activeElement.closest("[inert]")) $("#panel").focus({ preventScroll: true });
+
+  const pausa = nodoFx("ssj-pausa");
+  pausa.innerHTML = `<span>⏸ Rescate SSJ</span><span></span>`;
+  pausa.style.visibility = "hidden"; // aparece cuando ya se sabe dónde va
+  rescate.pausa = pausa;
+  faseRescate("entrada");
+
+  // en celular Guillermo queda arriba: se sube para ver la escena y después se vuelve a la pregunta
+  const scrollAntes = window.scrollY;
+  if (!estaVisible(guillermo.el)) {
+    window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+    if (!(await esperar(reduce ? 60 : 450))) return;
+  }
+  await hojaSSJ();
+  if (gen !== mordida.gen) return;
+
+  const E = medirEscena();
+  const { s, dir } = E;
+  const cabeza = E.punto([SSJ.ancla[0], 30]); // arriba del pelo, para los gritos
+  pausa.style.transform = `translate(${E.vw / 2}px, ${E.vh - 14}px) translate(-50%, -100%)`; // abajo: no tapa la escena
+  pausa.style.visibility = "";
+
+  // ---------- el actor: aura (capa propia) + sprite nítido ----------
+  const actor = nodoFx("ssj-actor");
+  actor.style.width = `${SSJ.w * s}px`;
+  actor.style.height = `${SSJ.h * s}px`;
+  actor.innerHTML = `<div class="ssj-cuerpo"><div class="ssj-aura"><div class="aura-a">${auraSVG(0)}</div><div class="aura-b">${auraSVG(1)}</div></div><div class="ssj-sprite"></div></div>`;
+  const cuerpo = actor.firstChild;
+  const aura = cuerpo.querySelector(".ssj-aura");
+  const sprite = cuerpo.querySelector(".ssj-sprite");
+  cuerpo.style.transformOrigin = sprite.style.transformOrigin = `${SSJ.ancla[0] * s}px 100%`;
+  if (E.espejo) cuerpo.style.transform = "scaleX(-1)";
+  sprite.style.backgroundImage = `url("${SSJ.src}")`;
+  sprite.style.backgroundSize = `${SSJ.w * s * SSJ.poses.length}px ${SSJ.h * s}px`;
+  const poner = (nombre) => { sprite.style.backgroundPosition = `${-SSJ.poses.indexOf(nombre) * SSJ.w * s}px 0`; };
+  const lugar = (dx = 0, dy = 0) => `translate(${E.x - SSJ.ancla[0] * s + dx}px, ${E.y - SSJ.ancla[1] * s + dy}px)`;
+  const fijar = (dx, dy) => animar(actor, [{ transform: lugar(dx, dy) }], { duration: 1, fill: "forwards" });
+  const pisar = (sx, sy, ms) => !reduce && animar(sprite, [{ transform: `scale(${sx}, ${sy})` }, { transform: "none" }], { duration: ms, easing: "steps(3)" });
+  actor.style.transform = lugar();
+
+  // globo de diálogo del rescatista, al costado de la cabeza que mira a Guillermo
+  const decir = (texto, ms) => {
+    const globo = nodoFx("ssj-globo");
+    globo.textContent = texto;
+    const p = E.punto([SSJ.ancla[0], 120]);
+    const en = (k) => `translate(${p.x + dir * 6}px, ${p.y}px) translate(${dir > 0 ? -100 : 0}%, -100%) scale(${k})`;
+    efimero(globo, animar(globo, [
+      { transform: en(0.7), opacity: 0 },
+      { transform: en(1), opacity: 1, offset: 0.12 },
+      { transform: en(1), opacity: 1, offset: 0.88 },
+      { transform: en(1), opacity: 0 }
+    ], { duration: ms, easing: "steps(4)", fill: "forwards" }), ms);
+  };
+
+  // 1) ENTRADA: llega corriendo desde su lado de la pantalla y se planta frente a Guillermo
+  poner("entrada");
+  sound.play("ssjEntra", true);
+  guillermo.set(CARAS_RESCATE.mira(dir));
+  guillermo.decir("¿Eh? ¿Y este quién es?");
+  if (reduce) animar(actor, [{ opacity: 0 }, { opacity: 1 }], { duration: 200, fill: "forwards" });
+  else {
+    const desde = dir > 0 ? E.vw + E.ext[0] + 20 - E.x : -(E.x + E.ext[1] + 20);
+    animar(actor, [0, 1, 2, 3, 4, 5, 6].map((k) => ({ transform: lugar(desde * (1 - k / 6), k % 2 ? -16 * s : 0) })),
+      { duration: T.entrada, easing: "linear", fill: "forwards" });
+    if (!(await esperar(T.entrada))) return;
+  }
+  poner("reposo");
+  pisar(1.05, 0.93, 200);
+  decir("¡Tranqui, Guillermo! Yo me encargo.", reduce ? 900 : 1300);
+  if (!(await esperar(T.plantado))) return;
+
+  // 2) PREPARACIÓN Y TRANSFORMACIÓN: se agacha haciendo fuerza, el aura junta energía y el pelo se vuelve dorado
+  faseRescate("transformacion");
+  if (!reduce) {
+    poner("preparacion");
+    sound.play("ssjAura", true);
+    aura.className = "ssj-aura junta";
+    chispas(E, 14, T.prepara + 200);
+    // tiembla de a poco, cada vez un poquito más (nada de parpadeos)
+    animar(actor, [0, 1, 2, 3, 4, 5, 6, 7].map((k) => ({ transform: lugar((k % 2 ? 1 : -1) * (0.5 + k * 0.25), 0) })),
+      { duration: T.prepara, easing: "steps(8)", fill: "forwards" });
+    cartel("¡¡HHNNN…!!", cabeza.x, cabeza.y, "nam-pop ssj-grito", T.prepara + T.anticipa);
+    if (!(await esperar(T.prepara))) return;
+    // anticipación: se encoge un instante antes de estallar
+    animar(sprite, [{ transform: "scale(1.04, 0.94)" }], { duration: T.anticipa, easing: "steps(2)", fill: "forwards" });
+    if (!(await esperar(T.anticipa))) return;
+    fijar(0, 0);
+  }
+  poner("ssj");
+  sound.play("ssjTransforma", true);
+  aura.className = "ssj-aura ssj";
+  if (!reduce) animar(sprite, [{ transform: "scale(0.97, 1.06)" }, { transform: "none" }], { duration: 320, easing: "steps(3)", fill: "forwards" });
+  brillo(E.punto([SSJ.ancla[0], 250]), SSJ.h * s * 1.05, "#fff1a0");
+  chispas(E, 22, T.transforma + 600);
+  guillermo.set(CARAS_RESCATE.nervioso(dir));
+  guillermo.decir("Pará, pará… ¿qué es ese pelo?");
+  if (!(await esperar(T.transforma))) return;
+
+  // 3) CARGA: junta las manos al costado y la esfera crece entre ellas
+  const bola = nodoFx("kame-bola");
+  const luz = nodoFx("kame-luz");
+  const r0 = Math.max(10, 34 * s);
+  [bola, luz].forEach((n) => { n.style.width = n.style.height = `${(n === luz ? 5 : 2) * r0}px`; });
+  const enBola = (p, k) => `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${k})`;
+  if (!reduce) {
+    faseRescate("carga");
+    poner("carga");
+    sound.play("kame", true);
+    const manos = E.punto(SSJ.manos.carga);
+    animar(bola, [0.15, 0.3, 0.28, 0.5, 0.46, 0.7, 0.66, 0.9, 1].map((k) => ({ transform: enBola(manos, k) })), { duration: T.carga, easing: "steps(9)", fill: "forwards" });
+    animar(luz, [{ transform: enBola(manos, 0.2), opacity: 0.2 }, { transform: enBola(manos, 1), opacity: 0.85 }], { duration: T.carga, easing: "steps(6)", fill: "forwards" });
+    converger(manos, r0 * 3, 12, T.carga);
+    // las sílabas salen de a una arriba del pelo, sin tapar la cara
+    ["Ka…", "me…", "ha…", "me…"].forEach((txt, i) => tarea(() => cartel(txt, cabeza.x + (i - 1.5) * SSJ.w * s * 0.22, cabeza.y - 6, "nam-pop kame-txt", 560), i * (T.carga / 4)));
+    if (!(await esperar(T.carga))) return;
+  }
+
+  // 4) DISPARO: estira los brazos y el rayo sale de las palmas hasta la cara de Guillermo
+  faseRescate("disparo");
+  poner("disparo");
+  sound.play("beam", true);
+  const palmas = E.punto(SSJ.manos.disparo);
+  const g = guillermo.el.getBoundingClientRect(); // se vuelve a medir: es a donde está ahora
+  const blanco = { x: g.left + g.width / 2, y: g.top + g.height * (10.5 / 29) };
+  // la esfera pasa a las palmas (con animación: la de la carga quedó fija con fill «forwards»)
+  [[bola, 1], [luz, 1.1]].forEach(([n, k]) => animar(n, [{ transform: enBola(palmas, k) }], { duration: 1, fill: "forwards" }));
+  // retroceso por el empuje: vuelve a su lugar para que las palmas queden en el nacimiento del rayo
+  if (!reduce) animar(actor, [{ transform: lugar(dir * 12 * s, 0) }, { transform: lugar() }], { duration: 300, easing: "steps(3)", fill: "forwards" });
+  cartel("¡¡HAAAA!!", cabeza.x, cabeza.y, "nam-pop ssj-grito grande", reduce ? 600 : 900);
+  const dx = blanco.x - palmas.x, dy = blanco.y - palmas.y;
+  const largo = Math.hypot(dx, dy);
+  const grosor = Math.max(14, 44 * s);
+  const rayo = nodoFx("rayo");
+  rayo.style.height = `${grosor}px`;
+  rayo.style.transform = `translate(${palmas.x}px, ${palmas.y - grosor / 2}px) rotate(${Math.atan2(dy, dx)}rad)`;
+  rayo.innerHTML = `<div class="rayo-cuerpo"></div><div class="rayo-cabeza"></div>`;
+  if (reduce) rayo.style.width = `${largo}px`;
+  else {
+    animar(rayo, [{ width: "0px" }, { width: `${largo}px` }], { duration: T.viaje, easing: "steps(7)", fill: "forwards" });
+    animar(rayo.firstChild, [{ transform: "scaleY(1)" }, { transform: "scaleY(0.85)" }, { transform: "scaleY(1.08)" }, { transform: "scaleY(0.92)" }], { duration: 360, iterations: 3, delay: T.viaje, easing: "steps(4)" });
+    if (!(await esperar(T.viaje))) return;
+  }
+
+  // 5) IMPACTO: Guillermo se sorprende, retrocede y queda mareado; el enojo baja y el panel se arma de nuevo
+  faseRescate("impacto");
+  sound.play("ssjImpacto", true);
+  impacto(blanco, g.width);
+  guillermo.set(CARAS_RESCATE.aturdido);
+  guillermo.decir("¡¿Eeeh?! …¿Qué pasó? Veo estrellitas…");
+  fijarPostura(0); // sin inclinarse, sin colorado, sin viñeta roja
+  enojo.nivel = 0;
+  bajaEnojo();
+  if (!reduce) {
+    animar($(".mascot-wrap"), [
+      { transform: "none" },
+      { transform: `translateX(${-dir * 22}px) rotate(${-dir * 12}deg)`, offset: 0.15 },
+      { transform: `translateX(${-dir * 16}px) rotate(${dir * 6}deg)`, offset: 0.4 },
+      { transform: `translateX(${-dir * 8}px) rotate(${-dir * 4}deg)`, offset: 0.65 },
+      { transform: "none" }
+    ], { duration: 1200, easing: "steps(10)" });
+    estrellas(g, 1500);
+  }
+  if (!(await esperar(reduce ? 200 : 380))) return;
+  [rayo, bola, luz].forEach((n) => animar(n, [{ opacity: 1 }, { opacity: 0 }], { duration: reduce ? 120 : 320, easing: "steps(3)", fill: "forwards" }));
+  faseRescate("recuperacion");
+  repararPanel(reduce ? 200 : 800);
+  rellenarPaciencia(reduce ? 0 : 80);
+  if (!(await esperar(T.impacto - (reduce ? 200 : 380)))) return;
+
+  // 6) RECUPERACIÓN Y SALIDA: baja la guardia, se apaga el aura, festeja y se va
+  if (!reduce) {
+    poner("recuperacion");
+    aura.className = "ssj-aura apaga";
+    if (!(await esperar(T.recupera))) return;
+  }
+  aura.className = "ssj-aura";
+  poner("victoria");
+  pisar(0.96, 1.05, 240);
+  sound.play("ssjVictoria", true);
+  decir("¡Listo! Seguí vos.", reduce ? 700 : 1000);
+  if (!(await esperar(T.victoria))) return;
+  if (reduce) animar(actor, [{ opacity: 1 }, { opacity: 0 }], { duration: 150, fill: "forwards" });
+  else {
+    poner("entrada");
+    cuerpo.style.transform = dir > 0 ? "none" : "scaleX(-1)"; // se da vuelta para irse por donde vino
+    const hasta = dir > 0 ? E.vw + E.ext[1] + 20 - E.x : -(E.x + E.ext[0] + 20);
+    animar(actor, [0, 1, 2, 3, 4].map((k) => ({ transform: lugar(hasta * (k / 4), k % 2 ? -16 * s : 0) })), { duration: T.salida, easing: "linear", fill: "forwards" });
+  }
+  if (!(await esperar(reduce ? 150 : T.salida))) return;
+  terminarRescate(scrollAntes);
+}
+
+// cierre: todo como nuevo y la misma pregunta lista para seguir
+function terminarRescate(scrollAntes) {
+  cortarActuacion(); // saca los efectos que queden y cualquier mordisco que se haya colado
+  Object.assign(enojo, { errores: 0, nivel: 0, final: false });
+  Object.assign(mordida, { marcas: [], bocados: [], siguiente: 0 });
+  piel.dibujar();
+  paciencia.marcar(0);
+  fijarPostura(0);
+  rescate.estado = "usado";
+  quiz.busy = false;
+  guillermo.decir("Ta, ta… me calmo. ¿En qué estábamos?", "alivio");
+  tarea(() => { if (guillermo.mood === "alivio") guillermo.set(caraBase()); }, 1500);
+  renderLifelines(); // vuelve a habilitar solo lo que corresponde a cómo está la pregunta
+  $("#ssj-aviso").textContent = "Listo: Guillermo se calmó y el panel quedó como nuevo. Seguís en la misma pregunta.";
+  if (scrollAntes) window.scrollTo({ top: scrollAntes, behavior: "auto" });
+  const next = $("#next-btn");
+  (quiz.answered && !next.hidden ? next : $("#q-text")).focus({ preventScroll: true });
+}
+
+// caras de Guillermo durante el rescate
+const CARAS_RESCATE = {
+  mira: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "fiu" }, "Guillermo, sorprendido, mira quién llegó"),
+  nervioso: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "triste", sudor: true }, "Guillermo, nervioso, ve venir el ataque"),
+  aturdido: cara({ cejas: "alta", ojos: "x", boca: "mastica" }, "Guillermo, mareado, con los ojos en cruz")
+};
+
+// llama hecha con píxeles (dos cuadros que se alternan); es una capa aparte, sin fondo
+function auraSVG(cuadro) {
+  const W = 30, H = 40;
+  const dentro = (x, y) => {
+    const dx = (x + 0.5 - 15) / 13.5, dy = (y + 0.5 - 25) / 14.5;
+    if (dx * dx + dy * dy <= 1) return true;
+    const alto = (x + cuadro * 2) % 5 === 0 ? 12 : (x + cuadro) % 3 === 0 ? 7 : 3; // largo de cada lengua de fuego
+    const tope = 25 - 14.5 * Math.sqrt(Math.max(0, 1 - dx * dx));
+    return Math.abs(dx) < 0.85 && y >= tope - alto * (1 - Math.abs(dx)) && y < tope + 1;
+  };
+  const rows = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
+    if (!dentro(x, y)) return ".";
+    const borde = [[1, 0], [-1, 0], [0, 1], [0, -1], [2, 0], [-2, 0], [0, -2]].some(([a, b]) => !dentro(x + a, y + b));
+    return borde ? "U" : "O";
+  }));
+  return pixelSVG(rows.map((r) => r.join("")), { O: "#ffd23f22", U: "#ffe066b0" }).replace("<svg ", '<svg preserveAspectRatio="none" ');
+}
+
+// chispas cuadradas que suben desde los pies alrededor del cuerpo
+function chispas(E, cantidad, ms) {
+  if (reduceMotion.matches) return;
+  const colores = ["#ffd23f", "#fff5b0", "#ffb627"];
+  const ancho = (E.ext[0] + E.ext[1]) * 0.8;
+  const alto = SSJ.h * E.s;
+  for (let i = 0; i < cantidad; i++) {
+    const n = nodoFx("chispa");
+    n.style.background = colores[i % colores.length];
+    const sx = E.x + (Math.random() - 0.5) * ancho, sy = E.y - Math.random() * alto * 0.5;
+    const sube = alto * (0.3 + Math.random() * 0.4);
+    const dur = 600 + Math.random() * 400;
+    efimero(n, animar(n, [
+      { transform: `translate(${sx}px, ${sy}px)`, opacity: 1 },
+      { transform: `translate(${sx + (Math.random() - 0.5) * 12}px, ${sy - sube}px)`, opacity: 0 }
+    ], { duration: dur, delay: Math.random() * Math.max(0, ms - dur), easing: "steps(6)", fill: "both" }), ms);
+  }
+}
+
+// chispas azules que se juntan en la esfera mientras carga
+function converger(p, radio, cantidad, ms) {
+  for (let i = 0; i < cantidad; i++) {
+    const n = nodoFx("chispa chica");
+    n.style.background = ["#ffffff", "#9fe2ff", "#4fb8ff"][i % 3];
+    const a = (i / cantidad) * Math.PI * 2 + Math.random() * 0.4;
+    const dur = 420 + Math.random() * 200;
+    efimero(n, animar(n, [
+      { transform: `translate(${p.x + Math.cos(a) * radio}px, ${p.y + Math.sin(a) * radio}px)`, opacity: 0 },
+      { transform: `translate(${p.x + Math.cos(a) * radio * 0.5}px, ${p.y + Math.sin(a) * radio * 0.5}px)`, opacity: 1, offset: 0.5 },
+      { transform: `translate(${p.x}px, ${p.y}px)`, opacity: 0 }
+    ], { duration: dur, delay: (i / cantidad) * (ms - dur), easing: "steps(5)", fill: "both" }), ms);
+  }
+}
+
+// resplandor suave que se abre una sola vez (transformación): sin destellos rápidos
+function brillo(p, d, color) {
+  const n = nodoFx("ssj-brillo");
+  n.style.width = n.style.height = `${d}px`;
+  n.style.setProperty("--c", color);
+  const en = (k) => `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${k})`;
+  efimero(n, animar(n, [
+    { transform: en(0.4), opacity: 0 },
+    { transform: en(0.9), opacity: 0.55, offset: 0.4 },
+    { transform: en(1.15), opacity: 0 }
+  ], { duration: reduceMotion.matches ? 400 : 700, easing: "steps(6)", fill: "forwards" }), 800);
+}
+
+// golpe del rayo: anillo de píxeles y un cartel
+function impacto(p, ancho) {
+  const n = nodoFx("ssj-impacto");
+  n.style.width = n.style.height = `${ancho * 1.3}px`;
+  const en = (k) => `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${k})`;
+  efimero(n, animar(n, reduceMotion.matches
+    ? [{ transform: en(1), opacity: 0.9 }, { transform: en(1), opacity: 0 }]
+    : [{ transform: en(0.3), opacity: 1 }, { transform: en(1), opacity: 0.9, offset: 0.5 }, { transform: en(1.3), opacity: 0 }],
+  { duration: 600, easing: "steps(5)", fill: "forwards" }), 700);
+  cartel("¡PAF!", p.x, p.y - ancho * 0.5, "nam-pop kame-txt grande", 800);
+  sacudir(5);
+}
+
+// estrellitas que giran sobre la cabeza de Guillermo mareado
+function estrellas(g, ms) {
+  const cx = g.left + g.width / 2, cy = g.top + g.height * 0.04;
+  for (let i = 0; i < 3; i++) {
+    const n = nodoFx("estrella");
+    const frames = Array.from({ length: 13 }, (_, p) => {
+      const a = ((p / 12) * 2 + i / 3) * Math.PI * 2;
+      return { transform: `translate(${cx + Math.cos(a) * g.width * 0.34}px, ${cy + Math.sin(a) * g.width * 0.08}px)` };
+    });
+    efimero(n, animar(n, frames, { duration: ms, easing: "steps(24)", fill: "forwards" }), ms);
+  }
+}
+
+// el enojo baja: cartel al lado de la paciencia
+function bajaEnojo() {
+  const r = paciencia.el.getBoundingClientRect();
+  if (!r.width) return;
+  // sobre los primeros dientes (en celular la fila ocupa todo el ancho y el centro queda tapado por el rescatista)
+  cartel("ENOJO ↓", r.left + Math.min(r.width / 2, 110), r.top - 8, "nam-pop ssj-calma", 1500);
+}
+
+// los pedazos vuelven a su lugar: cada mordisco se va cerrando y le llegan migas de vuelta
+function repararPanel(ms) {
+  const marcas = mordida.marcas.concat(mordida.bocados);
+  if (!marcas.length) return;
+  sound.play("restore", true);
+  const caja = panelCaja();
+  if (!reduceMotion.matches) {
+    const colores = ["#2f3d8f", "#18225a", "#202c6e", "#0a0d22", "#ffd23f"];
+    marcas.forEach((m, j) => {
+      const p = contacto(m, caja);
+      for (let i = 0; i < 7; i++) {
+        const n = nodoFx("miga" + (i % 3 ? "" : " chica"));
+        n.style.background = colores[(i + j) % colores.length];
+        const a = Math.atan2(p.oy, p.ox) + (Math.random() - 0.5) * 1.6;
+        const v = 60 + Math.random() * 80;
+        efimero(n, animar(n, [
+          { transform: `translate(${p.x + Math.cos(a) * v}px, ${p.y + Math.sin(a) * v}px) rotate(180deg)`, opacity: 0 },
+          { transform: `translate(${p.x + Math.cos(a) * v * 0.5}px, ${p.y + Math.sin(a) * v * 0.5}px) rotate(90deg)`, opacity: 1, offset: 0.4 },
+          { transform: `translate(${p.x}px, ${p.y}px)`, opacity: 1 }
+        ], { duration: ms * 0.8, delay: j * 40 + i * 25, easing: "steps(6)", fill: "both" }), ms + 400);
+      }
+    });
+  }
+  const pasos = reduceMotion.matches ? 2 : 8;
+  for (let i = 1; i <= pasos; i++) {
+    tarea(() => {
+      marcas.forEach((m) => { m.cura = i / pasos; });
+      piel.dibujar();
+    }, (ms / pasos) * i);
+  }
+}
+
+// los dientes de la paciencia vuelven uno por uno
+function rellenarPaciencia(ms) {
+  const rotos = [...paciencia.box.children].filter((d) => d.classList.contains("roto"));
+  rotos.reverse().forEach((d, i) => tarea(() => {
+    d.classList.remove("roto", "rompe");
+    if (!reduceMotion.matches) animar(d, [{ transform: "scale(1.6)" }, { transform: "scale(1)" }], { duration: 200, easing: "steps(3)" });
+  }, ms * i));
+  tarea(() => paciencia.marcar(0), ms * rotos.length + 10);
+}
+
+/* =========================================================
    CONTROLES
    ========================================================= */
 const actions = {
@@ -3354,6 +3886,7 @@ const actions = {
   },
   "life-pista": usarPista,
   "life-cambio": cambiarPregunta,
+  "life-ssj": activarRescate,
   "lesson-exam": () => startQuiz("examen"),
   learn: showLearn,
   "lesson-quiz": () => startQuiz(lesson.index),
@@ -3375,7 +3908,7 @@ document.addEventListener("click", (e) => {
   if (!btn || btn.disabled) return;
   const fn = actions[btn.dataset.action];
   if (!fn) return;
-  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-pista", "life-cambio", "reto-check"].includes(btn.dataset.action)) sound.play("click");
+  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-pista", "life-cambio", "life-ssj", "reto-check"].includes(btn.dataset.action)) sound.play("click");
   fn();
 });
 
@@ -3413,6 +3946,7 @@ function renderSoundButton() {
 $("#sound-toggle").addEventListener("click", () => {
   sound.on = !sound.on;
   store.set("sound", sound.on);
+  if (!sound.on) sound.callar(); // silenciar corta también la escena del rescate que esté sonando
   renderSoundButton();
   sound.play("click");
 });
@@ -3424,3 +3958,4 @@ guillermo.set("espera");
 guillermo.startBlinking();
 piel.init();
 $("#rappi-rider").innerHTML = pixelSVG(RAPPI_SPRITE, RAPPI_PALETA);
+hojaSSJ(); // precarga las poses del Rescate SSJ
