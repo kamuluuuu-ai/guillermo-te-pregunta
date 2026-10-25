@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=31">
+  <link rel="stylesheet" href="styles.css?v=32">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -63,6 +63,7 @@
           <button class="btn btn-yellow btn-big" type="button" data-action="start-quiz">▶ Jugar</button>
           <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ El desafío de Guillermo</button>
           <button class="btn btn-green" type="button" data-action="learn">◆ Clase: Teoría de grafos</button>
+          <button class="btn btn-orange" type="button" data-action="present">📽 Presentar la clase</button>
           <button class="btn btn-violet" type="button" data-action="instructions">? Instrucciones</button>
         </div>
         <div class="eval-history" id="eval-history-wrap" hidden>
@@ -200,7 +201,7 @@
         </div>
         <div class="menu menu-row">
           <button class="btn btn-yellow" type="button" data-action="retry-quiz">↻ Jugar de nuevo</button>
-          <button class="btn btn-green" type="button" id="r-back-lesson" data-action="learn" hidden>◆ Volver a la clase</button>
+          <button class="btn btn-green" type="button" id="r-back-lesson" data-action="back-class" hidden>◆ Volver a la clase</button>
           <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ Ir al desafío</button>
           <button class="btn btn-ghost" type="button" data-action="home">Inicio</button>
         </div>
@@ -281,10 +282,31 @@
         <p class="note" id="clase-fuente"></p>
       </div>
 
-      <!-- CLASE: UN TEMA -->
+      <!-- PRESENTAR LA CLASE: igual que la clase, pero para mostrarla frente a todos -->
+      <div class="screen" id="screen-present" data-screen hidden>
+        <p class="demo-badge demo-orange">Presentación · 26/10/26</p>
+        <h2 class="title title-sm">Teoría<br><span>de grafos</span></h2>
+        <p class="lead">Pasamos los temas en orden, jugamos con el grafo de ejemplo y al final de cada tema Guillermo le pregunta a la clase. Para avanzar o volver se pueden usar las flechas del teclado.</p>
+        <p class="team">Equipo: Velazco · Bueno · Kasmenko</p>
+        <button class="btn btn-yellow btn-big present-start" type="button" data-action="present-start">▶ Empezar la presentación</button>
+        <ol class="topic-list" id="present-list"></ol>
+        <div class="exam-card">
+          <div class="exam-text">
+            <h3 class="h3">¡Ahora pregunta Guillermo!</h3>
+            <p>Para cerrar: 10 preguntas mezcladas de los 4 temas para responder entre todos.</p>
+          </div>
+          <button class="btn btn-yellow btn-big" type="button" data-action="lesson-review">★ Preguntas para la clase</button>
+        </div>
+        <div class="menu menu-row">
+          <button class="btn btn-ghost" type="button" data-action="home">← Inicio</button>
+        </div>
+        <p class="note" id="present-fuente"></p>
+      </div>
+
+      <!-- CLASE: UN TEMA (también se usa al presentar) -->
       <div class="screen" id="screen-lesson" data-screen hidden>
         <nav class="lesson-nav" aria-label="Temas de la clase">
-          <button class="btn btn-ghost btn-small" type="button" data-action="learn">☰ Temas</button>
+          <button class="btn btn-ghost btn-small" type="button" data-action="back-class">☰ Temas</button>
           <span class="lesson-step" id="lesson-step">Tema 1 de 4</span>
         </nav>
         <h2 class="h2 lesson-title" id="lesson-title" tabindex="-1">Tema</h2>
@@ -327,6 +349,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=31"></script>
+  <script src="script.js?v=32"></script>
 </body>
 </html>

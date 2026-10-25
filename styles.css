@@ -657,6 +657,18 @@ kbd {
 .teach-box ul { margin: 0; padding-left: 22px; }
 .teach-box li { margin-bottom: 6px; }
 
+/* ---------- presentar la clase ---------- */
+.present-start { width: 100%; margin-bottom: 18px; }
+/* las notas de quien presenta: plegadas, para que no distraigan a la clase */
+.teach-box summary { cursor: pointer; font-family: var(--font-retro); font-size: 12px; line-height: 1.6; color: var(--yellow); }
+.teach-box details[open] summary { margin-bottom: 8px; }
+/* en compu, el tema se lee un poco más grande para verlo desde lejos */
+@media (min-width: 821px) {
+  .presentando .lesson-body { font-size: 1.15em; }
+  .presentando .lesson-body h3 { font-size: 14px; }
+  .presentando .lesson-title { font-size: 1.25em; }
+}
+
 /* ---------- examen: ¿estoy listo? ---------- */
 .exam-card {
   display: flex;

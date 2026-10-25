@@ -2064,6 +2064,7 @@ function show(name, focusEl) {
   screen.hidden = false;
   if (!reduceMotion.matches) screen.classList.add("enter");
   current = name;
+  document.body.classList.toggle("presentando", name === "lesson" && lesson.presentar);
   (focusEl || $("#panel")).focus({ preventScroll: true });
   if (window.innerWidth <= 820) window.scrollTo({ top: 0, behavior: "auto" });
 }
@@ -2286,6 +2287,7 @@ function showResults() {
   if (isRecord) store.set("bestQuiz", quiz.score);
   updateRecords();
   $("#r-back-lesson").hidden = quiz.lesson === null || quiz.lesson === "eval";
+  $("#r-back-lesson").textContent = lesson.presentar ? "📽 Volver a la presentación" : "◆ Volver a la clase";
   if (typeof quiz.lesson === "number") {
     const done = store.get("claseHechos", {});
     done[quiz.lesson] = Math.max(done[quiz.lesson] || 0, Math.round((quiz.correct / total) * 100));
@@ -2484,12 +2486,12 @@ function finishChallenge() {
 CLASE.temas.forEach((t) => t.preguntas.forEach((p) => { p.categoria = "Grafos · " + t.titulo; }));
 EXAMEN.preguntas.forEach((p) => { p.categoria = "Examen · " + CLASE.temas[p.tema].titulo; });
 
-const lesson = { index: 0, graph: null, selected: null, showDegrees: false };
+// presentar: se está mostrando la clase frente a todos (sección «Presentar la clase»)
+const lesson = { index: 0, graph: null, selected: null, showDegrees: false, presentar: false };
 
-function showLearn() {
-  stopChallenge();
+// la lista de temas (la usan la clase y la presentación)
+function armarTemas(list) {
   const done = store.get("claseHechos", {});
-  const list = $("#topic-list");
   list.innerHTML = "";
   CLASE.temas.forEach((t, i) => {
     const li = document.createElement("li");
@@ -2506,6 +2508,12 @@ function showLearn() {
     li.appendChild(b);
     list.appendChild(li);
   });
+}
+
+function showLearn() {
+  stopChallenge();
+  lesson.presentar = false;
+  armarTemas($("#topic-list"));
   $("#clase-fuente").textContent = CLASE.fuente;
   const bestExam = store.get("claseExamen", null);
   $("#exam-best").textContent = bestExam === null ? "Todavía no lo hiciste." : `Tu mejor resultado: ${bestExam} %.`;
@@ -2513,15 +2521,44 @@ function showLearn() {
   guillermo.say("¡Hoy damos teoría de grafos! Elegí un tema, leelo y después te pregunto a ver si lo entendiste.", "pensando");
 }
 
+/* ---------- presentar la clase: los mismos temas, para mostrarlos frente a todos ---------- */
+function showPresent() {
+  stopChallenge();
+  lesson.presentar = true;
+  armarTemas($("#present-list"));
+  $("#present-fuente").textContent = CLASE.fuente;
+  show("present");
+  guillermo.say("¡Hoy les presentamos teoría de grafos! Presten atención, que después les pregunto.", "alegria");
+}
+
+// volver a los temas: a la clase o a la presentación, según de dónde se vino
+const volverClase = () => (lesson.presentar ? showPresent() : showLearn());
+
+// al presentar, las flechas del teclado pasan de tema
+document.addEventListener("keydown", (e) => {
+  if (current !== "lesson" || !lesson.presentar || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (e.target.closest && e.target.closest("input, select, textarea")) return;
+  const i = e.key === "ArrowRight" ? lesson.index + 1 : e.key === "ArrowLeft" ? lesson.index - 1 : -1;
+  if (i < 0 || i >= CLASE.temas.length) return;
+  e.preventDefault();
+  sound.play("click");
+  openLesson(i);
+});
+
 function openLesson(i) {
   const t = CLASE.temas[i];
   lesson.index = i;
   $("#lesson-step").textContent = `Tema ${i + 1} de ${CLASE.temas.length}`;
   $("#lesson-title").textContent = t.titulo;
   $("#lesson-body").innerHTML = t.contenido;
-  $("#lesson-teach").innerHTML = `<h3>Para explicarlo en la clase</h3><ul>${t.clase.map(() => "<li></li>").join("")}</ul>`;
+  // al presentar, las ideas para explicarlo son notas para quien presenta: quedan plegadas
+  $("#lesson-teach").innerHTML = lesson.presentar
+    ? `<details><summary>Notas para presentar</summary><ul>${t.clase.map(() => "<li></li>").join("")}</ul></details>`
+    : `<h3>Para explicarlo en la clase</h3><ul>${t.clase.map(() => "<li></li>").join("")}</ul>`;
   $("#lesson-teach").querySelectorAll("li").forEach((li, k) => { li.textContent = t.clase[k]; });
-  $("#lesson-quiz-btn").textContent = `✔ ¿Lo entendí? Preguntame (${t.preguntas.length})`;
+  $("#lesson-quiz-btn").textContent = lesson.presentar
+    ? `✔ Preguntale a la clase (${t.preguntas.length})`
+    : `✔ ¿Lo entendí? Preguntame (${t.preguntas.length})`;
   $("#lesson-prev").disabled = i === 0;
   $("#lesson-next").disabled = i === CLASE.temas.length - 1;
   lesson.showDegrees = t.modo === "grado";
@@ -2530,7 +2567,10 @@ function openLesson(i) {
   loadGraph(t.ejemplo);
   show("lesson", $("#lesson-title"));
   window.scrollTo({ top: 0, behavior: "auto" });
-  guillermo.say(`Tema ${i + 1}: ${t.titulo}${/[?!.]$/.test(t.titulo) ? "" : "."} Leelo tranqui y jugá con el grafo. Cuando estés, tocá «¿Lo entendí?».`, "espera");
+  const titulo = `Tema ${i + 1}: ${t.titulo}${/[?!.]$/.test(t.titulo) ? "" : "."}`;
+  guillermo.say(lesson.presentar
+    ? `${titulo} ¡Atentos, que al final del tema les hago preguntas!`
+    : `${titulo} Leelo tranqui y jugá con el grafo. Cuando estés, tocá «¿Lo entendí?».`, "espera");
 }
 
 /* ---------- examen: ¿estoy listo? ---------- */
@@ -4045,7 +4085,7 @@ const actions = {
   instructions: () => { show("instructions"); guillermo.say(FRASES.instrucciones, "pensando"); },
   "start-quiz": startEval,
   "retry-quiz": () => startQuiz(quiz.lesson),
-  "quit-quiz": () => (quiz.lesson === null ? goHome() : typeof quiz.lesson === "number" ? openLesson(quiz.lesson) : showLearn()),
+  "quit-quiz": () => (quiz.lesson === null ? goHome() : typeof quiz.lesson === "number" ? openLesson(quiz.lesson) : volverClase()),
   "start-eval": startEval,
   "eval-clear": clearEvalHistory,
   "life-rappi": llamarRappi,
@@ -4059,6 +4099,9 @@ const actions = {
   "life-ssj": activarRescate,
   "lesson-exam": () => startQuiz("examen"),
   learn: showLearn,
+  present: showPresent,
+  "present-start": () => openLesson(0),
+  "back-class": volverClase,
   "lesson-quiz": () => startQuiz(lesson.index),
   "lesson-review": () => startQuiz("todo"),
   "lesson-prev": () => openLesson(Math.max(0, lesson.index - 1)),
