@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=22">
+  <link rel="stylesheet" href="styles.css?v=27">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -83,7 +83,7 @@
               <li>Son <strong>12 preguntas</strong> de teoría de grafos, sin repetir.</li>
               <li>Cada una tiene 4 opciones y <strong>una sola</strong> es correcta.</li>
               <li>Algunas son <strong>mini retos de grafos</strong>: tocás los vértices o las aristas para seleccionarlos (tocá de nuevo para quitarlos) y recién al apretar <strong>✔ Comprobar</strong> se corrige. Cuentan como una pregunta más.</li>
-              <li>Tenés <strong>4 comodines</strong> para toda la partida: <strong>🛵 Rappi</strong> atropella dos opciones incorrectas, <strong>💡 Pista</strong>, <strong>🔄 Cambiar pregunta</strong> y <strong>⚡ Rescate SSJ</strong>, que calma a Guillermo y restaura el panel (ese también está en las prácticas de la clase).</li>
+              <li>Tenés <strong>4 comodines</strong> para toda la partida: <strong>🛵 Rappi</strong> atropella dos opciones incorrectas, <strong>💡 Pista</strong>, <strong>🔄 Cambiar pregunta</strong> y <strong>⚡ Llamar a Kamil</strong>, que calma a Guillermo y restaura el panel (ese también está en las prácticas de la clase).</li>
               <li>Al final sale una <strong>nota del 1 al 12</strong> (se aprueba con 6) y el repaso de lo que fallaste.</li>
               <li>Atajos: teclas <kbd>1</kbd>–<kbd>4</kbd> para responder, <kbd>P</kbd> para la pista y <kbd>Enter</kbd> para seguir. En los mini retos, <kbd>Tab</kbd> recorre los vértices o aristas y <kbd>Enter</kbd> o <kbd>Espacio</kbd> selecciona o quita.</li>
             </ul>
@@ -143,15 +143,15 @@
 
         <div class="lifelines" id="lifelines" role="group" aria-label="Comodines" hidden>
           <button class="btn btn-orange btn-small" type="button" id="life-rappi" data-action="life-rappi">🛵 Llamar a Rappi</button>
-          <button class="btn btn-violet btn-small" type="button" id="life-pista" data-action="life-pista">💡 Pista de Guillermo</button>
-          <button class="btn btn-teal btn-small" type="button" id="life-cambio" data-action="life-cambio">🔄 Cambiar pregunta</button>
           <div class="ssj-comodin">
             <button class="btn btn-ssj btn-small life-ssj" type="button" id="life-ssj" data-action="life-ssj" aria-describedby="ssj-desc">
               <img class="ssj-retrato" src="assets/rescate-ssj/retrato.png" alt="" width="40" height="40">
-              <span class="ssj-texto"><span class="ssj-nombre">⚡ Rescate SSJ</span><span class="ssj-usos" id="ssj-usos">1 uso</span></span>
+              <span class="ssj-texto"><span class="ssj-nombre">⚡ Llamar a Kamil</span><span class="ssj-usos" id="ssj-usos">1 uso</span></span>
             </button>
             <p class="ssj-desc" id="ssj-desc">Calma a Guillermo y restaura el panel</p>
           </div>
+          <button class="btn btn-teal btn-small" type="button" id="life-cambio" data-action="life-cambio">🔄 Cambiar pregunta</button>
+          <button class="btn btn-violet btn-small" type="button" id="life-pista" data-action="life-pista">💡 Pista de Guillermo</button>
         </div>
         <p class="sr-only" id="ssj-aviso" aria-live="polite"></p>
         <details class="mini-help" id="life-help" hidden>
@@ -160,7 +160,7 @@
             <li><strong>🛵 Rappi:</strong> pasa en su moto y atropella dos opciones incorrectas.</li>
             <li><strong>💡 Pista:</strong> Guillermo te tira una ayuda.</li>
             <li><strong>🔄 Cambio:</strong> cambia la pregunta por otra.</li>
-            <li><strong>⚡ Rescate SSJ:</strong> llega alguien, se transforma en Super Saiyajin y le tira un Kamehameha a Guillermo: se le pasa el enojo y el panel queda como nuevo. La pregunta sigue igual.</li>
+            <li><strong>⚡ Llamar a Kamil:</strong> llega Kamil, se transforma en Super Saiyajin y le tira un Kamehameha a Guillermo: se le pasa el enojo y el panel queda como nuevo. La pregunta sigue igual.</li>
           </ul>
           <p>Hay uno de cada uno para toda la partida.</p>
         </details>
@@ -318,6 +318,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=22"></script>
+  <script src="script.js?v=24"></script>
 </body>
 </html>

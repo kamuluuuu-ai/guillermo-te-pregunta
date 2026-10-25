@@ -694,8 +694,8 @@ kbd {
 .btn-orange { --c: var(--orange); --cd: var(--orange-d); --fg: var(--ink); }
 .demo-orange { background: var(--orange); }
 
-.lifelines { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
-.lifelines .btn { flex: 1 1 180px; }
+.lifelines { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px; margin-top: 18px; }
+.lifelines .btn { flex: 1 1 180px; min-height: 66px; } /* misma altura que el botón de Kamil (con retrato) */
 .lifelines .btn.used { text-decoration: line-through; }
 
 /* recorta solo a los costados: Rappi entra y sale por los bordes pero puede saltar por arriba */
@@ -1017,7 +1017,9 @@ body.estallido::after { animation: estallido 0.9s steps(3) both; }
    COMODÍN «RESCATE SSJ»
    ========================================================= */
 .btn-ssj { --c: #ffb627; --cd: #c27800; --fg: var(--ink); }
-.ssj-comodin { flex: 1 1 220px; display: flex; flex-direction: column; gap: 8px; }
+.ssj-comodin { flex: 1 1 180px; display: flex; flex-direction: column; gap: 8px; }
+/* la Pista de Guillermo ocupa el lugar ancho de abajo; Kamil va arriba, al lado de Rappi */
+.lifelines #life-pista { flex-basis: 100%; }
 .lifelines .btn.life-ssj { flex: none; justify-content: flex-start; gap: 10px; padding-left: 10px; }
 .ssj-retrato { flex: none; width: 40px; height: 40px; image-rendering: pixelated; background: #ffffff55; box-shadow: 0 0 0 2px var(--ink); }
 .ssj-texto { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; text-align: left; }

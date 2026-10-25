@@ -2292,7 +2292,7 @@ function startQuiz(lesson = null) {
   show("quiz", $("#q-text"));
   enojoIniciar(limitePara(quiz.deck.length));
   renderQuestion(lesson === "eval"
-    ? `¡Arranca la evaluación${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 4 comodines: Rappi, Pista, Cambio y Rescate SSJ. Usalos bien.`
+    ? `¡Arranca la evaluación${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 4 comodines: Rappi, Pista, Cambio y Llamar a Kamil. Usalos bien.`
     : pick(FRASES.arranque));
 }
 
@@ -3094,7 +3094,7 @@ function renderEval(total) {
   const nota = Math.max(1, Math.round((quiz.correct / total) * 12));
   const aprobado = nota >= 6;
   const usados = Object.keys(COMODINES).filter((k) => !quiz.comodines[k]).map((k) => COMODINES[k].label.replace(/^\S+\s/, ""));
-  if (!quiz.comodines.ssj) usados.push("Rescate SSJ");
+  if (!quiz.comodines.ssj) usados.push("Llamar a Kamil");
   const fecha = new Date().toLocaleString("es-UY", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
   const hist = store.get("evaluaciones", []);
   hist.push({ nombre: quiz.alumno, nota, correctas: quiz.correct, total, fecha });
@@ -3368,6 +3368,10 @@ const SSJ = {
   img: null
 };
 
+// el Rescate va siempre en su versión larga, aunque el sistema pida menos movimiento
+// (el resto del juego sí sigue esa preferencia). Para volver a respetarla: return reduceMotion.matches
+const escenaCorta = () => false;
+
 // tiempos de cada momento (ms); con menos movimiento va la versión corta
 const TIEMPOS_SSJ = {
   normal: { entrada: 550, plantado: 240, prepara: 600, anticipa: 140, transforma: 650, carga: 1000, viaje: 260, impacto: 800, recupera: 400, victoria: 550, salida: 360 },
@@ -3375,7 +3379,7 @@ const TIEMPOS_SSJ = {
 };
 
 const FASES_SSJ = {
-  entrada: "Llega el rescate",
+  entrada: "Llega Kamil",
   transformacion: "Transformación",
   carga: "Carga el Kamehameha",
   disparo: "¡Kamehameha!",
@@ -3466,16 +3470,16 @@ async function escenaRescate() {
   cortarActuacion(); // corta el mordisco en curso o en cola; lo mordido se repara en la escena
   const gen = mordida.gen;
   mordida.actuando = true; // Guillermo está ocupado: lo que tenga que decir espera
-  const reduce = reduceMotion.matches;
+  const reduce = escenaCorta();
   const T = reduce ? TIEMPOS_SSJ.reducido : TIEMPOS_SSJ.normal;
   rescate.estado = "entrada";
   renderLifelines();
   pausarPregunta(true);
-  $("#ssj-aviso").textContent = "Rescate SSJ en curso: la pregunta queda en pausa unos segundos.";
+  $("#ssj-aviso").textContent = "Kamil está en camino: la pregunta queda en pausa unos segundos.";
   if (document.activeElement && document.activeElement.closest("[inert]")) $("#panel").focus({ preventScroll: true });
 
   const pausa = nodoFx("ssj-pausa");
-  pausa.innerHTML = `<span>⏸ Rescate SSJ</span><span></span>`;
+  pausa.innerHTML = `<span>⏸ Llamaste a Kamil</span><span></span>`;
   pausa.style.visibility = "hidden"; // aparece cuando ya se sabe dónde va
   rescate.pausa = pausa;
   faseRescate("entrada");
@@ -3711,7 +3715,7 @@ function auraSVG(cuadro) {
 
 // chispas cuadradas que suben desde los pies alrededor del cuerpo
 function chispas(E, cantidad, ms) {
-  if (reduceMotion.matches) return;
+  if (escenaCorta()) return;
   const colores = ["#ffd23f", "#fff5b0", "#ffb627"];
   const ancho = (E.ext[0] + E.ext[1]) * 0.8;
   const alto = SSJ.h * E.s;
@@ -3753,7 +3757,7 @@ function brillo(p, d, color) {
     { transform: en(0.4), opacity: 0 },
     { transform: en(0.9), opacity: 0.55, offset: 0.4 },
     { transform: en(1.15), opacity: 0 }
-  ], { duration: reduceMotion.matches ? 400 : 700, easing: "steps(6)", fill: "forwards" }), 800);
+  ], { duration: escenaCorta() ? 400 : 700, easing: "steps(6)", fill: "forwards" }), 800);
 }
 
 // golpe del rayo: anillo de píxeles y un cartel
@@ -3761,7 +3765,7 @@ function impacto(p, ancho) {
   const n = nodoFx("ssj-impacto");
   n.style.width = n.style.height = `${ancho * 1.3}px`;
   const en = (k) => `translate(${p.x}px, ${p.y}px) translate(-50%, -50%) scale(${k})`;
-  efimero(n, animar(n, reduceMotion.matches
+  efimero(n, animar(n, escenaCorta()
     ? [{ transform: en(1), opacity: 0.9 }, { transform: en(1), opacity: 0 }]
     : [{ transform: en(0.3), opacity: 1 }, { transform: en(1), opacity: 0.9, offset: 0.5 }, { transform: en(1.3), opacity: 0 }],
   { duration: 600, easing: "steps(5)", fill: "forwards" }), 700);
@@ -3796,7 +3800,7 @@ function repararPanel(ms) {
   if (!marcas.length) return;
   sound.play("restore", true);
   const caja = panelCaja();
-  if (!reduceMotion.matches) {
+  if (!escenaCorta()) {
     const colores = ["#2f3d8f", "#18225a", "#202c6e", "#0a0d22", "#ffd23f"];
     marcas.forEach((m, j) => {
       const p = contacto(m, caja);
@@ -3813,7 +3817,7 @@ function repararPanel(ms) {
       }
     });
   }
-  const pasos = reduceMotion.matches ? 2 : 8;
+  const pasos = escenaCorta() ? 2 : 8;
   for (let i = 1; i <= pasos; i++) {
     tarea(() => {
       marcas.forEach((m) => { m.cura = i / pasos; });
@@ -3827,7 +3831,7 @@ function rellenarPaciencia(ms) {
   const rotos = [...paciencia.box.children].filter((d) => d.classList.contains("roto"));
   rotos.reverse().forEach((d, i) => tarea(() => {
     d.classList.remove("roto", "rompe");
-    if (!reduceMotion.matches) animar(d, [{ transform: "scale(1.6)" }, { transform: "scale(1)" }], { duration: 200, easing: "steps(3)" });
+    if (!escenaCorta()) animar(d, [{ transform: "scale(1.6)" }, { transform: "scale(1)" }], { duration: 200, easing: "steps(3)" });
   }, ms * i));
   tarea(() => paciencia.marcar(0), ms * rotos.length + 10);
 }
