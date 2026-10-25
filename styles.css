@@ -574,7 +574,8 @@ kbd {
 .topic-state { flex: none; font-size: 13px; font-weight: 900; color: var(--muted); text-transform: uppercase; }
 .topic-state.done { color: var(--good); }
 
-.lesson-nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.lesson-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
+.lesson-nav .lesson-step { margin-left: auto; }
 .lesson-step { font-family: var(--font-retro); font-size: 10px; color: var(--teal); }
 .lesson-title { outline: none; color: var(--good); }
 

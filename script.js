@@ -204,7 +204,7 @@ const AFIRMACIONES = [
 
 /* ---------------------------------------------------------
    3) CLASE: TEORÍA DE GRAFOS
-   Basada en Rosen, «Matemática discreta y sus aplicaciones»
+   Referencia: Rosen, «Matemática discreta y sus aplicaciones»
    (5.ª ed.), capítulo 8, secciones 8.1 y 8.2.
    Cada tema tiene:
      titulo, resumen → lo que se ve en la lista de temas
@@ -215,7 +215,7 @@ const AFIRMACIONES = [
      preguntas       → igual que PREGUNTAS (sin "categoria")
    --------------------------------------------------------- */
 const CLASE = {
-  fuente: "Basado en Rosen, K. H., «Matemática discreta y sus aplicaciones», 5.ª ed., McGraw-Hill: cap. 8, sección 8.1 «Introducción a los grafos» (págs. 503, 504 y 506) y sección 8.2 «Terminología en teoría de grafos» (págs. 511–512).",
+  fuente: "Referencia: Rosen, K. H., «Matemática discreta y sus aplicaciones», 5.ª ed., McGraw-Hill: cap. 8, sección 8.1 «Introducción a los grafos» (págs. 503, 504 y 506) y sección 8.2 «Terminología en teoría de grafos» (págs. 511–512).",
   temas: [
     {
       titulo: "¿Qué es un grafo?",
@@ -227,7 +227,7 @@ const CLASE = {
         <div class="def"><span class="def-tag">Definición</span>Un grafo se escribe <strong>G = (V, E)</strong>: <strong>V</strong> es el conjunto de <em>vértices</em> (los puntos) y <strong>E</strong> es el conjunto de <em>aristas</em> (las conexiones entre puntos).</div>
         <h3>¿Dónde aparecen?</h3>
         <ul>
-          <li><strong>Redes de computadoras:</strong> cada computadora es un punto y cada cable o enlace es una línea. Es el ejemplo con el que arranca el libro.</li>
+          <li><strong>Redes de computadoras:</strong> cada computadora es un punto y cada cable o enlace es una línea.</li>
           <li><strong>Mapas y rutas:</strong> las ciudades son puntos y las rutas que las unen son líneas.</li>
           <li><strong>Redes sociales:</strong> en un «grafo de conocidos» cada persona es un punto y se unen dos personas si se conocen.</li>
           <li><strong>Ecología:</strong> cada especie es un punto y se unen dos especies si compiten por el mismo alimento.</li>
@@ -361,7 +361,7 @@ const CLASE = {
       contenido: `
         <p>Las <strong>aristas</strong> (también llamadas <strong>enlaces</strong>) son las <strong>conexiones entre los vértices</strong>. Cada arista une dos vértices.</p>
         <div class="def"><span class="def-tag">Notación</span>Una arista entre u y v se escribe <strong>{u, v}</strong>. Las aristas se juntan en el conjunto <strong>E</strong>, por ejemplo E = {{a, b}, {b, c}}. El orden no importa: {u, v} y {v, u} son la misma arista.</div>
-        <h3>Palabras que usa el libro</h3>
+        <h3>Palabras que vamos a usar</h3>
         <ul>
           <li>Si e = {u, v}, la arista e es <strong>incidente</strong> con u y con v, y decimos que <strong>conecta</strong> u y v.</li>
           <li>u y v son los <strong>extremos</strong> de la arista.</li>
@@ -428,9 +428,9 @@ const CLASE = {
         <p>El <strong>grado</strong> de un vértice dice <strong>cuántas aristas llegan a él</strong> (cuántas aristas son incidentes con él).</p>
         <div class="def"><span class="def-tag">Definición</span>El grado de un vértice v se escribe <strong>δ(v)</strong> y es el número de aristas incidentes con v.</div>
         <h3>El de mayor grado</h3>
-        <p>Para encontrar el vértice de mayor grado, calculá δ(v) de cada vértice y quedate con el máximo. <strong>Puede haber empate</strong>: si varios vértices llegan al máximo, todos son «de mayor grado». En el grafo G del libro el máximo es 4 y lo alcanzan b, c y f.</p>
-        <h3>Ejemplo del libro</h3>
-        <p>En el grafo G de abajo (el de la Figura 1 de la sección 8.2): δ(a) = 2, δ(b) = δ(c) = δ(f) = 4, δ(d) = 1, δ(e) = 3 y δ(g) = 0. Por eso g es <strong>aislado</strong> (grado 0) y d es una <strong>hoja</strong> (grado 1).</p>
+        <p>Para encontrar el vértice de mayor grado, calculá δ(v) de cada vértice y quedate con el máximo. <strong>Puede haber empate</strong>: si varios vértices llegan al máximo, todos son «de mayor grado». En el grafo G de abajo el máximo es 4 y lo alcanzan b, c y f.</p>
+        <h3>Un ejemplo</h3>
+        <p>En el grafo G de abajo: δ(a) = 2, δ(b) = δ(c) = δ(f) = 4, δ(d) = 1, δ(e) = 3 y δ(g) = 0. Por eso g es <strong>aislado</strong> (grado 0) y d es una <strong>hoja</strong> (grado 1).</p>
         <h3>Teorema de los apretones de manos</h3>
         <div class="def def-yellow"><span class="def-tag">Teorema</span>Si un grafo tiene e aristas, la <strong>suma de los grados de todos sus vértices es 2e</strong>.</div>
         <p>¿Por qué? Cada arista tiene dos extremos, así que suma 1 al grado de cada uno: en total aporta 2. Es como un saludo: cada apretón de manos usa dos manos.</p>
@@ -471,7 +471,7 @@ const CLASE = {
           opciones: ["30", "60", "16", "36"],
           correcta: 0,
           pista: "Primero calculá la suma de los grados: 10 × 6.",
-          explicacion: "La suma es 60 = 2e, así que e = 30. Es el Ejemplo 2 de la sección 8.2 del libro."
+          explicacion: "La suma es 60 = 2e, así que e = 30."
         },
         {
           pregunta: "¿Puede existir un grafo cuyos vértices tengan grados 1, 2 y 2?",
@@ -521,7 +521,7 @@ const EXAMEN = {
     },
     {
       tema: 0,
-      pregunta: "En el ejemplo del libro de especies que compiten por alimento en un bosque, ¿qué representa una arista?",
+      pregunta: "En un grafo de especies que compiten por alimento en un bosque, ¿qué representa una arista?",
       opciones: ["Que dos especies compiten entre sí", "Una especie", "Un tipo de alimento", "El bosque entero"],
       correcta: 0,
       pista: "Las especies son los vértices.",
@@ -639,7 +639,7 @@ const EXAMEN = {
     },
     {
       tema: 3,
-      pregunta: "En el grafo G del libro, δ(e) = 3. ¿Qué significa?",
+      pregunta: "En un grafo G, δ(e) = 3. ¿Qué significa?",
       opciones: ["Que hay 3 aristas incidentes con e", "Que e está en la posición 3", "Que e es el tercer vértice", "Que el grafo tiene 3 vértices"],
       correcta: 0,
       pista: "δ(v) es el grado del vértice v.",
@@ -708,7 +708,7 @@ const EVALUACION = {
     },
     {
       tema: 0,
-      pregunta: "En el ejemplo del libro de un grafo de conocidos, ¿cuándo hay una arista entre dos personas?",
+      pregunta: "En un grafo de conocidos, ¿cuándo hay una arista entre dos personas?",
       opciones: ["Cuando las dos personas se conocen", "Cuando tienen el mismo nombre", "Cuando viven lejos", "Nunca: las personas son aristas"],
       correcta: 0,
       pista: "Cada persona es un vértice.",
@@ -850,7 +850,7 @@ const GRAFOS_EJEMPLO = {
     aristas: [["Router", "PC1"], ["Router", "PC2"], ["Router", "PC3"], ["Router", "PC4"], ["PC1", "PC2"], ["PC3", "PC4"]]
   },
   rosen: {
-    nombre: "Grafo G del libro (sección 8.2, Figura 1)",
+    nombre: "Grafo G",
     vertices: { a: [8, 50], b: [30, 12], c: [56, 12], d: [82, 12], e: [56, 50], f: [30, 50], g: [82, 50] },
     aristas: [["a", "b"], ["a", "f"], ["b", "c"], ["b", "f"], ["b", "e"], ["c", "f"], ["c", "e"], ["c", "d"], ["f", "e"]]
   }
@@ -2521,6 +2521,63 @@ function showLearn() {
   guillermo.say("¡Hoy damos teoría de grafos! Elegí un tema, leelo y después te pregunto a ver si lo entendiste.", "pensando");
 }
 
+/* ---------- copiar un tema para los apuntes ---------- */
+// el tema como texto limpio: títulos, párrafos, listas con viñetas y definiciones
+function textoDelTema(i) {
+  const t = CLASE.temas[i];
+  const caja = document.createElement("div");
+  caja.innerHTML = t.contenido;
+  const limpio = (el) => el.textContent.replace(/\s+/g, " ").trim();
+  const titulo = `Tema ${i + 1}: ${t.titulo}`;
+  const partes = [titulo, "=".repeat(Math.min(40, titulo.length))];
+  [...caja.children].forEach((el) => {
+    if (el.matches("h3")) partes.push("", limpio(el).toUpperCase());
+    else if (el.matches("ul, ol")) partes.push([...el.children].map((li, k) => (el.matches("ol") ? `${k + 1}. ` : "• ") + limpio(li)).join("\n"));
+    else if (el.matches(".def")) {
+      const tag = el.querySelector(".def-tag");
+      const etiqueta = tag ? limpio(tag) : "";
+      if (tag) tag.remove();
+      partes.push(etiqueta ? `${etiqueta}: ${limpio(el)}` : limpio(el));
+    } else if (el.matches("table")) partes.push([...el.rows].map((r) => [...r.cells].map(limpio).join(" | ")).join("\n"));
+    else if (limpio(el)) partes.push(limpio(el));
+  });
+  // el grafo de ejemplo del tema, para que «el grafo de abajo» se entienda en los apuntes
+  const g = GRAFOS_EJEMPLO[t.ejemplo];
+  if (g) partes.push("", `EJEMPLO: ${g.nombre.toUpperCase()}`, `V = {${Object.keys(g.vertices).join(", ")}}`, `E = {${g.aristas.map(([u, v]) => `{${u}, ${v}}`).join(", ")}}`);
+  partes.push("", CLASE.fuente);
+  return partes.join("\n").replace(/\n{3,}/g, "\n\n") + "\n";
+}
+
+async function copiarTexto(texto) {
+  try {
+    await navigator.clipboard.writeText(texto);
+    return true;
+  } catch {
+    // sin permiso del portapapeles (o navegador viejo): con un campo de texto escondido
+    const area = document.createElement("textarea");
+    area.value = texto;
+    area.setAttribute("readonly", "");
+    area.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0";
+    document.body.appendChild(area);
+    area.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch { ok = false; }
+    area.remove();
+    return ok;
+  }
+}
+
+async function copiarTema() {
+  const b = $("#lesson-copy");
+  const ok = await copiarTexto(textoDelTema(lesson.index));
+  b.textContent = ok ? "✔ Copiado" : "✘ No se pudo copiar";
+  $("#lesson-copy-aviso").textContent = ok
+    ? `Copiaste el tema ${lesson.index + 1}. Pegalo en tus apuntes.`
+    : "No se pudo copiar. Seleccioná el texto del tema y copialo a mano.";
+  clearTimeout(b._t);
+  b._t = setTimeout(() => { b.textContent = "📋 Copiar"; }, 2000);
+}
+
 /* ---------- presentar la clase: los mismos temas, para mostrarlos frente a todos ---------- */
 function showPresent() {
   stopChallenge();
@@ -4102,6 +4159,7 @@ const actions = {
   present: showPresent,
   "present-start": () => openLesson(0),
   "back-class": volverClase,
+  "lesson-copy": copiarTema,
   "lesson-quiz": () => startQuiz(lesson.index),
   "lesson-review": () => startQuiz("todo"),
   "lesson-prev": () => openLesson(Math.max(0, lesson.index - 1)),

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=32">
+  <link rel="stylesheet" href="styles.css?v=34">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -307,9 +307,11 @@
       <div class="screen" id="screen-lesson" data-screen hidden>
         <nav class="lesson-nav" aria-label="Temas de la clase">
           <button class="btn btn-ghost btn-small" type="button" data-action="back-class">☰ Temas</button>
+          <button class="btn btn-teal btn-small" type="button" data-action="lesson-copy" id="lesson-copy" title="Copia el tema como texto para tus apuntes">📋 Copiar</button>
           <span class="lesson-step" id="lesson-step">Tema 1 de 4</span>
         </nav>
         <h2 class="h2 lesson-title" id="lesson-title" tabindex="-1">Tema</h2>
+        <p class="sr-only" id="lesson-copy-aviso" aria-live="polite"></p>
         <div class="lesson-body" id="lesson-body"></div>
 
         <figure class="graph-lab" id="graph-lab">
@@ -335,7 +337,7 @@
   </main>
 
   <footer class="footer">
-    <p>Proyecto estudiantil de UTU · Teoría de grafos basada en Rosen, cap. 8</p>
+    <p>Proyecto estudiantil de UTU · Referencia: Rosen, «Matemática discreta y sus aplicaciones», cap. 8</p>
   </footer>
 
   <!-- capa de efectos: Guillermo volando a morder, migas y carteles (no atrapa clics) -->
@@ -349,6 +351,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=32"></script>
+  <script src="script.js?v=34"></script>
 </body>
 </html>
