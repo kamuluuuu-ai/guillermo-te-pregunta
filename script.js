@@ -1037,229 +1037,60 @@ const sound = {
 
 /* =========================================================
    GUILLERMO EN PIXEL ART
-   Cuadrícula de 24 × 29. Cada letra es un color de PALETA
-   ("." = transparente). Se dibuja como SVG con bordes nítidos.
+   Las 16 caras salen de la hoja aprobada, recortadas y
+   alineadas en una tira (assets/guillermo/caras.png, ver
+   preparar-sprites.py). Todas comparten el mismo cuadro:
+   cambiar de cara no mueve ni agranda la cabeza.
    ========================================================= */
-const PALETA = {
-  K: "#140d1c", // contorno
-  H: "#3a2418", // pelo castaño oscuro
-  h: "#5e3c27", // brillo del pelo
-  S: "#f3cba9", // piel
-  s: "#d9a37f", // sombra de piel
-  B: "#22150e", // cejas gruesas
-  E: "#1a110d", // ojos oscuros
-  W: "#ffffff", // brillo
-  M: "#d9827a", // labios
-  m: "#7a2e33", // boca abierta
-  F: "#b5764f", // pecas / lunares
-  P: "#f19c95", // cachetes
-  C: "#eadfb8", // capucha beige
-  c: "#c7b585", // sombra de capucha
-  J: "#1d2833", // campera oscura
-  j: "#34465a", // brillo de campera
-  Z: "#6b7a88", // cierre
-  R: "#ff3b4e", // vena de enojo
-  D: "#8fe3ff"  // gota de sudor
+const GUILLE = {
+  src: "assets/guillermo/caras.png",
+  w: 312, h: 306,                // un cuadro de la tira, en píxeles de la hoja
+  caras: ["espera", "parpadeo", "alegria", "animo", "pensando", "sorpresa", "molesto", "enojado",
+    "furioso", "mordida", "mordidaFinal", "lleno", "alivio", "nervioso", "asustado", "aturdido"],
+  cabeza: 262,                   // recorte de la cabeza que sale volando: hasta el cuello de la capucha
+  cara: [158, 186],              // centro de la cara (entre los ojos y la boca)
+  boca: { mordida: [154, 216], mordidaFinal: [156, 208], alivio: [150, 212] }
 };
 
-const SPRITE_BASE = [
-  ".......KKKKKKKKKK.......",
-  ".....KKHHHHHHHHHHKK.....",
-  "...KKHHHHHhhHHHHHHHKK...",
-  "..KHHHhhHHHHHHHHHhhHHK..",
-  ".KHHHHHHHHHHHHHHHHHHHHK.",
-  ".KHHHHHHHhHHHHHHHHHHHHK.",
-  ".KHHHHHHHHHHHHHHHHHHHHK.",
-  ".KHHHSSSSSHHHHhHHHHHHHK.",
-  ".KHSSSSSSSSSSSSSSSHHHHK.",
-  ".KHSSBBBBBSSSSBBBBBSSHK.",
-  ".KSSBBBBBBSSSSBBBBBBSSK.",
-  ".KSSSSSSSSSSSSSSSSSSSSK.",
-  "KsSSSSWEESSSSSSWEESSSSsK",
-  "KsSSSSEEESSSSSSEEESSSSsK",
-  "KsSSSSSSSSSSSSSSSSSSSSsK",
-  ".KSSSFSSSSSssSSSSSFSSSK.",
-  ".KSSSSSSSSSSSSSSSSSSSSK.",
-  ".KSSSSSSMSSSSSSMSSSSSSK.",
-  ".KSSSSSSSMMMMMMSSSSSSSK.",
-  "..KSSSSSSSSSSSSSSSSSSK..",
-  "...KsSSSSSSSSSSSSSSsK...",
-  ".CCCKKsSSSSSSSSSSsKKCCC.",
-  "CCCCcCCKKKssssKKKCCcCCCC",
-  "JCCCCcCCCKKKKKKCCCcCCCCJ",
-  "JJJCCCcCCCJZZJCCCcCCCJJJ",
-  "JJJJCCCCCJJZZJJCCCCCJJJJ",
-  "JJjJJJCCJJJZZJJJCCJJJjJJ",
-  "JjJJJJJJJJJZZJJJJJJJJJjJ",
-  "JjJJJJJJJJJZZJJJJJJJJJjJ"
-];
-
-// Cada expresión reemplaza el interior (columnas 2 a 21) de algunas filas.
 const EXPRESIONES = {
-  espera: { label: "Guillermo, sonriendo y esperando", rows: {} },
-  parpadeo: {
-    label: "Guillermo, sonriendo y esperando",
-    rows: { 12: "SSSSSSSSSSSSSSSSSSSS", 13: "SSSSEEESSSSSSEEESSSS" }
-  },
-  alegria: {
-    label: "Guillermo, feliz con los ojos cerrados de alegría",
-    rows: {
-      12: "SSSSSESSSSSSSSESSSSS",
-      13: "SSSSESESSSSSSESESSSS",
-      15: "SPPFSSSSSssSSSSSFPPS",
-      17: "SSSSSSmWWWWWWmSSSSSS",
-      18: "SSSSSSSmMMMMmSSSSSSS"
-    }
-  },
-  animo: {
-    label: "Guillermo, guiñando un ojo para darte ánimo",
-    rows: {
-      9: "HSSSSSBBSSSSBBSSSSSH",
-      10: "SSBBBBBSSSSSSBBBBBSS",
-      12: "SSSSSSSSSSSSSWEESSSS",
-      13: "SSSSEEESSSSSSEEESSSS",
-      15: "SPPFSSSSSssSSSSSFPPS"
-    }
-  },
-  pensando: {
-    label: "Guillermo, pensando con una ceja levantada",
-    rows: {
-      8: "HSSSSSSSSSSSBBBBBHHH",
-      9: "HSSBBBBBSSSSSSSSSSSH",
-      10: "SSBBBBBBSSSSSSSSSSSS",
-      12: "SSSSSWESSSSSSSWESSSS",
-      17: "SSSSSSSSSSSSSSSSSSSS",
-      18: "SSSSSSSSSSMMMSSSSSSS"
-    }
-  },
-  sorpresa: {
-    label: "Guillermo, sorprendido con la boca abierta",
-    rows: {
-      8: "HSSBBBBBSSSSBBBBBHHH",
-      9: "HSSSSSSSSSSSSSSSSSSH",
-      10: "SSSSSSSSSSSSSSSSSSSS",
-      17: "SSSSSSSSSmmSSSSSSSSS",
-      18: "SSSSSSSSSmmSSSSSSSSS"
-    }
-  },
-  // caras de enojo (se arman con las partes de CARA, más abajo): cada una es una actuación distinta
-  molesto: {
-    label: "Guillermo, molesto: cejas bajas, ojos entrecerrados y la boca apretada",
-    partes: { cejas: "molesta", ojos: "entrecerrados", boca: "plana" }
-  },
-  enojado: {
-    label: "Guillermo, enojado con el ceño fruncido y la boca para abajo",
-    partes: { cejas: "enojada", ojos: "rendija", boca: "triste", cachetes: true }
-  },
-  furioso: {
-    label: "Guillermo, furioso y colorado, con una vena en la frente, apretando los dientes",
-    partes: { cejas: "furiosa", ojos: "rendija", boca: "dientes", cachetes: true, vena: true }
-  },
-  mordida: {
-    label: "Guillermo con la boca bien abierta, listo para morder",
-    partes: { cejas: "enojada", ojos: "rendija", boca: "abierta", cachetes: true }
-  },
-  alivio: {
-    label: "Guillermo, aliviado: cierra los ojos y suelta el aire",
-    partes: { cejas: "alta", ojos: "cerrados", boca: "fiu", sudor: true }
-  },
-  lleno: {
-    label: "Guillermo masticando, lleno y contento",
-    partes: { ojos: "felices", boca: "mastica", cachetes: true }
-  }
+  espera: "Guillermo, sonriendo tranquilo y esperando",
+  parpadeo: "Guillermo, sonriendo tranquilo y esperando",
+  alegria: "Guillermo, feliz y riéndose con la boca abierta",
+  animo: "Guillermo, guiñando un ojo para darte ánimo",
+  pensando: "Guillermo, pensando con la mano en el mentón",
+  sorpresa: "Guillermo, sorprendido con la boca abierta",
+  molesto: "Guillermo, molesto: cejas bajas y la boca apretada",
+  enojado: "Guillermo, enojado con el ceño fruncido y la boca para abajo",
+  furioso: "Guillermo, furioso, apretando los dientes",
+  mordida: "Guillermo con la boca bien abierta, listo para morder",
+  mordidaFinal: "Guillermo abre una boca gigante para comerse el panel",
+  lleno: "Guillermo masticando, lleno y contento",
+  alivio: "Guillermo, aliviado: cierra los ojos y suelta el aire",
+  nervioso: "Guillermo, nervioso y sudando",
+  asustado: "Guillermo, asustado con la boca abierta",
+  aturdido: "Guillermo, mareado, con los ojos en cruz"
 };
 
-/* Partes para armar caras. Cada fila reemplaza las columnas 2 a 21;
-   «_» deja el píxel que había. */
-const CARA = {
-  cejas: {
-    alta: { 8: "HSSBBBBBSSSSBBBBBHHH", 9: "HSSSSSSSSSSSSSSSSSSH", 10: "SSSSSSSSSSSSSSSSSSSS" },
-    molesta: { 9: "HSSSSSSSSSSSSSSSSSSH", 10: "SSSBBBBBBSSBBBBBBSSS", 11: "SSSSSSSBBSSBBSSSSSSS" },
-    enojada: { 9: "HSBBSSSSSSSSSSSSBBSH", 10: "SSSSBBBBSSSSBBBBSSSS", 11: "SSSSSSBBBSSBBBSSSSSS" },
-    furiosa: { 9: "HBBSSSSSSSSSSSSSSBBH", 10: "SSSBBBSSSSSSSSBBBSSS", 11: "SSSSSBBBBSSBBBBSSSSS" }
-  },
-  ojos: {
-    normal: { 12: "SSSSWEESSSSSSWEESSSS", 13: "SSSSEEESSSSSSEEESSSS" },
-    entrecerrados: { 12: "SSSSsssSSSSSSsssSSSS", 13: "SSSSEEESSSSSSEEESSSS" },
-    rendija: { 12: "SSSSSSSSSSSSSSSSSSSS", 13: "SSSSEEWSSSSSSWEESSSS" },
-    abiertos: { 12: "SSSWEEWSSSSSSWEEWSSS", 13: "SSSWEEWSSSSSSWEEWSSS" },
-    felices: { 12: "SSSSSESSSSSSSSESSSSS", 13: "SSSSESESSSSSSESESSSS" },
-    cerrados: { 12: "SSSSSSSSSSSSSSSSSSSS", 13: "SSSSEEESSSSSSEEESSSS" },
-    x: { 11: "SSSSESESSSSSSESESSSS", 12: "SSSSSESSSSSSSSESSSSS", 13: "SSSSESESSSSSSESESSSS" } // aturdido
-  },
-  cachetes: { 15: "_PP______________PP_" },
-  bocas: {
-    plana: { 17: "SSSSSSSSSSSSSSSSSSSS", 18: "SSSSSSSMMMMMMSSSSSSS" },
-    triste: { 17: "SSSSSSSMMMMMMSSSSSSS", 18: "SSSSSSMSSSSSSMSSSSSS" },
-    dientes: { 16: "SSSSSmmmmmmmmmmSSSSS", 17: "SSSSSmWWWWWWWWmSSSSS", 18: "SSSSSmmmmmmmmmmSSSSS" },
-    abierta: { 15: "_____mmmmmmmmmm_____", 16: "SSSSSmWWWWWWWWmSSSSS", 17: "SSSSSmmmmmmmmmmSSSSS", 18: "SSSSSmWWWWWWWWmSSSSS" },
-    gigante: { 15: "___mmmmmmmmmmmmmm___", 16: "SSSmWWWWWWWWWWWWmSSS", 17: "SSSmmmmmmmmmmmmmmSSS", 18: "SSSmWWWWWWWWWWWWmSSS", 19: "_SSmmmmmmmmmmmmmmSS_" },
-    mastica: { 17: "SSSSSSMSSMSSMSSSSSSS", 18: "SSSSSSSMMSMMSMSSSSSS" },
-    fiu: { 17: "SSSSSSSSSSmmSSSSSSSS", 18: "SSSSSSSSSSmmSSSSSSSS" }
-  },
-  // píxeles sueltos [columna, fila, color]
-  vena: [[16, 2], [18, 2], [15, 3], [16, 3], [18, 3], [19, 3], [15, 5], [16, 5], [18, 5], [19, 5], [16, 6], [18, 6]].map(([x, y]) => [x, y, "R"]),
-  sudor: [[21, 9, "D"], [20, 10, "D"], [21, 10, "D"], [20, 11, "D"], [21, 11, "D"]]
-};
+// una cara con otra descripción (para las actuaciones): cara("mordida", "Guillermo muerde el panel")
+const cara = (nombre, label) => ({ nombre, label: label || EXPRESIONES[nombre] });
+const nombreCara = (mood) => (typeof mood === "string" ? mood : mood.nombre);
 
-// mueve los ojos hacia donde mira (dx: −1 izquierda, 1 derecha; dy: 1 abajo)
-function mirarOjos(ojos, { dx = 0, dy = 0 }) {
-  const out = {};
-  Object.keys(ojos).forEach((r) => {
-    let row = ojos[r];
-    if (dx > 0) row = "S" + row.slice(0, 19);
-    if (dx < 0) row = row.slice(1) + "S";
-    out[Number(r) + (dy > 0 ? 1 : 0)] = row;
-  });
-  if (dy > 0 && !out[12]) out[12] = "SSSSSSSSSSSSSSSSSSSS";
-  return out;
-}
-
-// una cara armada en el momento (para la actuación del mordisco)
-const cara = (partes, label) => ({ partes, label: label || "Guillermo, enojado" });
-
-// con mucha rabia se pone colorado
-const PALETA_ROJA = { ...PALETA, S: "#f4a08a", s: "#de7765", P: "#e8505a" };
-
-function filasCara(exp) {
-  const rows = SPRITE_BASE.slice();
-  const pegar = (over) => Object.keys(over).forEach((r) => {
-    const base = rows[r];
-    const inner = [...over[r]].map((ch, k) => (ch === "_" ? base[k + 2] : ch)).join("");
-    rows[r] = base.slice(0, 2) + inner + base.slice(22);
-  });
-  const p = exp.partes;
-  if (p) {
-    if (p.cejas) pegar(CARA.cejas[p.cejas]);
-    if (p.ojos || p.mirar) pegar(p.mirar ? mirarOjos(CARA.ojos[p.ojos || "normal"], p.mirar) : CARA.ojos[p.ojos]);
-    if (p.cachetes) pegar(CARA.cachetes);
-    if (p.boca) pegar(CARA.bocas[p.boca]);
-    [...(p.vena ? CARA.vena : []), ...(p.sudor ? CARA.sudor : [])].forEach(([x, y, c]) => {
-      rows[y] = rows[y].slice(0, x) + c + rows[y].slice(x + 1);
-    });
+// pinta una cara en el elemento (en .chomper el CSS deja ver solo la cabeza)
+function pintarCara(el, mood) {
+  let s = el.firstElementChild;
+  if (!s || !s.classList.contains("guille-cara")) {
+    el.innerHTML = '<span class="guille-cara" aria-hidden="true"></span>';
+    s = el.firstElementChild;
   }
-  if (exp.rows) pegar(exp.rows);
-  return rows;
+  const i = Math.max(0, GUILLE.caras.indexOf(nombreCara(mood)));
+  s.style.backgroundPosition = `${(i * 100) / (GUILLE.caras.length - 1)}% 0`;
 }
 
-// mood: nombre de EXPRESIONES o una cara armada; cabeza: solo la cabeza (para cuando sale volando)
-function spriteSVG(mood, rojo, cabeza) {
-  const pal = rojo ? PALETA_ROJA : PALETA;
-  let rows = filasCara(typeof mood === "string" ? EXPRESIONES[mood] : mood);
-  if (cabeza) rows = rows.slice(0, 21);
-  let rects = "";
-  rows.forEach((row, y) => {
-    let x = 0;
-    while (x < row.length) {
-      const ch = row[x];
-      let run = 1;
-      while (row[x + run] === ch) run++;
-      if (ch !== ".") rects += `<rect x="${x}" y="${y}" width="${run}" height="1" fill="${pal[ch]}"/>`;
-      x += run;
-    }
-  });
-  return `<svg viewBox="0 0 24 ${rows.length}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${rects}</svg>`;
-}
+// las medidas del cuadro van al CSS (proporción de la mascota y del recorte de la cabeza)
+document.documentElement.style.setProperty("--guille-w", GUILLE.w);
+document.documentElement.style.setProperty("--guille-h", GUILLE.h);
+document.documentElement.style.setProperty("--guille-cabeza", GUILLE.cabeza);
+new Image().src = GUILLE.src; // precarga: el primer cambio de cara no parpadea
 
 /* =========================================================
    RAPPI EN PIXEL ART (comodín de la evaluación)
@@ -1356,18 +1187,12 @@ const guillermo = {
   bubble: $("#bubble"),
   text: $("#bubble-text"),
   mood: "espera",
-  rojo: false,
-  cache: {},
-  draw(mood) {
-    const key = (typeof mood === "string" ? mood : JSON.stringify(mood.partes)) + (this.rojo ? "-rojo" : "");
-    if (!this.cache[key]) this.cache[key] = spriteSVG(mood, this.rojo);
-    this.el.innerHTML = this.cache[key];
-  },
-  // mood: nombre de EXPRESIONES o una cara armada con cara()
+  draw(mood) { pintarCara(this.el, mood); },
+  // mood: nombre de EXPRESIONES o una cara con otra descripción, hecha con cara()
   set(mood, animate) {
     this.mood = typeof mood === "string" ? mood : "actuando";
     this.draw(mood);
-    this.el.setAttribute("aria-label", (typeof mood === "string" ? EXPRESIONES[mood] : mood).label);
+    this.el.setAttribute("aria-label", typeof mood === "string" ? EXPRESIONES[mood] : mood.label);
     if (animate && !reduceMotion.matches) {
       this.el.classList.remove("jump", "shake");
       void this.el.offsetWidth; // reinicia la animación
@@ -1439,7 +1264,6 @@ const caraBase = () => ENOJO.caras[enojo.nivel];
 // la postura (inclinarse hacia el panel) y el color van con el nivel de enojo
 function fijarPostura(n) {
   $(".host").dataset.enojo = n;
-  guillermo.rojo = n >= 3;
   if (n) document.body.dataset.rabia = n;
   else delete document.body.dataset.rabia;
 }
@@ -1875,19 +1699,22 @@ function crearCabeza(c) {
   caraCabeza(el, c);
   return el;
 }
-function caraCabeza(el, c) { el.innerHTML = spriteSVG(c, guillermo.rojo, true); }
+function caraCabeza(el, c) { pintarCara(el, c); }
 
-// la boca (fila 17 de 21) queda justo sobre el borde y la cabeza afuera del panel
-function poseMordiendo(p, w, extra = 0, s = 1) {
-  const u = (w * s) / 24;
-  const lejos = 7 * u + 2 + extra;
-  return pose(p.x + p.ox * lejos, p.y + p.oy * lejos, p.ang, s);
+// la boca de la cara (girada junto con la cabeza) queda justo sobre el punto de contacto
+// y la cabeza afuera del panel; extra la aleja un poco más hacia afuera
+function poseMordiendo(p, w, extra = 0, s = 1, boca = GUILLE.boca.mordida) {
+  const k = (w * s) / GUILLE.w;
+  const bx = (boca[0] - GUILLE.w / 2) * k, by = (boca[1] - GUILLE.cabeza / 2) * k;
+  const a = (p.ang * Math.PI) / 180, cos = Math.cos(a), sen = Math.sin(a);
+  const lejos = 2 + extra;
+  return pose(p.x - (bx * cos - by * sen) + p.ox * lejos, p.y - (bx * sen + by * cos) + p.oy * lejos, p.ang, s);
 }
 
 // de dónde sale: de su lugar si se lo ve; si no, entra por arriba de la pantalla
 function poseInicio(el, p) {
   const g = guillermo.el.getBoundingClientRect();
-  if (estaVisible(guillermo.el)) return { desdeHost: true, p: pose(g.left + g.width / 2, g.top + g.height * (10.5 / 29), 0, g.width / el._w) };
+  if (estaVisible(guillermo.el)) return { desdeHost: true, p: pose(g.left + g.width / 2, g.top + g.height * (GUILLE.cabeza / 2 / GUILLE.h), 0, g.width / el._w) };
   return { desdeHost: false, p: pose(Math.min(window.innerWidth - 40, Math.max(40, p.x)), -el._w, 0, 1) };
 }
 
@@ -1943,7 +1770,7 @@ function vapor() {
 function aliento() {
   if (reduceMotion.matches || !estaVisible(guillermo.el)) return;
   const g = guillermo.el.getBoundingClientRect();
-  const x = g.left + g.width * 0.56, y = g.top + g.height * 0.62;
+  const x = g.left + g.width * (GUILLE.boca.alivio[0] / GUILLE.w), y = g.top + g.height * (GUILLE.boca.alivio[1] / GUILLE.h);
   for (let k = 0; k < 3; k++) {
     const n = nodoFx("aliento");
     const anim = animar(n, [
@@ -2010,12 +1837,11 @@ async function actuacionMordida(b) {
   const m = elegirLugar(b.escala);
   let p = contacto(m, panelCaja());
   const g = guillermo.el.getBoundingClientRect();
-  const mirar = { dx: p.x > g.right ? 1 : p.x < g.left ? -1 : 0, dy: p.y > g.bottom ? 1 : 0 };
-  const cejas = ["molesta", "molesta", "enojada", "furiosa"][n];
-  const tenso = cara({ cejas, ojos: "rendija", mirar, boca: n >= 2 ? "dientes" : "plana", cachetes: n >= 2, vena: n >= 3 }, "Guillermo mira el panel con hambre y se prepara");
-  const abierta = cara({ cejas, ojos: "rendija", mirar, boca: "abierta", cachetes: true, vena: n >= 3 }, "Guillermo abre la boca para morder el panel");
-  const muerde = cara({ cejas, ojos: "rendija", boca: "dientes", cachetes: true, vena: n >= 3 }, "Guillermo muerde el panel");
-  const mastica = cara({ cejas, ojos: "felices", boca: "mastica", cachetes: true }, "Guillermo mastica un pedazo del panel");
+  const mirar = { dx: p.x > g.right ? 1 : p.x < g.left ? -1 : 0 }; // hacia dónde se echa para atrás
+  const tenso = cara(["molesto", "molesto", "enojado", "furioso"][n], "Guillermo mira el panel con hambre y se prepara");
+  const abierta = cara("mordida", "Guillermo abre la boca para morder el panel");
+  const muerde = cara("mordida", "Guillermo muerde el panel");
+  const mastica = cara("lleno", "Guillermo mastica un pedazo del panel");
 
   // 1) intención: mira el panel, se echa para atrás y gruñe
   fijarPostura(n);
@@ -2114,10 +1940,10 @@ async function actuacionFinal(b) {
     ? { fx: 0, fy, ox: -1, oy: 0, ang: -90 }
     : { fx: Math.min(0.8, Math.max(0.2, (g.left + g.width / 2 - c0.left) / c0.W)), fy: 0, ox: 0, oy: -1, ang: 0 };
   if (lado.fy === 0 && c0.top < 30) Object.assign(lado, { fx: 0, fy, ox: -1, oy: 0, ang: -90 });
-  const mirar = { dx: lado.ox < 0 ? 1 : 0, dy: lado.oy < 0 ? 1 : 0 };
-  const furia = cara({ cejas: "furiosa", ojos: "abiertos", mirar, boca: "dientes", cachetes: true, vena: true }, "Guillermo perdió la paciencia: colorado, temblando, con los ojos desorbitados");
-  const bocaza = cara({ cejas: "furiosa", ojos: "rendija", mirar, boca: "gigante", cachetes: true, vena: true }, "Guillermo abre una boca gigante para comerse el panel");
-  const muerde = cara({ cejas: "furiosa", ojos: "rendija", boca: "dientes", cachetes: true, vena: true }, "Guillermo se come el panel");
+  const furia = cara("furioso", "Guillermo perdió la paciencia: temblando y apretando los dientes");
+  const bocaza = cara("mordidaFinal", "Guillermo abre una boca gigante para comerse el panel");
+  const muerde = cara("mordidaFinal", "Guillermo se come el panel");
+  const BOCA = GUILLE.boca.mordidaFinal;
 
   // 1) pierde la paciencia: tiembla cada vez más fuerte
   fijarPostura(3);
@@ -2144,7 +1970,7 @@ async function actuacionFinal(b) {
     inicio = poseInicio(cabeza, p());
     mover(cabeza, inicio.p, 0);
     guillermo.el.style.visibility = "hidden";
-    const fin = poseMordiendo(p(), cabeza._w, 0, 1.4);
+    const fin = poseMordiendo(p(), cabeza._w, 0, 1.4, BOCA);
     mover(cabeza, pose((cabeza._pose.x + fin.x) / 2, Math.min(cabeza._pose.y, fin.y) - 70, fin.ang / 2, 1.2, 1.15, 0.88), 140, "ease-in");
     if (!(await esperar(140))) return;
     mover(cabeza, fin, 120, "ease-in");
@@ -2170,7 +1996,8 @@ async function actuacionFinal(b) {
     cartel(k === 2 ? "¡¡ÑAAAM!!" : "¡ÑAM!", centro.x, centro.y - 20, k === 2 ? "nam-pop grande" : "nam-pop", 800);
     if (cabeza) {
       caraCabeza(cabeza, muerde);
-      if (k) mover(cabeza, pose(centro.x, centro.y - 10, 0, 1.4 + k * 0.4), 0);
+      // la boca va al centro del bocado (cada vez más grande)
+      if (k) mover(cabeza, poseMordiendo({ ...centro, ox: 0, oy: 0, ang: 0 }, cabeza._w, 0, 1.4 + k * 0.4, BOCA), 0);
     }
     if (k === 1 && pantalla) {
       // el contenido se queda sin piso y se cae
@@ -2210,7 +2037,7 @@ async function actuacionFinal(b) {
 function comioTodo(detalle, alVerResultados) {
   const o = $("#eaten");
   o.hidden = false;
-  $("#eaten-guillermo").innerHTML = spriteSVG("lleno", false);
+  pintarCara($("#eaten-guillermo"), "lleno");
   $("#eaten-detail").textContent = detalle;
   mordida.alComido = alVerResultados;
   const r = piel.panel.getBoundingClientRect();
@@ -2893,7 +2720,7 @@ $("#graph-degrees").addEventListener("change", (e) => { lesson.showDegrees = e.t
 EVALUACION.preguntas.forEach((p) => { p.categoria = "Evaluación · " + CLASE.temas[p.tema].titulo; });
 
 const COMODINES = {
-  rappi: { label: "🛵 Llamar a Rappi", usado: "🛵 Rappi ya pasó" }
+  rappi: { label: "🛵 Llamar a Rappi" }
 };
 
 function renderEvalHistory() {
@@ -2937,16 +2764,14 @@ function renderLifelines() {
   box.hidden = false;
   renderRescate();
   $(".elias-comodin").hidden = !evaluacion;
-  if (evaluacion) renderCambio();
-  Object.keys(COMODINES).forEach((k) => {
-    const b = $("#life-" + k);
-    b.hidden = !evaluacion;
-    if (!evaluacion) return;
-    const used = !quiz.comodines[k];
-    b.textContent = used ? COMODINES[k].usado : COMODINES[k].label;
-    b.classList.toggle("used", used);
-    b.disabled = used || quiz.answered || quiz.busy || disparo.enEscena || (k === "rappi" && !!quiz.deck[quiz.index].reto);
-  });
+  $(".rappi-comodin").hidden = !evaluacion;
+  if (!evaluacion) return;
+  renderCambio();
+  const b = $("#life-rappi");
+  const used = !quiz.comodines.rappi;
+  $("#rappi-usos").textContent = used ? "Usado" : "1 uso";
+  b.classList.toggle("used", used);
+  b.disabled = used || quiz.answered || quiz.busy || disparo.enEscena || !!quiz.deck[quiz.index].reto;
 }
 
 // Rappi siempre se anima (aunque el sistema pida menos movimiento): es el chiste del comodín.
@@ -3440,10 +3265,10 @@ function activarRescate() {
 function medirEscena() {
   const vw = window.innerWidth, vh = window.innerHeight;
   const g = guillermo.el.getBoundingClientRect();
-  const blanco = { x: g.left + g.width / 2, y: g.top + g.height * (10.5 / 29) }; // la cara de Guillermo
+  const blanco = { x: g.left + g.width * (GUILLE.cara[0] / GUILLE.w), y: g.top + g.height * (GUILLE.cara[1] / GUILLE.h) }; // la cara de Guillermo
   const dir = blanco.x < vw / 2 ? 1 : -1;  // de qué lado de Guillermo se planta
   const espejo = dir > 0;                  // el dibujo mira a la derecha: si queda a la derecha, se da vuelta
-  const alto = Math.min(Math.max(g.height * 1.25, 150), 300, vh * 0.45);
+  const alto = Math.min(Math.max(g.width * 1.5, 150), 300, vh * 0.45);
   const s = alto / SSJ.h;
   const [ax, ay] = SSJ.ancla;
   const ext = espejo ? [(SSJ.w - ax) * s, ax * s] : [ax * s, (SSJ.w - ax) * s]; // cuánto ocupa a cada lado del ancla
@@ -3526,7 +3351,7 @@ async function escenaRescate() {
   // 1) ENTRADA: llega corriendo desde su lado de la pantalla y se planta frente a Guillermo
   poner("entrada");
   sound.play("ssjEntra", true);
-  guillermo.set(CARAS_RESCATE.mira(dir));
+  guillermo.set(CARAS_RESCATE.mira);
   guillermo.decir("¿Eh? ¿Y este quién es?");
   if (reduce) animar(actor, [{ opacity: 0 }, { opacity: 1 }], { duration: 200, fill: "forwards" });
   else {
@@ -3563,7 +3388,7 @@ async function escenaRescate() {
   if (!reduce) animar(sprite, [{ transform: "scale(0.97, 1.06)" }, { transform: "none" }], { duration: 320, easing: "steps(3)", fill: "forwards" });
   brillo(E.punto([SSJ.ancla[0], 250]), SSJ.h * s * 1.05, "#fff1a0");
   chispas(E, 22, T.transforma + 600);
-  guillermo.set(CARAS_RESCATE.nervioso(dir));
+  guillermo.set(CARAS_RESCATE.nervioso);
   guillermo.decir("Pará, pará… ¿qué es ese pelo?");
   if (!(await esperar(T.transforma))) return;
 
@@ -3592,7 +3417,7 @@ async function escenaRescate() {
   sound.play("beam", true);
   const palmas = E.punto(SSJ.manos.disparo);
   const g = guillermo.el.getBoundingClientRect(); // se vuelve a medir: es a donde está ahora
-  const blanco = { x: g.left + g.width / 2, y: g.top + g.height * (10.5 / 29) };
+  const blanco = { x: g.left + g.width * (GUILLE.cara[0] / GUILLE.w), y: g.top + g.height * (GUILLE.cara[1] / GUILLE.h) };
   // la esfera pasa a las palmas (con animación: la de la carga quedó fija con fill «forwards»)
   [[bola, 1], [luz, 1.1]].forEach(([n, k]) => animar(n, [{ transform: enBola(palmas, k) }], { duration: 1, fill: "forwards" }));
   // retroceso por el empuje: vuelve a su lugar para que las palmas queden en el nacimiento del rayo
@@ -3682,9 +3507,9 @@ function terminarRescate(scrollAntes) {
 
 // caras de Guillermo durante el rescate
 const CARAS_RESCATE = {
-  mira: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "fiu" }, "Guillermo, sorprendido, mira quién llegó"),
-  nervioso: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "triste", sudor: true }, "Guillermo, nervioso, ve venir el ataque"),
-  aturdido: cara({ cejas: "alta", ojos: "x", boca: "mastica" }, "Guillermo, mareado, con los ojos en cruz")
+  mira: cara("sorpresa", "Guillermo, sorprendido, mira quién llegó"),
+  nervioso: cara("nervioso", "Guillermo, nervioso y sudando, ve venir el ataque"),
+  aturdido: cara("aturdido", "Guillermo, mareado, con los ojos en cruz")
 };
 
 /* =========================================================
@@ -3953,8 +3778,6 @@ async function escenaDisparo() {
   const lugar = (dx = 0, dy = 0) => `translate(${E.x - ELIAS.ancla[0] * s + dx}px, ${E.y - ELIAS.ancla[1] * s + dy}px)`;
   mirar(dir);
   actor.style.transform = lugar();
-  const g0 = guillermo.el.getBoundingClientRect();
-  const haciaElias = Math.sign(E.x - (g0.left + g0.width / 2)) || 1;
 
   // 1) ENTRADA: aparece junto al panel en reposo (entra a saltitos desde su borde de la pantalla)
   poner("reposo");
@@ -3971,7 +3794,7 @@ async function escenaDisparo() {
   if (!reduce) {
     poner("preparacion");
     sound.play("eliasCarga", true);
-    guillermo.set(CARAS_DISPARO.mira(haciaElias));
+    guillermo.set(CARAS_DISPARO.mira);
     guillermo.decir(`¿${nombre}? ¿Qué hacés con eso?`);
     animar(sprite, [{ transform: `${dir < 0 ? "scaleX(-1) " : ""}scale(1.03, 0.96)` }, { transform: dir < 0 ? "scaleX(-1)" : "none" }],
       { duration: T.prepara, easing: "steps(3)" });
@@ -3980,7 +3803,7 @@ async function escenaDisparo() {
 
   // 3) APUNTADO: la pose queda quieta un momento bien visible
   poner("apuntando");
-  guillermo.set(CARAS_DISPARO.asustado(haciaElias));
+  guillermo.set(CARAS_DISPARO.asustado);
   if (reduce) guillermo.decir(`¿${nombre}? ¿Qué vas a hacer?`);
   if (!(await esperar(T.apunta))) return;
 
@@ -4000,7 +3823,7 @@ async function escenaDisparo() {
 
   // 5) CAMBIO: impacto → la pregunta se rompe en píxeles; se arma la nueva en el mismo lugar
   sound.play("eliasRompe", true);
-  guillermo.set(CARAS_DISPARO.sorpresa(haciaElias));
+  guillermo.set(CARAS_DISPARO.sorpresa);
   guillermo.decir("¡¿Le disparó a la pregunta?!");
   $("#ssj-aviso").textContent = "La pregunta se rompió. Ahora aparece otra.";
   if (reduce) {
@@ -4062,9 +3885,9 @@ function terminarDisparo(actor, scrollAntes) {
 
 // caras de Guillermo mientras Elías dispara (no le apunta a él)
 const CARAS_DISPARO = {
-  mira: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "fiu" }, "Guillermo, sorprendido, mira a quien llegó"),
-  asustado: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "triste", sudor: true }, "Guillermo, asustado, ve que apunta a la pregunta"),
-  sorpresa: (dx) => cara({ cejas: "alta", ojos: "abiertos", mirar: { dx }, boca: "abierta" }, "Guillermo, con la boca abierta, ve la pregunta hecha pedazos")
+  mira: cara("sorpresa", "Guillermo, sorprendido, mira a quien llegó"),
+  asustado: cara("asustado", "Guillermo, asustado, ve que apunta a la pregunta"),
+  sorpresa: cara("sorpresa", "Guillermo, con la boca abierta, ve la pregunta hecha pedazos")
 };
 
 // los textos del comodín usan el nombre configurado
@@ -4303,4 +4126,6 @@ guillermo.set("espera");
 guillermo.startBlinking();
 piel.init();
 $("#rappi-rider").innerHTML = pixelSVG(RAPPI_SPRITE, RAPPI_PALETA);
+// retrato del botón: la cabeza del mismo dibujo (filas 0 a 17, columnas 18 a 35)
+$("#rappi-retrato").innerHTML = pixelSVG(RAPPI_SPRITE.slice(0, 18).map((r) => r.slice(18, 36)), RAPPI_PALETA);
 hojaSSJ(); // precarga las poses del Rescate SSJ

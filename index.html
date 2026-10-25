@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=29">
+  <link rel="stylesheet" href="styles.css?v=30">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -38,7 +38,6 @@
       </div>
       <div class="mascot-wrap">
         <div class="mascot" id="mascot" role="img" aria-label="Guillermo, sonriendo y esperando"></div>
-        <div class="mascot-floor" aria-hidden="true"></div>
       </div>
       <p class="nametag"><span aria-hidden="true">★</span> GUILLERMO <span aria-hidden="true">★</span></p>
       <div class="paciencia" id="paciencia" role="img" hidden>
@@ -142,7 +141,13 @@
         </div>
 
         <div class="lifelines" id="lifelines" role="group" aria-label="Comodines" hidden>
-          <button class="btn btn-orange btn-small" type="button" id="life-rappi" data-action="life-rappi">🛵 Llamar a Rappi</button>
+          <div class="ssj-comodin rappi-comodin">
+            <button class="btn btn-orange btn-small life-ssj life-rappi" type="button" id="life-rappi" data-action="life-rappi" aria-describedby="rappi-desc">
+              <span class="ssj-retrato" id="rappi-retrato" aria-hidden="true"></span>
+              <span class="ssj-texto"><span class="ssj-nombre">🛵 Llamar a Rappi</span><span class="ssj-usos" id="rappi-usos">1 uso</span></span>
+            </button>
+            <p class="ssj-desc" id="rappi-desc">Atropella dos opciones incorrectas</p>
+          </div>
           <div class="ssj-comodin">
             <button class="btn btn-ssj btn-small life-ssj" type="button" id="life-ssj" data-action="life-ssj" aria-describedby="ssj-desc">
               <img class="ssj-retrato" src="assets/rescate-ssj/retrato.png" alt="" width="40" height="40">
@@ -322,6 +327,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=29"></script>
+  <script src="script.js?v=30"></script>
 </body>
 </html>
