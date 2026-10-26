@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=44">
+  <link rel="stylesheet" href="styles.css?v=46">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -58,6 +58,11 @@
         <div class="field">
           <label for="eval-name">Tu nombre (opcional)</label>
           <input id="eval-name" type="text" maxlength="40" autocomplete="off" placeholder="Ej.: Sofía">
+        </div>
+        <div class="field field-sala">
+          <label for="sala-codigo">Código de la clase (opcional)</label>
+          <input id="sala-codigo" type="text" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Ej.: K7QM" aria-describedby="sala-ayuda">
+          <p class="field-ayuda" id="sala-ayuda">Si el profe proyecta la pantalla de la clase, poné el código que aparece ahí.</p>
         </div>
         <fieldset class="elige-personaje">
           <legend>Tu personaje en el ranking (opcional)</legend>
@@ -378,6 +383,7 @@
     </div>
   </div>
 
-  <script src="script.js?v=44"></script>
+  <script src="comun.js?v=46"></script>
+  <script src="script.js?v=46"></script>
 </body>
 </html>

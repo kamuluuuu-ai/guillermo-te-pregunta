@@ -804,6 +804,9 @@ kbd {
   border: 3px solid var(--line);
 }
 .field input:focus-visible { border-color: var(--yellow); outline: none; }
+.field-sala { margin-top: 14px; }
+.field-sala input { max-width: 9em; font-family: var(--font-retro); font-size: 16px; letter-spacing: 3px; text-transform: uppercase; }
+.field-ayuda { margin: 0; color: var(--muted); font-size: 14px; }
 
 .eval-history { margin-top: 24px; display: grid; gap: 10px; justify-items: start; }
 .eval-history .ready-list { width: 100%; }

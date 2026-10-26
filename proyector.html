@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es-UY">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guillermo te pregunta · Pantalla de la clase</title>
+  <meta name="description" content="Pantalla para proyectar en clase: ranking en vivo, la paciencia de Guillermo y los comodines de todos.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=46">
+  <link rel="stylesheet" href="proyector.css?v=3">
+</head>
+<body class="proy-body">
+  <header class="topbar proy-topbar">
+    <a class="logo" href="index.html" aria-label="Guillermo te pregunta: ir al juego">
+      <span class="logo-small">GUILLERMO</span>
+      <span class="logo-big">TE PREGUNTA</span>
+    </a>
+    <p class="proy-estado" id="proy-estado" aria-live="polite"></p>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-small" type="button" id="proy-ronda" hidden>↺ Nueva ronda</button>
+      <button class="btn btn-ghost btn-small" type="button" id="proy-sala-nueva" hidden>Sala nueva</button>
+      <button class="btn btn-ghost btn-small" type="button" id="proy-completa">⛶ Pantalla completa</button>
+      <button id="sound-toggle" class="icon-btn" type="button" aria-pressed="true">
+        <span aria-hidden="true" id="sound-icon">🔊</span>
+        <span class="icon-btn-label" id="sound-label">Sonido: sí</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="proy" id="proy">
+    <!-- GUILLERMO Y LA PACIENCIA DE TODA LA CLASE -->
+    <section class="proy-izq" aria-label="Guillermo y la paciencia de la clase">
+      <aside class="host proy-host">
+        <div class="bubble" id="bubble" role="status" aria-live="polite">
+          <p id="bubble-text">Hola, clase. Vamos a ver cuánto aprendieron.</p>
+        </div>
+        <div class="mascot-wrap">
+          <div class="mascot" id="mascot" role="img" aria-label="Guillermo, sonriendo y esperando"></div>
+        </div>
+      </aside>
+      <div class="proy-paciencia" id="proy-paciencia" role="img" aria-label="Paciencia de Guillermo">
+        <p class="proy-paciencia-titulo">Paciencia de la clase <span id="proy-paciencia-num"></span></p>
+        <div class="paciencia-dientes" id="proy-dientes"></div>
+      </div>
+      <p class="proy-perdio" id="proy-perdio" hidden>¡Guillermo perdió la paciencia!</p>
+      <ol class="proy-feed" id="proy-feed" aria-label="Últimos movimientos"></ol>
+    </section>
+
+    <!-- CÓMO ENTRAR Y EL RANKING -->
+    <section class="proy-der">
+      <div class="proy-entrar" id="proy-entrar" hidden>
+        <div class="proy-qr" id="proy-qr" aria-hidden="true"></div>
+        <div class="proy-entrar-texto">
+          <p>Entrá a <strong id="proy-url"></strong></p>
+          <p>y poné el código <strong class="proy-codigo" id="proy-codigo"></strong></p>
+        </div>
+      </div>
+      <div class="ranking proy-ranking">
+        <h2 class="h3">🏆 Los que menos hicieron enojar a Guillermo</h2>
+        <p class="ranking-estado" id="proy-ranking-estado" aria-live="polite"></p>
+        <ol class="ranking-list" id="proy-lista"></ol>
+      </div>
+    </section>
+  </main>
+
+  <!-- cartel de los comodines: «¡Ana llamó a Kamil!» -->
+  <div class="proy-cartel" id="proy-cartel" role="status" aria-live="assertive" hidden>
+    <span id="proy-cartel-texto"></span>
+    <span class="proy-cartel-cola" id="proy-cartel-cola"></span>
+  </div>
+
+  <!-- arranque: crear la sala o seguir con la que estaba (el clic también habilita el sonido) -->
+  <div class="proy-inicio" id="proy-inicio">
+    <div class="proy-inicio-caja">
+      <h1 class="title title-sm">Pantalla<br><span>de la clase</span></h1>
+      <p class="lead" id="proy-inicio-texto">Proyectá esta pantalla. Los alumnos juegan la evaluación desde su celular o compu con el código de la sala.</p>
+      <div class="menu">
+        <button class="btn btn-yellow btn-big" type="button" id="proy-seguir" hidden>▶ Seguir con la sala</button>
+        <button class="btn btn-teal btn-big" type="button" id="proy-crear">★ Crear sala nueva</button>
+      </div>
+      <p class="proy-inicio-error" id="proy-inicio-error" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <div class="fx" id="fx" aria-hidden="true"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="comun.js?v=46"></script>
+  <script src="proyector.js?v=5"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+/* =========================================================
+   PANTALLA DE LA CLASE (proyector.html)
+   Usa todo styles.css (colores, letras, Guillermo, dientes,
+   ranking y efectos) y acá solo agrega el armado en grande para
+   leerlo de lejos: Guillermo a la izquierda, ranking a la derecha.
+   ========================================================= */
+.proy-body { height: 100vh; overflow: hidden; }
+.proy-topbar { gap: 16px; }
+.proy-estado { margin: 0 auto 0 8px; font-weight: 800; color: var(--muted); }
+.proy-estado.vivo::before { content: "● "; color: var(--good); }
+.proy-estado.caido::before { content: "● "; color: var(--bad); }
+
+.proy {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 32px;
+  padding: 8px 32px 24px;
+}
+
+/* ---------- Guillermo y la paciencia ---------- */
+.proy-izq { min-height: 0; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.proy-host { position: relative; top: auto; width: 100%; max-width: 640px; }
+.proy-host .bubble { min-height: 110px; font-size: clamp(18px, 2.2vw, 30px); padding: 18px 22px; }
+.proy-host .mascot { width: calc(var(--guille-w, 52) * var(--escala, 6) * 1px); }
+
+.proy-paciencia { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.proy-paciencia-titulo { margin: 0; font-family: var(--font-retro); font-size: clamp(11px, 1.1vw, 16px); color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.proy-paciencia-titulo span { color: var(--yellow); }
+.proy-paciencia .paciencia-dientes { justify-content: center; gap: 8px; max-width: 640px; }
+.proy-paciencia .diente { width: 20px; height: 28px; box-shadow: 0 0 0 3px var(--ink), inset 0 -6px 0 #cfd4ee; }
+.proy-paciencia .diente.ultimo { box-shadow: 0 0 0 3px var(--ink), inset 0 -6px 0 var(--bad-d); }
+.proy-paciencia .diente.roto { box-shadow: 0 0 0 3px var(--line); }
+.proy-paciencia .diente.vuelve { animation: vuelve 0.4s steps(3) both; }
+@keyframes vuelve { 0% { transform: scale(1.7); background: var(--teal); } 100% { transform: none; } }
+
+.proy-perdio {
+  margin: 0;
+  padding: 10px 16px;
+  font-family: var(--font-retro);
+  font-size: clamp(12px, 1.4vw, 20px);
+  color: #fff;
+  background: var(--bad);
+  box-shadow: inset 0 -5px 0 var(--bad-d), 0 5px 0 var(--ink);
+  animation: bob 1.2s steps(2) infinite;
+}
+
+/* últimos movimientos */
+.proy-feed { width: 100%; max-width: 640px; margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.proy-feed li { padding: 6px 12px; font-weight: 800; font-size: clamp(15px, 1.4vw, 21px); background: #0f1640; box-shadow: inset 4px 0 0 var(--line); }
+.proy-feed li.bien { box-shadow: inset 4px 0 0 var(--good); }
+.proy-feed li.mal { box-shadow: inset 4px 0 0 var(--bad); }
+.proy-feed li.comodin { box-shadow: inset 4px 0 0 var(--yellow); }
+.proy-feed li:first-child { animation: pop 0.25s steps(3) both; }
+
+/* ---------- cómo entrar y ranking ---------- */
+.proy-der { min-height: 0; display: flex; flex-direction: column; gap: 16px; }
+.proy-entrar { display: flex; align-items: center; gap: 20px; padding: 10px 16px; background: var(--ink); box-shadow: inset 0 0 0 4px var(--teal); }
+.proy-qr { flex: none; padding: 8px; background: #fff; line-height: 0; }
+.proy-qr img, .proy-qr canvas { display: block; width: clamp(88px, 9vw, 160px); height: auto; image-rendering: pixelated; }
+.proy-entrar-texto p { margin: 0; font-weight: 800; font-size: clamp(16px, 1.5vw, 24px); }
+.proy-entrar-texto strong { color: var(--yellow); overflow-wrap: anywhere; }
+.proy-codigo { display: inline-block; margin-top: 6px; font-family: var(--font-retro); font-size: clamp(28px, 3.6vw, 56px); letter-spacing: 6px; color: var(--yellow); }
+
+.proy-ranking { flex: 1; min-height: 0; margin: 0; display: flex; flex-direction: column; }
+.proy-ranking .h3 { font-size: clamp(13px, 1.3vw, 20px); }
+.proy-ranking .ranking-list { flex: 1; min-height: 0; overflow: hidden; align-content: start; }
+/* el alto de cada fila (--fila) lo calcula proyector.js para que entren todos; si no entran, van en dos columnas */
+.proy-ranking .ranking-list li {
+  --avatar: calc(var(--fila, 52px) - 12px);
+  height: var(--fila, 52px);
+  grid-template-columns: 2.4em var(--avatar) minmax(0, 1fr) auto;
+  padding: 0 12px;
+  font-size: clamp(14px, calc(var(--fila, 52px) * 0.42), 28px);
+}
+.proy-ranking .ranking-list.dos { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-auto-flow: column; }
+.proy-ranking .ranking-list.dos li { grid-template-columns: 2.2em var(--avatar) minmax(0, 1fr); row-gap: 0; font-size: clamp(13px, calc(var(--fila, 52px) * 0.34), 24px); line-height: 1.15; }
+.proy-ranking .ranking-list.dos .rk-avatar { grid-row: span 2; }
+.proy-ranking .ranking-list.dos .rk-pos { grid-row: span 2; }
+.proy-ranking .ranking-list.dos .rk-dato { grid-column: 3; text-align: left; }
+.proy-ranking .rk-avatar { width: var(--avatar); height: var(--avatar); }
+.proy-ranking .rk-dato { font-size: 0.75em; }
+.proy-ranking li.jugando .rk-dato::before { content: "▶ "; color: var(--teal); }
+.proy-ranking li.sube { animation: sube 0.6s steps(4) both; }
+@keyframes sube { 0% { background: var(--violet-d); } 100% { background: #0f1640; } }
+
+/* ---------- cartel de los comodines ---------- */
+.proy-cartel {
+  position: fixed;
+  left: 50%;
+  top: 84px;
+  z-index: 45;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 26px;
+  font-family: var(--font-retro);
+  font-size: clamp(16px, 2.2vw, 34px);
+  color: var(--ink);
+  text-align: center;
+  background: var(--yellow);
+  box-shadow: inset 0 -6px 0 var(--yellow-d), 0 0 0 4px var(--ink), 0 10px 0 4px #00000066;
+  animation: pop 0.3s steps(3) both;
+  pointer-events: none;
+}
+.proy-cartel-cola { font-family: var(--font-read); font-weight: 900; font-size: 0.55em; }
+.proy-cartel-cola:empty { display: none; }
+
+/* Rappi en la pantalla de la clase (es más grande que en la pregunta) */
+.proy-rappi { aspect-ratio: 52 / 43; filter: drop-shadow(0 6px 0 #00000088); z-index: 3; }
+.proy-rappi svg { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.polvo { width: 14px; height: 14px; background: #cfd4ee; box-shadow: 6px -6px 0 -2px #cfd4eeaa; }
+
+/* ---------- arranque ---------- */
+.proy-inicio { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 24px; background: #0a0d22ee; }
+.proy-inicio-caja { max-width: 640px; text-align: center; }
+.proy-inicio-caja .menu { justify-content: center; }
+.proy-inicio-error { min-height: 1.5em; color: var(--bad); font-weight: 800; }
+
+@media (max-width: 900px) {
+  .proy-body { height: auto; overflow: auto; }
+  .proy { grid-template-columns: minmax(0, 1fr); padding: 8px 16px 24px; }
+}
