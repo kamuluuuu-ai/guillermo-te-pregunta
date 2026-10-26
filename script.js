@@ -45,14 +45,6 @@ const PREGUNTAS = [
     pista: "Si movés los puntos sin cambiar las conexiones, el grafo es el mismo.",
     explicacion: "Un grafo solo guarda las conexiones: la posición y la forma del dibujo no cambian nada."
   },
-  {
-    categoria: "¿Qué es un grafo?",
-    pregunta: "En el dibujo de un grafo, dos aristas se cruzan en un punto donde no hay ningún cuadradito. ¿Ese cruce es un vértice?",
-    opciones: ["No: los vértices son solo los puntos marcados del grafo", "Sí, todo cruce es un vértice", "Sí, y tiene grado 4", "Depende del color de las líneas"],
-    correcta: 0,
-    pista: "¿Ese punto está en el conjunto V?",
-    explicacion: "Un cruce del dibujo no es un vértice: los vértices son los elementos de V. Las aristas pueden cruzarse en el papel sin tocarse."
-  },
   // Vértices
   {
     categoria: "Vértices",
@@ -170,7 +162,6 @@ const AFIRMACIONES = [
   { texto: "En una red de computadoras, los cables pueden ser las aristas.", v: true },
   { texto: "En un grafo de conocidos, cada persona es una arista.", v: false },
   { texto: "Si movés los puntos de un grafo sin cambiar las conexiones, sigue siendo el mismo grafo.", v: true },
-  { texto: "Un cruce de dos líneas en el dibujo siempre es un vértice.", v: false },
   { texto: "Si V = {a, b, c}, entonces |V| = 3.", v: true },
   { texto: "Si V = {p, q, r, s}, entonces |V| = 3.", v: false },
   { texto: "Si E = {{a, b}, {b, c}}, el grafo tiene 2 aristas.", v: true },
@@ -289,13 +280,6 @@ const CLASE = {
           correcta: 0,
           pista: "¿Cambió qué está conectado con qué?",
           explicacion: "En un grafo solo importan las conexiones, no la posición ni la forma del dibujo."
-        },
-        {
-          pregunta: "En el dibujo de un grafo, dos aristas se cruzan en un punto que no está marcado. ¿Ese cruce es un vértice?",
-          opciones: ["No: los vértices son solo los puntos marcados (los elementos de V)", "Sí, todo cruce es un vértice", "Sí, y su grado es 4", "Solo si las aristas son rectas"],
-          correcta: 0,
-          pista: "¿Ese punto está en el conjunto V?",
-          explicacion: "Las aristas pueden cruzarse en el papel sin tocarse. Un cruce no es un vértice ni suma grado a nadie."
         },
         {
           pregunta: "En un grafo de conocidos, ¿cuándo se unen dos personas con una arista?",
