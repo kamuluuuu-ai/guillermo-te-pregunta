@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=38">
+  <link rel="stylesheet" href="styles.css?v=39">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -59,6 +59,15 @@
           <label for="eval-name">Tu nombre (opcional)</label>
           <input id="eval-name" type="text" maxlength="40" autocomplete="off" placeholder="Ej.: Sofía">
         </div>
+        <fieldset class="elige-personaje">
+          <legend>Tu personaje en el ranking (opcional)</legend>
+          <div class="personajes">
+            <label class="personaje"><input type="radio" name="personaje" value="" checked><span class="avatar" data-avatar=""></span><span>Nadie</span></label>
+            <label class="personaje"><input type="radio" name="personaje" value="kamil"><span class="avatar" data-avatar="kamil"></span><span>Kamil</span></label>
+            <label class="personaje"><input type="radio" name="personaje" value="elias"><span class="avatar" data-avatar="elias"></span><span data-nombre-elias>Elías</span></label>
+            <label class="personaje"><input type="radio" name="personaje" value="rappi"><span class="avatar" data-avatar="rappi"></span><span>Rappi</span></label>
+          </div>
+        </fieldset>
         <div class="menu">
           <button class="btn btn-yellow btn-big" type="button" data-action="start-quiz">▶ Jugar</button>
           <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ El desafío de Guillermo</button>
@@ -361,6 +370,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=38"></script>
+  <script src="script.js?v=39"></script>
 </body>
 </html>

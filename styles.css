@@ -799,7 +799,7 @@ kbd {
 .ranking { margin-top: 24px; padding: 14px 16px; background: var(--ink); box-shadow: inset 0 0 0 4px var(--yellow); }
 .ranking .h3 { margin-top: 0; }
 .ranking-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
-.ranking-list li { display: grid; grid-template-columns: 2.2em minmax(0, 1fr) auto; align-items: center; gap: 4px 10px; padding: 8px 10px; background: #0f1640; font-weight: 800; }
+.ranking-list li { display: grid; grid-template-columns: 2.2em 36px minmax(0, 1fr) auto; align-items: center; gap: 4px 10px; padding: 8px 10px; background: #0f1640; font-weight: 800; }
 .ranking-list li.podio { box-shadow: inset 4px 0 0 var(--yellow); }
 .ranking-list li.propio { background: #2a1f5c; box-shadow: inset 0 0 0 3px var(--teal); }
 .rk-pos { font-variant-numeric: tabular-nums; text-align: center; }
@@ -808,9 +808,24 @@ kbd {
 .ranking-estado { margin: 8px 0 0; color: var(--muted); font-weight: 800; }
 .ranking-estado:empty { display: none; }
 #r-ranking .ranking-estado { margin: 0 0 10px; color: var(--text); }
+
+/* avatar: retrato del personaje o la foto sin perfil (redonda, como en WhatsApp) */
+.avatar { display: block; width: 36px; height: 36px; overflow: hidden; background: #ffffff55; box-shadow: 0 0 0 2px var(--ink); }
+.avatar img, .avatar svg { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.avatar[data-avatar=""] { border-radius: 50%; background: none; box-shadow: none; }
+
+.elige-personaje { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
+.elige-personaje legend { padding: 0; margin-bottom: 6px; font-weight: 800; }
+.personajes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; max-width: 340px; }
+.personaje { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 0; padding: 8px 4px; font-weight: 800; font-size: 14px; background: var(--ink); border: 3px solid var(--line); cursor: pointer; }
+.personaje input { position: absolute; opacity: 0; pointer-events: none; }
+.personaje .avatar { width: 44px; height: 44px; }
+.personaje:has(input:checked) { border-color: var(--yellow); background: #2a1f5c; }
+.personaje:has(input:focus-visible) { outline: 3px solid var(--teal); outline-offset: 2px; }
 @media (max-width: 560px) {
-  .ranking-list li { grid-template-columns: 2.2em minmax(0, 1fr); }
-  .rk-dato { grid-column: 2; text-align: left; }
+  .ranking-list li { grid-template-columns: 2.2em 36px minmax(0, 1fr); }
+  .rk-avatar { grid-row: span 2; }
+  .rk-dato { grid-column: 3; text-align: left; }
 }
 
 @keyframes rumble { 50% { transform: translateY(-1px); } }

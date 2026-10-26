@@ -2110,7 +2110,7 @@ function goHome() {
    MODO PRINCIPAL: PREGUNTAS
    ========================================================= */
 const quiz = { deck: [], index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, answered: false, hintUsed: false, mistakes: [], lesson: null, porTema: {},
-  reserve: [], comodines: {}, busy: false, alumno: "" };
+  reserve: [], comodines: {}, busy: false, alumno: "", personaje: null };
 
 const prepareQuestion = (q) => ({ ...q, mezcla: shuffle(q.opciones.map((texto, i) => ({ texto, ok: i === q.correcta }))) });
 
@@ -2850,7 +2850,7 @@ const ranking = {
     return r.json();
   },
   top() {
-    return this.pedir(`?select=id,nombre,errores,nota,comodines,comido&order=${this.orden}&limit=${RANKING.mostrar}`);
+    return this.pedir(`?select=id,nombre,personaje,errores,nota,comodines,comido&order=${this.orden}&limit=${RANKING.mostrar}`);
   },
   // agrega el resultado y devuelve su id y en qué puesto quedó
   async anotar(fila) {
@@ -2860,13 +2860,33 @@ const ranking = {
   }
 };
 
+// personaje del ranking: el retrato de Kamil, Elías o Rappi, o la foto sin perfil
+const PERSONAJES = ["kamil", "elias", "rappi"];
+const SIN_PERFIL = `<svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><rect width="40" height="40" fill="#cfd8dc"/><circle cx="20" cy="15.5" r="7.5" fill="#fff"/><path d="M5 40c0-9.5 6.7-15 15-15s15 5.5 15 15z" fill="#fff"/></svg>`;
+const rappiCabeza = () => pixelSVG(RAPPI_SPRITE.slice(0, 18).map((r) => r.slice(18, 36)), RAPPI_PALETA);
+function avatarHTML(personaje) {
+  if (personaje === "kamil") return `<img src="assets/rescate-ssj/retrato.png" alt="">`;
+  if (personaje === "elias") return `<img src="assets/cambio-disparo/retrato.png" alt="">`;
+  if (personaje === "rappi") return rappiCabeza();
+  return SIN_PERFIL;
+}
+const nombrePersonaje = (p) => ({ kamil: "Kamil", elias: ELIAS.nombre, rappi: "Rappi" })[p] || "Sin personaje";
+const personajeElegido = () => {
+  const v = document.querySelector('input[name="personaje"]:checked')?.value;
+  return PERSONAJES.includes(v) ? v : null;
+};
+
 function pintarRanking(list, filas, propio) {
   list.innerHTML = "";
   filas.forEach((f, k) => {
     const li = document.createElement("li");
     li.className = [f.id === propio && "propio", k < 3 && "podio"].filter(Boolean).join(" ");
-    li.innerHTML = `<span class="rk-pos"></span><span class="rk-nombre"></span><span class="rk-dato"></span>`;
+    li.innerHTML = `<span class="rk-pos"></span><span class="rk-avatar avatar" role="img"></span><span class="rk-nombre"></span><span class="rk-dato"></span>`;
     li.querySelector(".rk-pos").textContent = ["🥇", "🥈", "🥉"][k] || `${k + 1}.`;
+    const avatar = li.querySelector(".rk-avatar");
+    avatar.innerHTML = avatarHTML(f.personaje);
+    avatar.dataset.avatar = f.personaje || "";
+    avatar.setAttribute("aria-label", nombrePersonaje(f.personaje));
     li.querySelector(".rk-nombre").textContent = f.nombre;
     li.querySelector(".rk-dato").textContent = [
       f.errores === 0 ? "No lo enojó" : `${f.errores} ${f.errores === 1 ? "error" : "errores"}`,
@@ -2947,6 +2967,8 @@ function clearEvalHistory() {
 
 function startEval() {
   quiz.alumno = ($("#eval-name").value || "").trim().slice(0, 40);
+  quiz.personaje = personajeElegido();
+  store.set("personaje", quiz.personaje);
   startQuiz("eval");
 }
 
@@ -3109,7 +3131,7 @@ function renderEval(total, comido) {
   hist.push({ nombre: quiz.alumno, nota, correctas: quiz.correct, total, fecha });
   store.set("evaluaciones", hist.slice(-50));
   // errores: las respuestas incorrectas (Kamil calma a Guillermo, pero no las borra)
-  anotarEnRanking({ nombre: (quiz.alumno || "").replace(/\s+/g, " ").trim().slice(0, 24), errores: quiz.mistakes.length, total, nota, comodines: usados.length, comido: !!comido });
+  anotarEnRanking({ nombre: (quiz.alumno || "").replace(/\s+/g, " ").trim().slice(0, 24), personaje: quiz.personaje || null, errores: quiz.mistakes.length, total, nota, comodines: usados.length, comido: !!comido });
 
   $("#r-ready").className = "ready " + (aprobado ? "ready-ok" : "ready-no");
   $("#r-ready-title").textContent = `${quiz.alumno ? quiz.alumno + " · " : ""}Nota orientativa: ${nota}/12 · ${aprobado ? "✔ Aprobado" : "✘ A reforzar"}`;
@@ -4326,5 +4348,12 @@ mostrarRanking();
 piel.init();
 $("#rappi-rider").innerHTML = pixelSVG(RAPPI_SPRITE, RAPPI_PALETA);
 // retrato del botón: la cabeza del mismo dibujo (filas 0 a 17, columnas 18 a 35)
-$("#rappi-retrato").innerHTML = pixelSVG(RAPPI_SPRITE.slice(0, 18).map((r) => r.slice(18, 36)), RAPPI_PALETA);
+$("#rappi-retrato").innerHTML = rappiCabeza();
+// selector de personaje del inicio (se recuerda el último elegido)
+document.querySelectorAll(".personaje .avatar").forEach((a) => { a.innerHTML = avatarHTML(a.dataset.avatar); });
+{
+  const guardado = store.get("personaje", null);
+  const radio = document.querySelector(`input[name="personaje"][value="${PERSONAJES.includes(guardado) ? guardado : ""}"]`);
+  if (radio) radio.checked = true;
+}
 hojaSSJ(); // precarga las poses del Rescate SSJ
