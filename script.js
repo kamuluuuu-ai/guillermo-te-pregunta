@@ -142,7 +142,7 @@ const PREGUNTAS = [
     opciones: ["12", "6", "3", "36"],
     correcta: 0,
     pista: "Cada arista suma 1 al grado de cada uno de sus dos extremos.",
-    explicacion: "Por el teorema de los apretones de manos, la suma de los grados es 2 · 6 = 12."
+    explicacion: "Por el teorema de la suma de los grados, la suma es 2 · 6 = 12."
   },
   {
     categoria: "Grado",
@@ -238,7 +238,7 @@ const CLASE = {
         <p>En esta clase usamos <strong>grafos simples</strong>: cada arista une dos vértices distintos y entre dos vértices hay como mucho una arista.</p>
 `,
       clase: [
-        "Arrancá con una pregunta: «¿Qué tienen en común un mapa de ómnibus, Instagram y la red de computadoras del liceo?». La respuesta: todos son cosas conectadas.",
+        "Arrancá mostrando un mapa de rutas y una red de computadoras: en los dos hay elementos y conexiones entre ellos.",
         "Dibujá en el pizarrón un grafo de rutas con 4 o 5 ciudades y preguntá cuáles son los puntos y cuáles las conexiones.",
         "Mostrá que si movés los puntos de lugar sin cambiar las conexiones, el grafo es el mismo."
       ],
@@ -304,7 +304,7 @@ const CLASE = {
         </ul>
         <p>Tocá cualquier vértice del ejemplo para ver sus vecinos.</p>`,
       clase: [
-        "Pedí 5 voluntarios: cada uno es un vértice. Que se tomen de la mano con quien conocen de antes y vean quiénes quedan «aislados» o con una sola conexión.",
+        "Dibujá un grafo con un vértice aislado y una hoja, y preguntá cuáles son y por qué.",
         "Escribí en el pizarrón el conjunto V con los nombres y preguntá cuánto vale |V|.",
         "Remarcá que un vértice puede representar cualquier cosa: no tiene que ser una persona."
       ],
@@ -431,16 +431,15 @@ const CLASE = {
         <p>Para encontrar el vértice de mayor grado, calculá δ(v) de cada vértice y quedate con el máximo. <strong>Puede haber empate</strong>: si varios vértices llegan al máximo, todos son «de mayor grado». En el grafo G de abajo el máximo es 4 y lo alcanzan b, c y f.</p>
         <h3>Un ejemplo</h3>
         <p>En el grafo G de abajo: δ(a) = 2, δ(b) = δ(c) = δ(f) = 4, δ(d) = 1, δ(e) = 3 y δ(g) = 0. Por eso g es <strong>aislado</strong> (grado 0) y d es una <strong>hoja</strong> (grado 1).</p>
-        <h3>Teorema de los apretones de manos</h3>
+        <h3>Teorema de la suma de los grados</h3>
         <div class="def def-yellow"><span class="def-tag">Teorema</span>Si un grafo tiene e aristas, la <strong>suma de los grados de todos sus vértices es 2e</strong>.</div>
-        <p>¿Por qué? Cada arista tiene dos extremos, así que suma 1 al grado de cada uno: en total aporta 2. Es como un saludo: cada apretón de manos usa dos manos.</p>
+        <p>¿Por qué? Cada arista tiene dos extremos, así que suma 1 al grado de cada uno: en total aporta 2.</p>
         <ul>
           <li><strong>Uso rápido:</strong> si hay 10 vértices y cada uno tiene grado 6, la suma es 60 = 2e, así que hay <strong>30 aristas</strong>.</li>
           <li><strong>Consecuencia:</strong> la suma de los grados siempre es par, por lo que todo grafo tiene una <strong>cantidad par de vértices de grado impar</strong>.</li>
         </ul>
         <p>Activá «Mostrar grados» en el ejemplo y comprobá que la suma da el doble de las aristas.</p>`,
       clase: [
-        "Hacé el «apretón de manos» en vivo: que 4 compañeros se saluden entre algunos, contá cuántas manos dio cada uno (su grado) y mostrá que la suma da el doble de saludos.",
         "Dibujá un grafo, pedí que la clase calcule cada δ(v) y después verifiquen juntos que la suma es 2e.",
         "Desafío final: «¿Existe un grafo con grados 1, 2 y 2?». No, porque la suma (5) es impar."
       ],
@@ -658,7 +657,7 @@ const EXAMEN = {
       pregunta: "Un grafo tiene 7 aristas. ¿Cuánto da la suma de los grados de sus vértices?",
       opciones: ["14", "7", "21", "No se puede saber"],
       correcta: 0,
-      pista: "Teorema de los apretones de manos.",
+      pista: "Teorema de la suma de los grados.",
       explicacion: "La suma de los grados siempre es 2e = 2 · 7 = 14."
     },
     {
@@ -674,7 +673,7 @@ const EXAMEN = {
       pregunta: "¿Puede un grafo tener exactamente un vértice de grado impar?",
       opciones: ["No, siempre hay una cantidad par de vértices de grado impar", "Sí, es lo más común", "Sí, si tiene muchos vértices", "Solo si tiene un vértice aislado"],
       correcta: 0,
-      pista: "Es una consecuencia del teorema de los apretones de manos.",
+      pista: "Es una consecuencia del teorema de la suma de los grados.",
       explicacion: "Como la suma de los grados es par, los vértices de grado impar tienen que venir de a pares."
     }
   ]
@@ -813,7 +812,7 @@ const EVALUACION = {
       pregunta: "Un grafo tiene 5 aristas. ¿Cuánto da la suma de los grados de todos sus vértices?",
       opciones: ["10", "5", "25", "No se puede saber"],
       correcta: 0,
-      pista: "Teorema de los apretones de manos.",
+      pista: "Teorema de la suma de los grados.",
       explicacion: "La suma de los grados es 2e = 2 · 5 = 10."
     },
     {
@@ -876,36 +875,37 @@ const AJUSTES = {
    FRASES DE GUILLERMO
    --------------------------------------------------------- */
 const FRASES = {
-  bienvenida: "¡Soy Guillermo! ¿Te animás a poner a prueba lo que sabés?",
-  instrucciones: "Es facilito: leés, pensás y elegís. Si te trancás, pedime una pista.",
-  arranque: ["¡Arrancamos! Vamos con la primera.", "¡Dale que va! Primera pregunta."],
-  pregunta: ["A ver esta…", "Pensala tranqui.", "Esta me encanta.", "¿Qué decís?", "Vamos con otra."],
-  acierto: ["¡Bien ahí!", "¡Excelente, crack!", "¡Esa es! Sabés un montón.", "¡Joya! Seguimos.", "¡Impecable!"],
-  racha: ["¡Estás on fire! Racha de {n}.", "¡{n} seguidas! No te para nadie."],
+  bienvenida: "Hola, vamos a ver cuanto aprendiste",
+  instrucciones: "Esta fácil y si te trancas te puedo dar una pista",
+  arranque: ["Dale con la primera.", "No te sientas presionado eh, que esta es solo la primera."],
+  pregunta: ["Dale que vos podes", "Esta es facil.", "Y esta que te parece.", "¿Qué decís?", "Dale con otra."],
+  acierto: ["¡Bien ahí!", "Buena", "Sabés un montón.", "Seguimos.", "Impeca"],
+  racha: ["Que aura que Tenes, Tenes una racha de {n}.", "{n} seguidas! No te para nadie."],
   error: ["¡Casi! Probá de nuevo en la que viene.", "No pasa nada, así se aprende.", "Uh, esa era difícil. ¡Vamos que la próxima sale!", "Tranqui, ahora ya te la sabés."],
   pistaUsada: "Ya te di la pista de esta: {p}",
   // el enojo va de 1 (molesto) a 3 (perdió la paciencia)
   enojo: {
     // antes de morder: cortitas, para leer mientras se prepara
     intencion: {
-      1: ["Mmm… ese borde se ve crocante.", "Perdoname, pero tengo que hacerlo.", "Un mordisquito nomás…", "Ese rincón me está llamando."],
-      2: ["¡Ahí voy, eh!", "Esa esquina es mía.", "No me mires así: vos empezaste.", "¡Agarrá fuerte el panel!"],
-      3: ["¡GRRR! ¡Ya fue!", "¡Se me saltó la térmica!", "¡Sostené el monitor!", "¡Ahí voy con todo!"]
+      1: ["Mmm… ese borde se ve crocante.", "Perdoname, pero tengo que hacerlo.", "Un mordisquito maas", "Ese rincón se ve como un flan."],
+      2: ["¡Ahí voy, eh!", "Esa esquina es mía.", "Mira que te como.", "Agarrame que me lo como"],
+      3: ["¡GRRR! ¡Ya fue!", "Se me salio un tornillo", "¡Sostené el monitor, que peso mucho!", "Te hago un mataleon"]
     },
     intencionFinal: ["¡SE ME ACABÓ LA PACIENCIA!", "¡AHORA ME LO COMO ENTERO!", "¡NO VA A QUEDAR NI EL MARCO!"],
     // después del mordisco, según cuánto se enojó
     reaccion: {
-      1: ["Ñam. Esa no era, eh. Me estoy poniendo de mal humor.", "Mmm… gusto a respuesta equivocada. Ojo con la próxima.", "Uh, esa no. Y el borde estaba rico, no te voy a mentir."],
-      2: ["¡Otra mal! Ya me estoy calentando…", "¡Grrr! Este panel está quedando como galletita de recreo.", "Che, concentrate, que el panel se me termina."],
-      3: ["¡ESTOY QUE MUERDO! …literalmente.", "¡Me sale humo de las orejas! Pensá bien la que viene.", "¡GRRR! Este panel ya parece un queso gruyere."]
+      1: ["ñam ñam, esa no era.", "Mmm… te equivocaste. Ojo con la próxima.", "Uh, esa no. El borde del panel esta rico."],
+      2: ["¡Otra mal! Ya me estoy calentando…", "¡Grrr! Este panel está quedando como galletita.", "Gordo concentrate que me lo como todo."],
+      // {elias}: el nombre configurado en ELIAS
+      3: ["¡ESTOY QUE MUERDO!.", "¡Me sale humo de las orejas (como {elias})", "¡GRRR! Este panel ya parece un alfajor de maizena."]
     },
-    ultimo: ["¡Un error más y me lo como entero! Avisado estás.", "Me queda un solo diente de paciencia… cuidámelo.", "La próxima mal y no queda ni la pregunta, ¿eh?"],
+    ultimo: ["¡Un error más y me lo como entero!.", "Me tenes arto ya de todo lo que te equivocas.", "La próxima mal y no queda ni la pregunta, ¿eh?"],
     grito: { 1: ["¡Ñam!", "¡Crunch!"], 2: ["¡ÑAM!", "¡CRUNCH!"], 3: ["¡ÑAAAM!", "¡GRRR!"] },
     // una correcta lo calma un rato (lo mordido no vuelve)
-    alivio: ["Fiuu… bueno, esa sí. Se me pasa un poquito.", "Ah, mirá vos. Así me gusta… respiro hondo.", "Bien ahí. Uno, dos, tres… me calmo un cachito.", "¡Eso! Se me baja la presión. Un poco."],
-    comido: "¡ÑAAAM! Me comí todo el panel. …Estaba rico, eh."
+    alivio: ["ta, ta ya me calmo.", "Ah, mirá vos. Así me gusta… respiro hondo.", "por fin acertas una, disxelico.", "Uy Casi me da un hibishibis."],
+    comido: "¡ÑAAAM! Me comí todo el panel. Estaba rico, como un alfajor de maizena"
   },
-  amenaza: ["A ver esta… que tengo hambre.", "Pensala bien, que todavía me queda lugar para otro mordisco.", "Esta sacala bien, ¿eh? Te estoy mirando."],
+  amenaza: ["Pensala bien o sino te como.", "Pensala bien, que todavía me queda lugar para otro mordisco.", "Esta sacala bien, ¿eh? Te estoy mirando."],
   desafioIntro: "¡Este es mi desafío! 60 segundos de verdadero o falso. ¿Estás pronto?",
   desafioArranque: "¡Ya! ¿Verdadero o falso?",
   desafioAcierto: ["¡Bien!", "¡Eso!", "¡Sí!", "¡Joya!"],
@@ -1293,7 +1293,7 @@ function nuevoError(reaccion) {
     nivel: enojo.nivel,
     escala: Math.min(1, (enojo.errores - 1) / Math.max(1, enojo.limite - 2)),
     perdidos: enojo.errores,
-    reaccion: reaccion || pickSin(quedan === 1 ? FRASES.enojo.ultimo : FRASES.enojo.reaccion[enojo.nivel])
+    reaccion: reaccion || fill(pickSin(quedan === 1 ? FRASES.enojo.ultimo : FRASES.enojo.reaccion[enojo.nivel]), { elias: ELIAS.nombre })
   };
 }
 
@@ -2130,7 +2130,7 @@ function startQuiz(lesson = null) {
   show("quiz", $("#q-text"));
   enojoIniciar(limitePara(quiz.deck.length));
   renderQuestion(lesson === "eval"
-    ? `¡Arranca la evaluación${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 3 comodines: Rappi, ${ELIAS.nombre} (cambia la pregunta) y Kamil. Usalos bien.`
+    ? `Arrancamos${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 3 comodines: Rappi, ${ELIAS.nombre} (cambia la pregunta) y Kamil. Usalos bien.`
     : pick(FRASES.arranque));
 }
 
@@ -2330,8 +2330,8 @@ function showResults() {
   }
   else if (ratio === 1) msg = `¡Perfecto! ¡${total} de ${total}! Los grafos no tienen secretos para vos.`;
   else if (ratio >= 0.7) msg = `¡Bien ahí! ${quiz.correct} de ${total}. Repasá las que fallaste y vas por el récord.`;
-  else if (ratio >= 0.4) msg = `${quiz.correct} de ${total}. ¡Vas bien! Mirá el repaso y probá de nuevo.`;
-  else msg = `${quiz.correct} de ${total}. ¡Tranqui! Leé las explicaciones y la próxima sale mejor.`;
+  else if (ratio >= 0.4) msg = `${quiz.correct} de ${total}. ¡Bien campeon! Mirá el repaso y probá de nuevo.`;
+  else msg = `${quiz.correct} de ${total}. ¡Tranqui! Leé las mis apuntes y la próxima sale mejor.`;
 
   if (comido) msg += " ¡Y me comí el panel entero! Las que faltaban cuentan como no respondidas.";
   else if (mordidas >= 2) msg += ` Por cierto: le di ${mordidas} mordiscos al panel. Ya le volvió a crecer.`;
@@ -2518,7 +2518,7 @@ function showLearn() {
   const bestExam = store.get("claseExamen", null);
   $("#exam-best").textContent = bestExam === null ? "Todavía no lo hiciste." : `Tu mejor resultado: ${bestExam} %.`;
   show("learn");
-  guillermo.say("¡Hoy damos teoría de grafos! Elegí un tema, leelo y después te pregunto a ver si lo entendiste.", "pensando");
+  guillermo.say("Esto es teoría de grafo, léelo y después te hago unas preguntitas", "pensando");
 }
 
 /* ---------- copiar un tema para los apuntes ---------- */
@@ -2608,10 +2608,9 @@ function openLesson(i) {
   $("#lesson-step").textContent = `Tema ${i + 1} de ${CLASE.temas.length}`;
   $("#lesson-title").textContent = t.titulo;
   $("#lesson-body").innerHTML = t.contenido;
-  // al presentar, las ideas para explicarlo son notas para quien presenta: quedan plegadas
-  $("#lesson-teach").innerHTML = lesson.presentar
-    ? `<details><summary>Notas para presentar</summary><ul>${t.clase.map(() => "<li></li>").join("")}</ul></details>`
-    : `<h3>Para explicarlo en la clase</h3><ul>${t.clase.map(() => "<li></li>").join("")}</ul>`;
+  // las ideas para explicarlo son solo de la clase: al presentar no se muestran
+  $("#lesson-teach").hidden = lesson.presentar;
+  $("#lesson-teach").innerHTML = `<h3>Para explicarlo en la clase</h3><ul>${t.clase.map(() => "<li></li>").join("")}</ul>`;
   $("#lesson-teach").querySelectorAll("li").forEach((li, k) => { li.textContent = t.clase[k]; });
   $("#lesson-quiz-btn").textContent = lesson.presentar
     ? `✔ Preguntale a la clase (${t.preguntas.length})`
@@ -2627,7 +2626,7 @@ function openLesson(i) {
   const titulo = `Tema ${i + 1}: ${t.titulo}${/[?!.]$/.test(t.titulo) ? "" : "."}`;
   guillermo.say(lesson.presentar
     ? `${titulo} ¡Atentos, que al final del tema les hago preguntas!`
-    : `${titulo} Leelo tranqui y jugá con el grafo. Cuando estés, tocá «¿Lo entendí?».`, "espera");
+    : `${titulo} Dale tranqui que es fácil, cuando estés toca «¿Lo entendí?».`, "espera");
 }
 
 /* ---------- examen: ¿estoy listo? ---------- */
@@ -2790,7 +2789,7 @@ function describeGraph() {
     lines.push(`<strong>E</strong> = {${g.aristas.map(edgeName).join(", ")}} → |E| = ${g.aristas.length}`);
     if (lesson.showDegrees) {
       lines.push(`Grados: ${g.names.map((n) => `δ(${n}) = ${g.degree[n]}`).join(" · ")}`);
-      lines.push(`Suma de grados = ${sum} = 2 · ${g.aristas.length} aristas ✔ (teorema de los apretones de manos)`);
+      lines.push(`Suma de grados = ${sum} = 2 · ${g.aristas.length} aristas ✔ (teorema de la suma de los grados)`);
     }
     lines.push(`<em>Tocá un vértice o una arista para ver más.</em>`);
   } else if (sel.type === "vertex") {
@@ -2849,7 +2848,7 @@ function clearEvalHistory() {
   }
   store.set("evaluaciones", []);
   renderEvalHistory();
-  guillermo.say("Listo, borré el historial de este dispositivo.", "espera");
+  guillermo.say("Para que queres que borre el historial??? Bueno ya lo borre.", "espera");
 }
 
 function startEval() {
