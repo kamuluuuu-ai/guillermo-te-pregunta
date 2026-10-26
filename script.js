@@ -163,7 +163,6 @@ const AFIRMACIONES = [
   { texto: "En un grafo de conocidos, cada persona es una arista.", v: false },
   { texto: "Si movés los puntos de un grafo sin cambiar las conexiones, sigue siendo el mismo grafo.", v: true },
   { texto: "Si V = {a, b, c}, entonces |V| = 3.", v: true },
-  { texto: "Un lazo suma 2 al grado de su vértice.", v: true },
   { texto: "Si V = {p, q, r, s}, entonces |V| = 3.", v: false },
   { texto: "Si E = {{a, b}, {b, c}}, el grafo tiene 2 aristas.", v: true },
   { texto: "Si E = {{1, 2}, {3, 4}}, el grafo tiene 4 aristas.", v: false },
@@ -389,8 +388,7 @@ const CLASE = {
           "El orden no importa: {u, v} y {v, u} son la misma arista.",
           "E es el conjunto de aristas y |E| es cuántas hay. Ej.: E = {{a, b}, {a, c}, {c, d}} → |E| = 3.",
           "Si e = {u, v}: e es incidente con u y con v, u y v son sus extremos, y e conecta u y v.",
-          "Ojo: «adyacente» es entre dos vértices; «incidente» es entre una arista y un vértice.",
-          "Lazo (o bucle): una arista que une un vértice consigo mismo, {v, v}. En un grafo simple no hay lazos; un grafo que los admite es un pseudografo."
+          "Ojo: «adyacente» es entre dos vértices; «incidente» es entre una arista y un vértice."
         ]
       },
       ejemplo: "red",
@@ -402,7 +400,6 @@ const CLASE = {
         <ul>
           <li>Si e = {u, v}, la arista e es <strong>incidente</strong> con u y con v, y decimos que <strong>conecta</strong> u y v.</li>
           <li>u y v son los <strong>extremos</strong> de la arista.</li>
-          <li>Un <strong>lazo</strong> (o <strong>bucle</strong>) es una arista que une un vértice consigo mismo. En un grafo simple no hay lazos; un grafo que los admite se llama <strong>pseudografo</strong>.</li>
         </ul>
         <h3>Contar aristas</h3>
         <p>La cantidad de aristas se escribe <strong>|E|</strong>. En la red del laboratorio de abajo, cada cable es una arista: el router está unido a las cuatro computadoras y además PC1–PC2 y PC3–PC4, así que |E| = 6. La impresora todavía no tiene cable: es un vértice sin aristas.</p>
@@ -413,13 +410,6 @@ const CLASE = {
         "Escribí E como conjunto de pares y hacé que la clase cuente |E|."
       ],
       preguntas: [
-        {
-          pregunta: "¿Qué es un lazo (o bucle)?",
-          opciones: ["Una arista que une un vértice consigo mismo", "Dos aristas entre los mismos vértices", "Un vértice sin aristas", "Una arista muy larga"],
-          correcta: 0,
-          pista: "Sale de un vértice y vuelve al mismo.",
-          explicacion: "Un lazo conecta un vértice consigo mismo. Los grafos que los admiten se llaman pseudografos."
-        },
         {
           pregunta: "¿Qué representa una arista?",
           opciones: ["Una conexión entre dos vértices", "Un punto de la red", "La cantidad de vértices", "Un número"],
@@ -470,7 +460,6 @@ const CLASE = {
       apuntes: {
         ideas: [
           "Grado δ(v): cuántas aristas son incidentes con v (cuántas líneas llegan a ese punto).",
-          "Un lazo suma 2 al grado de su vértice, porque sus dos extremos están en ese vértice.",
           "Aislado → δ(v) = 0. Hoja → δ(v) = 1.",
           "Vértice de mayor grado: calculá δ de todos y quedate con el máximo. Puede haber empate.",
           "Teorema: la suma de los grados de todos los vértices es 2e (e = cantidad de aristas), porque cada arista suma 1 a cada uno de sus dos extremos.",
@@ -497,14 +486,14 @@ const CLASE = {
       modo: "grado",
       contenido: `
         <p>El <strong>grado</strong> de un vértice dice <strong>cuántas aristas llegan a él</strong> (cuántas aristas son incidentes con él).</p>
-        <div class="def"><span class="def-tag">Definición</span>El grado de un vértice v se escribe <strong>δ(v)</strong> y es el número de aristas incidentes con v. <strong>Un lazo cuenta dos veces</strong>, porque sus dos extremos están en v.</div>
+        <div class="def"><span class="def-tag">Definición</span>El grado de un vértice v se escribe <strong>δ(v)</strong> y es el número de aristas incidentes con v.</div>
         <h3>El de mayor grado</h3>
         <p>Para encontrar el vértice de mayor grado, calculá δ(v) de cada vértice y quedate con el máximo. <strong>Puede haber empate</strong>: si varios vértices llegan al máximo, todos son «de mayor grado». En el grafo G de abajo el máximo es 4 y lo alcanzan b, c y f.</p>
         <h3>Un ejemplo</h3>
         <p>En el grafo G de abajo: δ(a) = 2, δ(b) = δ(c) = δ(f) = 4, δ(d) = 1, δ(e) = 3 y δ(g) = 0. Por eso g es <strong>aislado</strong> (grado 0) y d es una <strong>hoja</strong> (grado 1).</p>
         <h3>Teorema de la suma de los grados</h3>
         <div class="def def-yellow"><span class="def-tag">Teorema</span>Si un grafo tiene e aristas, la <strong>suma de los grados de todos sus vértices es 2e</strong>.</div>
-        <p>¿Por qué? Cada arista tiene dos extremos, así que suma 1 al grado de cada uno: en total aporta 2. Con un lazo pasa lo mismo: sus dos extremos están en el mismo vértice y le suma 2.</p>
+        <p>¿Por qué? Cada arista tiene dos extremos, así que suma 1 al grado de cada uno: en total aporta 2.</p>
         <ul>
           <li><strong>Uso rápido:</strong> si hay 10 vértices y cada uno tiene grado 6, la suma es 60 = 2e, así que hay <strong>30 aristas</strong>.</li>
           <li><strong>Consecuencia:</strong> la suma de los grados siempre es par, por lo que todo grafo tiene una <strong>cantidad par de vértices de grado impar</strong>.</li>
@@ -515,13 +504,6 @@ const CLASE = {
         "Desafío final: «¿Existe un grafo con grados 1, 2 y 2?». No, porque la suma (5) es impar."
       ],
       preguntas: [
-        {
-          pregunta: "Un vértice tiene 2 aristas comunes y un lazo. ¿Cuál es su grado?",
-          opciones: ["4", "3", "2", "5"],
-          correcta: 0,
-          pista: "Un lazo aporta dos unidades al grado.",
-          explicacion: "2 aristas aportan 2 y el lazo aporta 2 más: δ(v) = 4."
-        },
         {
           pregunta: "¿Qué indica el grado δ(v) de un vértice?",
           opciones: ["Cuántas aristas son incidentes con v", "Cuántos vértices tiene el grafo", "El nombre del vértice", "Cuántas aristas tiene el grafo"],
@@ -708,14 +690,6 @@ const EXAMEN = {
     // Tema 3: Grado de un vértice
     {
       tema: 3,
-      pregunta: "Un compañero te pregunta por qué un lazo suma 2 al grado. ¿Qué le explicás?",
-      opciones: ["Porque los dos extremos del lazo están en el mismo vértice", "Porque el lazo es más largo", "Porque es una regla sin motivo", "Porque un lazo son dos vértices"],
-      correcta: 0,
-      pista: "Pensá en cuántas puntas de línea tocan el vértice.",
-      explicacion: "El grado cuenta extremos de aristas. El lazo sale y vuelve al mismo vértice: le aporta sus dos extremos."
-    },
-    {
-      tema: 3,
       pregunta: "En el mapa de rutas, San José y Canelones tienen grado 3 y ninguna ciudad tiene más. ¿Cuáles son los vértices de mayor grado?",
       opciones: ["San José y Canelones", "Solo San José", "Solo Canelones", "Ninguno, porque hay empate"],
       correcta: 0,
@@ -845,14 +819,6 @@ const EVALUACION = {
     // Tema 2: Aristas
     {
       tema: 2,
-      pregunta: "¿Cómo se llama un grafo que admite lazos?",
-      opciones: ["Pseudografo", "Grafo vacío", "Vértice aislado", "Hoja"],
-      correcta: 0,
-      pista: "Empieza con «pseudo».",
-      explicacion: "Un grafo con lazos (aristas de un vértice a sí mismo) es un pseudografo."
-    },
-    {
-      tema: 2,
       pregunta: "¿Qué otro nombre reciben las aristas?",
       opciones: ["Enlaces", "Nodos", "Vértices", "Hojas"],
       correcta: 0,
@@ -885,14 +851,6 @@ const EVALUACION = {
     },
 
     // Tema 3: Grado de un vértice
-    {
-      tema: 3,
-      pregunta: "Un vértice tiene un lazo y ninguna otra arista. ¿Cuál es su grado?",
-      opciones: ["2", "1", "0", "3"],
-      correcta: 0,
-      pista: "Un lazo cuenta doble.",
-      explicacion: "Los dos extremos del lazo están en el mismo vértice, así que suma 2 al grado."
-    },
     {
       tema: 3,
       pregunta: "Si V = {a, b, c} y E = {{a, b}, {a, c}}, ¿cuánto vale δ(a)?",
@@ -929,8 +887,9 @@ const EVALUACION = {
 };
 
 /* Grafos de ejemplo para la clase. Las posiciones van de 0 a 100 (x) y de 0 a 60 (y).
-   Todos son grafos simples: cada arista une dos vértices distintos y no se repite
-   (validarGrafo avisa en la consola si no). Los grados se calculan de las aristas.
+   Son grafos simples: cada arista une dos vértices distintos y no se repite
+   (validarGrafo avisa en la consola si no). La excepción es el que tiene «lazos: true»,
+   que muestra un lazo [v, v]. Los grados se calculan de las aristas (un lazo suma 2).
    lados → dónde va la etiqueta de un vértice («arriba», «abajo», «izq», «der») cuando
            la regla de siempre (arriba si y ≤ 30, abajo si no) la deja pisada por una arista. */
 const GRAFOS_EJEMPLO = {
@@ -949,6 +908,12 @@ const GRAFOS_EJEMPLO = {
     nombre: "Red de computadoras del laboratorio",
     vertices: { PC1: [12, 14], PC2: [12, 50], Router: [50, 32], PC3: [88, 14], PC4: [88, 50], Impresora: [50, 6] },
     aristas: [["Router", "PC1"], ["Router", "PC2"], ["Router", "PC3"], ["Router", "PC4"], ["PC1", "PC2"], ["PC3", "PC4"]]
+  },
+  lazo: {
+    nombre: "Ejemplo con lazo (pseudografo)",
+    lazos: true,
+    vertices: { a: [18, 40], b: [50, 40], c: [82, 40] },
+    aristas: [["a", "b"], ["b", "c"], ["b", "b"]]
   },
   rosen: {
     nombre: "Grafo G",
@@ -2409,18 +2374,18 @@ function graphData(key) {
   const g = GRAFOS_EJEMPLO[key];
   const names = Object.keys(g.vertices);
   const degree = Object.fromEntries(names.map((n) => [n, 0]));
-  g.aristas.forEach(([u, v]) => { degree[u]++; degree[v]++; });
+  g.aristas.forEach(([u, v]) => { degree[u]++; degree[v]++; }); // un lazo [v, v] suma 2
   return { ...g, key, names, degree };
 }
 
-// la clase usa solo grafos simples: avisa si alguien agrega un lazo, una arista repetida o un vértice que no existe
+// la clase usa grafos simples: avisa si alguien agrega un lazo (salvo en el ejemplo de lazos), una arista repetida o un vértice que no existe
 function validarGrafo(key) {
   const g = GRAFOS_EJEMPLO[key];
   const vistos = new Set();
   g.aristas.forEach(([u, v]) => {
     const par = [u, v].sort().join("|");
     if (!(u in g.vertices) || !(v in g.vertices)) console.error(`Grafo «${key}»: la arista {${u}, ${v}} usa un vértice que no está en V.`);
-    else if (u === v) console.error(`Grafo «${key}»: {${u}, ${v}} es un lazo; acá van grafos simples.`);
+    else if (u === v && !g.lazos) console.error(`Grafo «${key}»: {${u}, ${v}} es un lazo; acá van grafos simples.`);
     else if (vistos.has(par)) console.error(`Grafo «${key}»: la arista {${u}, ${v}} está repetida.`);
     vistos.add(par);
   });
@@ -2463,13 +2428,16 @@ function drawGraph() {
     const [u, v] = e;
     const [x1, y1] = g.vertices[u];
     const [x2, y2] = g.vertices[v];
-    const d = `M ${x1} ${y1} L ${x2} ${y2}`;
+    // el lazo es una curva que sale del vértice y vuelve a él por arriba
+    const d = u === v
+      ? `M ${x1 - 2.5} ${y1 - 2} C ${x1 - 11} ${y1 - 22}, ${x1 + 11} ${y1 - 22}, ${x1 + 2.5} ${y1 - 2}`
+      : `M ${x1} ${y1} L ${x2} ${y2}`;
     const active = sel && ((sel.type === "edge" && sel.idx === idx) || (sel.type === "vertex" && (u === sel.name || v === sel.name)));
     const grp = document.createElementNS(svgNS, "g");
     grp.setAttribute("class", "g-edge" + (active ? " on" : ""));
     grp.setAttribute("tabindex", "0");
     grp.setAttribute("role", "button");
-    grp.setAttribute("aria-label", `Arista ${edgeName(e)}`);
+    grp.setAttribute("aria-label", u === v ? `Lazo en ${u}` : `Arista ${edgeName(e)}`);
     grp.dataset.key = "e" + idx;
     grp.innerHTML = `<path class="hit" d="${d}"/><path class="line" d="${d}"/>`;
     grp.addEventListener("click", () => selectGraph({ type: "edge", idx }));
@@ -2529,15 +2497,17 @@ function describeGraph() {
   } else if (sel.type === "vertex") {
     const n = sel.name;
     const inc = g.aristas.filter(([u, v]) => u === n || v === n);
-    const neigh = inc.map(([u, v]) => (u === n ? v : u));
+    const neigh = inc.filter(([u, v]) => u !== v).map(([u, v]) => (u === n ? v : u)); // el lazo no agrega vecinos
     const d = g.degree[n];
     const kind = d === 0 ? " → es un vértice <strong>aislado</strong>" : d === 1 ? " → es una <strong>hoja</strong> (colgante)" : "";
     lines.push(`<strong>Vértice ${n}</strong>: grado δ(${n}) = ${d}${kind}`);
     lines.push(`Vecinos (adyacentes): ${neigh.length ? neigh.join(", ") : "ninguno"}`);
     lines.push(`Aristas incidentes: ${inc.length ? inc.map(edgeName).join(", ") : "ninguna"}`);
+    if (inc.some(([u, v]) => u === v)) lines.push(`El lazo cuenta 2 en el grado: ${inc.map(([u, v]) => (u === v ? 2 : 1)).join(" + ")} = ${d}.`);
   } else {
     const [u, v] = g.aristas[sel.idx];
-    lines.push(`<strong>Arista {${u}, ${v}}</strong>: conecta ${u} con ${v}. Es incidente con sus dos extremos, que por eso son vértices adyacentes.`);
+    if (u === v) lines.push(`<strong>Lazo {${u}, ${u}}</strong>: sale de ${u} y vuelve a ${u}. Sus dos extremos están en ${u}, así que suma 2 al grado de ${u}.`);
+    else lines.push(`<strong>Arista {${u}, ${v}}</strong>: conecta ${u} con ${v}. Es incidente con sus dos extremos, que por eso son vértices adyacentes.`);
   }
   info.innerHTML = lines.map((l) => `<span>${l}</span>`).join("");
 }
