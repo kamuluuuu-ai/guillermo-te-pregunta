@@ -2862,7 +2862,7 @@ const ranking = {
 
 // personaje del ranking: el retrato de Kamil, Elías o Rappi, o la foto sin perfil
 const PERSONAJES = ["kamil", "elias", "rappi"];
-// foto sin perfil en pixel art (18 × 18, como la cabeza de Rappi): fondo violeta y silueta clara con borde
+// foto sin perfil en pixel art (18 × 18, como la cabeza de Rappi): fondo violeta oscuro y silueta violeta clara
 const SIN_PERFIL = pixelSVG([
   "gggggggggggggggggg",
   "gggggggooooggggggg",
@@ -2882,7 +2882,7 @@ const SIN_PERFIL = pixelSVG([
   "gowwwwwwwwwwwwwsog",
   "owwwwwwwwwwwwwwwso",
   "owwwwwwwwwwwwwwwso",
-], { g: "#8b5cf6", o: "#3b1f8a", w: "#efe8ff", s: "#c9b6fb" });
+], { g: "#2e1a6b", o: "#180d3d", w: "#c4b0ff", s: "#9d82f2" });
 const rappiCabeza = () => pixelSVG(RAPPI_SPRITE.slice(0, 18).map((r) => r.slice(18, 36)), RAPPI_PALETA);
 function avatarHTML(personaje) {
   if (personaje === "kamil") return `<img src="assets/rescate-ssj/retrato.png" alt="">`;
