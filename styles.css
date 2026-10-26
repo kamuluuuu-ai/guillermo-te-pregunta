@@ -809,10 +809,9 @@ kbd {
 .ranking-estado:empty { display: none; }
 #r-ranking .ranking-estado { margin: 0 0 10px; color: var(--text); }
 
-/* avatar: retrato del personaje o la foto sin perfil (redonda, como en WhatsApp) */
+/* avatar: retrato del personaje o la foto sin perfil */
 .avatar { display: block; width: 36px; height: 36px; overflow: hidden; background: #ffffff55; box-shadow: 0 0 0 2px var(--ink); }
 .avatar img, .avatar svg { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
-.avatar[data-avatar=""] { border-radius: 50%; background: none; box-shadow: none; }
 
 .elige-personaje { margin: 14px 0 0; padding: 0; border: 0; min-width: 0; }
 .elige-personaje legend { padding: 0; margin-bottom: 6px; font-weight: 800; }
