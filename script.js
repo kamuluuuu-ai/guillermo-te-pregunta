@@ -220,6 +220,31 @@ const CLASE = {
     {
       titulo: "¿Qué es un grafo?",
       resumen: "Motivación visual: redes, conexiones y mapas.",
+      apuntes: {
+        ideas: [
+          "Un grafo representa cosas conectadas: cada cosa es un punto (vértice) y cada conexión es una línea (arista).",
+          "Se escribe G = (V, E): V es el conjunto de vértices y E el de aristas.",
+          "Aparecen en redes de computadoras, mapas de rutas, redes sociales y en ecología.",
+          "Solo importa qué está conectado con qué: mover los puntos o curvar las líneas no cambia el grafo.",
+          "Si dos aristas se cruzan en el dibujo, el cruce NO es un vértice.",
+          "Grafo simple: cada arista une dos vértices distintos y entre dos vértices hay como mucho una arista."
+        ],
+        dibujo: {
+          ancho: 300, alto: 160,
+          vertices: { A: [30, 25], B: [170, 25], C: [30, 125], D: [170, 125] },
+          aristas: [["A", "B"], ["C", "D"], ["A", "D"], ["B", "C"]],
+          notas: [{ x: 180, y: 79, texto: "cruce: NO es vértice", flecha: [106, 75] }],
+          texto: [
+            "A ------- B",
+            "  \\     /",
+            "    \\ /",
+            "     X    <- cruce: NO es vértice",
+            "    / \\",
+            "  /     \\",
+            "C ------- D"
+          ]
+        }
+      },
       ejemplo: "rutas",
       modo: "general",
       contenido: `
@@ -290,6 +315,29 @@ const CLASE = {
     {
       titulo: "Vértices (nodos)",
       resumen: "Los puntos de la red: el conjunto V.",
+      apuntes: {
+        ideas: [
+          "Vértice (o nodo): cada punto de la red. Representa un elemento: una persona, una ciudad, una computadora…",
+          "V es el conjunto de vértices y |V| es cuántos hay. Ej.: V = {a, b, c, d} → |V| = 4.",
+          "Adyacentes (vecinos): dos vértices unidos por una arista.",
+          "Vértice aislado: no está unido a nadie.",
+          "Vértice colgante u hoja: está unido a exactamente un vértice."
+        ],
+        dibujo: {
+          ancho: 300, alto: 150,
+          vertices: { a: [30, 25], b: [150, 25], c: [90, 95], d: [190, 95], e: [265, 95] },
+          aristas: [["a", "b"], ["a", "c"], ["b", "c"], ["c", "d"]],
+          notas: [{ x: 190, y: 132, texto: "hoja" }, { x: 265, y: 132, texto: "aislado" }],
+          texto: [
+            "a ------- b",
+            "  \\     /",
+            "    \\ /",
+            "     c ------- d       e",
+            "",
+            "d: hoja (1 vecino)   e: aislado (0 vecinos)"
+          ]
+        }
+      },
       ejemplo: "amigos",
       modo: "general",
       contenido: `
@@ -356,6 +404,15 @@ const CLASE = {
     {
       titulo: "Aristas (enlaces)",
       resumen: "Las conexiones entre puntos: el conjunto E.",
+      apuntes: {
+        ideas: [
+          "Arista (o enlace): una conexión entre dos vértices. Se escribe {u, v}.",
+          "El orden no importa: {u, v} y {v, u} son la misma arista.",
+          "E es el conjunto de aristas y |E| es cuántas hay. Ej.: E = {{a, b}, {a, c}, {c, d}} → |E| = 3.",
+          "Si e = {u, v}: e es incidente con u y con v, u y v son sus extremos, y e conecta u y v.",
+          "Ojo: «adyacente» es entre dos vértices; «incidente» es entre una arista y un vértice."
+        ]
+      },
       ejemplo: "red",
       modo: "general",
       contenido: `
@@ -422,6 +479,31 @@ const CLASE = {
     {
       titulo: "Grado de un vértice",
       resumen: "Cuántas aristas llegan a cada vértice.",
+      apuntes: {
+        ideas: [
+          "Grado δ(v): cuántas aristas son incidentes con v (cuántas líneas llegan a ese punto).",
+          "Aislado → δ(v) = 0. Hoja → δ(v) = 1.",
+          "Vértice de mayor grado: calculá δ de todos y quedate con el máximo. Puede haber empate.",
+          "Teorema: la suma de los grados de todos los vértices es 2e (e = cantidad de aristas), porque cada arista suma 1 a cada uno de sus dos extremos.",
+          "Ej.: 10 vértices de grado 6 → suma 60 = 2e → e = 30 aristas.",
+          "La suma siempre es par, así que hay una cantidad par de vértices de grado impar. Ej.: grados 1, 2 y 2 es imposible (suma 5)."
+        ],
+        dibujo: {
+          ancho: 300, alto: 170,
+          vertices: { a: [30, 25], b: [150, 25], c: [90, 95], d: [190, 95], e: [265, 95] },
+          etiquetas: { a: "a: 2", b: "b: 2", c: "c: 3", d: "d: 1", e: "e: 0" },
+          aristas: [["a", "b"], ["a", "c"], ["b", "c"], ["c", "d"]],
+          notas: [{ x: 150, y: 152, texto: "2 + 2 + 3 + 1 + 0 = 8 = 2 · 4 aristas" }],
+          texto: [
+            "a(2) ---- b(2)",
+            "  \\      /",
+            "    \\  /",
+            "     c(3) ---- d(1)     e(0)",
+            "",
+            "2 + 2 + 3 + 1 + 0 = 8 = 2 · 4 aristas"
+          ]
+        }
+      },
       ejemplo: "rosen",
       modo: "grado",
       contenido: `
@@ -2536,31 +2618,57 @@ function showLearn() {
   guillermo.say("Esto es teoría de grafo, léelo y después te hago unas preguntitas", "pensando");
 }
 
-/* ---------- copiar un tema para los apuntes ---------- */
-// el tema como texto limpio: títulos, párrafos, listas con viñetas y definiciones
-function textoDelTema(i) {
+/* ---------- apuntes: un resumen corto de cada tema para copiar ---------- */
+// el resumen como texto: las ideas con viñetas y, si el tema lo tiene, el dibujito hecho con caracteres
+function textoApuntes(i) {
   const t = CLASE.temas[i];
-  const caja = document.createElement("div");
-  caja.innerHTML = t.contenido;
-  const limpio = (el) => el.textContent.replace(/\s+/g, " ").trim();
-  const titulo = `Tema ${i + 1}: ${t.titulo}`;
-  const partes = [titulo, "=".repeat(Math.min(40, titulo.length))];
-  [...caja.children].forEach((el) => {
-    if (el.matches("h3")) partes.push("", limpio(el).toUpperCase());
-    else if (el.matches("ul, ol")) partes.push([...el.children].map((li, k) => (el.matches("ol") ? `${k + 1}. ` : "• ") + limpio(li)).join("\n"));
-    else if (el.matches(".def")) {
-      const tag = el.querySelector(".def-tag");
-      const etiqueta = tag ? limpio(tag) : "";
-      if (tag) tag.remove();
-      partes.push(etiqueta ? `${etiqueta}: ${limpio(el)}` : limpio(el));
-    } else if (el.matches("table")) partes.push([...el.rows].map((r) => [...r.cells].map(limpio).join(" | ")).join("\n"));
-    else if (limpio(el)) partes.push(limpio(el));
-  });
-  // el grafo de ejemplo del tema, para que «el grafo de abajo» se entienda en los apuntes
-  const g = GRAFOS_EJEMPLO[t.ejemplo];
-  if (g) partes.push("", `EJEMPLO: ${g.nombre.toUpperCase()}`, `V = {${Object.keys(g.vertices).join(", ")}}`, `E = {${g.aristas.map(([u, v]) => `{${u}, ${v}}`).join(", ")}}`);
+  const titulo = `Apuntes · Tema ${i + 1}: ${t.titulo}`;
+  const partes = [titulo, "=".repeat(Math.min(40, titulo.length)), ...t.apuntes.ideas.map((idea) => `• ${idea}`)];
+  if (t.apuntes.dibujo) partes.push("", ...t.apuntes.dibujo.texto);
   partes.push("", CLASE.fuente);
-  return partes.join("\n").replace(/\n{3,}/g, "\n\n") + "\n";
+  return partes.join("\n") + "\n";
+}
+
+// el dibujito del resumen: vértices como cuadraditos, aristas y notas
+function dibujoApuntes(d) {
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  let svg = "";
+  d.aristas.forEach(([u, v]) => {
+    const [x1, y1] = d.vertices[u], [x2, y2] = d.vertices[v];
+    svg += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="ap-arista"/>`;
+  });
+  (d.notas || []).forEach((n) => {
+    if (n.flecha) svg += `<line x1="${n.x - 4}" y1="${n.y - 4}" x2="${n.flecha[0]}" y2="${n.flecha[1]}" class="ap-flecha"/>`;
+    svg += `<text x="${n.x}" y="${n.y}" class="ap-nota" text-anchor="${n.flecha ? "start" : "middle"}">${esc(n.texto)}</text>`;
+  });
+  Object.entries(d.vertices).forEach(([id, [x, y]]) => {
+    // el nombre va arriba, salvo que le lleguen aristas desde arriba: ahí va abajo para no pisarlas
+    const abajo = d.aristas.some(([u, v]) => (u === id && d.vertices[v][1] < y) || (v === id && d.vertices[u][1] < y));
+    svg += `<rect x="${x - 7}" y="${y - 7}" width="14" height="14" class="ap-vertice"/>`;
+    svg += `<text x="${x}" y="${abajo ? y + 24 : y - 13}" class="ap-nombre" text-anchor="middle">${esc((d.etiquetas || {})[id] || id)}</text>`;
+  });
+  return `<svg viewBox="0 -12 ${d.ancho} ${d.alto + 12}" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">${svg}</svg>`;
+}
+
+function pintarApuntes(i) {
+  const a = CLASE.temas[i].apuntes;
+  const list = $("#apuntes-lista");
+  list.innerHTML = "";
+  a.ideas.forEach((idea) => {
+    const li = document.createElement("li");
+    li.textContent = idea;
+    list.appendChild(li);
+  });
+  const fig = $("#apuntes-dibujo");
+  fig.hidden = !a.dibujo;
+  fig.innerHTML = a.dibujo ? dibujoApuntes(a.dibujo) : "";
+}
+
+function toggleApuntes() {
+  const box = $("#lesson-apuntes");
+  box.hidden = !box.hidden;
+  $("#lesson-apuntes-btn").setAttribute("aria-expanded", String(!box.hidden));
+  if (!box.hidden) box.scrollIntoView({ block: "nearest", behavior: reduceMotion.matches ? "auto" : "smooth" });
 }
 
 async function copiarTexto(texto) {
@@ -2582,15 +2690,15 @@ async function copiarTexto(texto) {
   }
 }
 
-async function copiarTema() {
-  const b = $("#lesson-copy");
-  const ok = await copiarTexto(textoDelTema(lesson.index));
+async function copiarApuntes() {
+  const b = $("#apuntes-copy");
+  const ok = await copiarTexto(textoApuntes(lesson.index));
   b.textContent = ok ? "✔ Copiado" : "✘ No se pudo copiar";
   $("#lesson-copy-aviso").textContent = ok
-    ? `Copiaste el tema ${lesson.index + 1}. Pegalo en tus apuntes.`
-    : "No se pudo copiar. Seleccioná el texto del tema y copialo a mano.";
+    ? `Copiaste los apuntes del tema ${lesson.index + 1}. Pegalos en tu cuaderno o en tus notas.`
+    : "No se pudo copiar. Seleccioná el resumen y copialo a mano.";
   clearTimeout(b._t);
-  b._t = setTimeout(() => { b.textContent = "📋 Copiar"; }, 2000);
+  b._t = setTimeout(() => { b.textContent = "📋 Copiar apuntes"; }, 2000);
 }
 
 /* ---------- presentar la clase: los mismos temas, para mostrarlos frente a todos ---------- */
@@ -2623,6 +2731,7 @@ function openLesson(i) {
   $("#lesson-step").textContent = `Tema ${i + 1} de ${CLASE.temas.length}`;
   $("#lesson-title").textContent = t.titulo;
   $("#lesson-body").innerHTML = t.contenido;
+  pintarApuntes(i);
   // las ideas para explicarlo son solo de la clase: al presentar no se muestran
   $("#lesson-teach").hidden = lesson.presentar;
   $("#lesson-teach").innerHTML = `<h3>Para explicarlo en la clase</h3><ul>${t.clase.map(() => "<li></li>").join("")}</ul>`;
@@ -4296,7 +4405,8 @@ const actions = {
   present: showPresent,
   "present-start": () => openLesson(0),
   "back-class": volverClase,
-  "lesson-copy": copiarTema,
+  "lesson-apuntes": toggleApuntes,
+  "apuntes-copy": copiarApuntes,
   "lesson-quiz": () => startQuiz(lesson.index),
   "lesson-review": () => startQuiz("todo"),
   "lesson-prev": () => openLesson(Math.max(0, lesson.index - 1)),

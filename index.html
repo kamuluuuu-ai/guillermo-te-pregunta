@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=41">
+  <link rel="stylesheet" href="styles.css?v=44">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -326,11 +326,19 @@
       <div class="screen" id="screen-lesson" data-screen hidden>
         <nav class="lesson-nav" aria-label="Temas de la clase">
           <button class="btn btn-ghost btn-small" type="button" data-action="back-class">☰ Temas</button>
-          <button class="btn btn-teal btn-small" type="button" data-action="lesson-copy" id="lesson-copy" title="Copia el tema como texto para tus apuntes">📋 Copiar</button>
+          <button class="btn btn-teal btn-small" type="button" data-action="lesson-apuntes" id="lesson-apuntes-btn" aria-expanded="false" aria-controls="lesson-apuntes">📝 Apuntes</button>
           <span class="lesson-step" id="lesson-step">Tema 1 de 4</span>
         </nav>
         <h2 class="h2 lesson-title" id="lesson-title" tabindex="-1">Tema</h2>
         <p class="sr-only" id="lesson-copy-aviso" aria-live="polite"></p>
+        <section class="apuntes" id="lesson-apuntes" aria-labelledby="apuntes-titulo" hidden>
+          <div class="apuntes-head">
+            <h3 class="h3" id="apuntes-titulo">📝 Apuntes del tema</h3>
+            <button class="btn btn-yellow btn-small" type="button" data-action="apuntes-copy" id="apuntes-copy">📋 Copiar apuntes</button>
+          </div>
+          <ul class="apuntes-lista" id="apuntes-lista"></ul>
+          <figure class="apuntes-dibujo" id="apuntes-dibujo" hidden></figure>
+        </section>
         <div class="lesson-body" id="lesson-body"></div>
 
         <figure class="graph-lab" id="graph-lab">
@@ -370,6 +378,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=41"></script>
+  <script src="script.js?v=44"></script>
 </body>
 </html>
