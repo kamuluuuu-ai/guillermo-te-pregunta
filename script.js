@@ -254,8 +254,6 @@ const CLASE = {
           <li><strong>Ecología:</strong> cada especie es un punto y se unen dos especies si compiten por el mismo alimento.</li>
         </ul>
         <p>Lo que importa es <strong>qué está conectado con qué</strong>. Dónde dibujes los puntos o si las líneas son rectas o curvas no cambia el grafo.</p>
-        <h3>Ojo con los cruces</h3>
-        <p>En el dibujo, dos aristas pueden cruzarse sin tocarse. <strong>Un cruce no es un vértice</strong>: los vértices son solo los puntos marcados, los elementos de V.</p>
         <p>En esta clase usamos <strong>grafos simples</strong>: cada arista une dos vértices distintos y entre dos vértices hay como mucho una arista.</p>
 `,
       clase: [

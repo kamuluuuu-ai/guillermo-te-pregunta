@@ -14,17 +14,17 @@
    ========================================================= */
 const PROY = {
   cadaCuanto: 2000,        // ms entre consultas
-  pacienciaMinima: 10,     // la barra arranca con esto…
-  pacienciaPorJugador: 2,  // …o con 2 por jugador, lo que sea más
-  aciertosPorDiente: 5,    // cada 5 respuestas bien de la clase vuelve un diente
+  pacienciaMinima: 8,      // la barra arranca con esto…
+  pacienciaPorJugador: 1,  // …o con 1 por jugador, lo que sea más
+  aciertosPorDiente: 10,   // cada 10 respuestas bien de la clase vuelve un diente
   escenaMaxima: 16000,     // si una escena se traba (pestaña sin dibujar), se corta y sigue la cola
   feed: 4                  // renglones de «últimos movimientos»
 };
 
 // los comodines en la pantalla de la clase: cuánta paciencia le devuelven a Guillermo
 const COMODIN_CLASE = {
-  ssj: { quien: "Kamil", suma: 3, escena: () => escenaKamil },
-  cambio: { quien: ELIAS.nombre, suma: 2, escena: () => escenaElias },
+  ssj: { quien: "Kamil", suma: 1, escena: () => escenaKamil },
+  cambio: { quien: ELIAS.nombre, suma: 1, escena: () => escenaElias },
   rappi: { quien: "Rappi", suma: 1, escena: () => escenaRappi }
 };
 
