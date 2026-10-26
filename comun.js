@@ -428,6 +428,9 @@ const SSJ = {
   ancla: [182, 485], // punto medio entre los championes, sobre el piso
   poses: ["reposo", "entrada", "preparacion", "ssj", "carga", "disparo", "recuperacion", "victoria"],
   manos: { carga: [126, 304], disparo: [374, 262] }, // dónde está la energía, en píxeles del cuadro
+  // aura: dos cuadros de llamas (sin fondo, alineados por la base) que se alternan detrás de Kamil;
+  // alto y ancho en píxeles del cuadro, centrada en el ancla y apoyada en el piso
+  aura: { src: ["assets/rescate-ssj/aura-1.png", "assets/rescate-ssj/aura-2.png"], w: 562, h: 600 },
   img: null
 };
 
@@ -455,7 +458,9 @@ function hojaSSJ() {
   if (!SSJ.img) {
     SSJ.img = new Image();
     SSJ.img.src = SSJ.src;
-    SSJ.lista = (SSJ.img.decode ? SSJ.img.decode() : Promise.resolve()).then(() => true, () => false);
+    const cargar = (img) => (img.decode ? img.decode() : Promise.resolve()).then(() => true, () => false);
+    const auras = SSJ.aura.src.map((src) => Object.assign(new Image(), { src }));
+    SSJ.lista = Promise.all([cargar(SSJ.img), ...auras.map(cargar)]).then((ok) => ok[0]);
   }
   return Promise.race([SSJ.lista, new Promise((r) => setTimeout(() => r(false), 1500))]);
 }
@@ -573,23 +578,15 @@ function animarPixeles(px, origen, modo, ms) {
   });
 }
 
-// llama hecha con píxeles (dos cuadros que se alternan); es una capa aparte, sin fondo
-function auraSVG(cuadro) {
-  const W = 30, H = 40;
-  const dentro = (x, y) => {
-    const dx = (x + 0.5 - 15) / 13.5, dy = (y + 0.5 - 25) / 14.5;
-    if (dx * dx + dy * dy <= 1) return true;
-    const alto = (x + cuadro * 2) % 5 === 0 ? 12 : (x + cuadro) % 3 === 0 ? 7 : 3; // largo de cada lengua de fuego
-    const tope = 25 - 14.5 * Math.sqrt(Math.max(0, 1 - dx * dx));
-    return Math.abs(dx) < 0.85 && y >= tope - alto * (1 - Math.abs(dx)) && y < tope + 1;
-  };
-  const rows = Array.from({ length: H }, (_, y) => Array.from({ length: W }, (_, x) => {
-    if (!dentro(x, y)) return ".";
-    const borde = [[1, 0], [-1, 0], [0, 1], [0, -1], [2, 0], [-2, 0], [0, -2]].some(([a, b]) => !dentro(x + a, y + b));
-    return borde ? "U" : "O";
-  }));
-  return pixelSVG(rows.map((r) => r.join("")), { O: "#ffd23f22", U: "#ffe066b0" }).replace("<svg ", '<svg preserveAspectRatio="none" ');
+// el aura de Kamil: los dos cuadros de llamas, uno encima del otro, en una capa detrás del sprite
+function auraSSJ() {
+  const { src, w, h } = SSJ.aura;
+  const caja = `left:${((SSJ.ancla[0] - w / 2) / SSJ.w) * 100}%;width:${(w / SSJ.w) * 100}%;height:${(h / SSJ.h) * 100}%`;
+  return `<div class="ssj-aura" style="${caja}">${src.map((s, i) => `<img class="aura-${"ab"[i]}" src="${s}" alt="" draggable="false">`).join("")}</div>`;
 }
+
+// cuánto ocupa Kamil a cada lado del ancla contando el aura (así las llamas no se cortan en el borde)
+const anchoSSJ = (lado) => Math.max(lado, SSJ.aura.w / 2);
 
 // chispas cuadradas que suben desde los pies alrededor del cuerpo
 function chispas(E, cantidad, ms) {

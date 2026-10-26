@@ -408,10 +408,11 @@ function medirActor(cfg, alto) {
   const espejo = dir > 0;                  // los dibujos miran a la derecha: si queda a la derecha, se dan vuelta
   const s = alto / cfg.h;
   const [ax, ay] = cfg.ancla;
-  const ext = espejo ? [(cfg.w - ax) * s, ax * s] : [ax * s, (cfg.w - ax) * s];
+  const lado = cfg.aura ? anchoSSJ : (l) => l; // Kamil cuenta también su aura
+  const ext = (espejo ? [cfg.w - ax, ax] : [ax, cfg.w - ax]).map((l) => lado(l) * s);
   const borde = dir > 0 ? g.right : g.left;
   const x = Math.min(vw - 8 - ext[1], Math.max(8 + ext[0], borde + dir * (alto * 0.7 + 20)));
-  const y = Math.min(vh - 6, g.bottom);
+  const y = Math.min(vh - 6, Math.max(g.bottom, 6 + Math.max(ay, cfg.aura ? cfg.aura.h * 1.08 : 0) * s)); // que no se corte arriba (el aura crece al transformarse)
   const punto = ([px, py]) => ({ x: x + (px - ax) * s * (espejo ? -1 : 1), y: y - (ay - py) * s });
   return { vw, vh, g, blanco, dir, espejo, s, x, y, ext, punto };
 }
@@ -454,7 +455,7 @@ async function escenaKamil(ev, nombre, c) {
   const actor = nodoFx("ssj-actor");
   actor.style.width = `${SSJ.w * s}px`;
   actor.style.height = `${SSJ.h * s}px`;
-  actor.innerHTML = `<div class="ssj-cuerpo"><div class="ssj-aura"><div class="aura-a">${auraSVG(0)}</div><div class="aura-b">${auraSVG(1)}</div></div><div class="ssj-sprite"></div></div>`;
+  actor.innerHTML = `<div class="ssj-cuerpo">${auraSSJ()}<div class="ssj-sprite"></div></div>`;
   const cuerpo = actor.firstChild;
   const aura = cuerpo.querySelector(".ssj-aura");
   const sprite = cuerpo.querySelector(".ssj-sprite");

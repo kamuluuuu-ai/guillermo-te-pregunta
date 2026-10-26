@@ -226,21 +226,17 @@ const CLASE = {
           "Se escribe G = (V, E): V es el conjunto de vértices y E el de aristas.",
           "Aparecen en redes de computadoras, mapas de rutas, redes sociales y en ecología.",
           "Solo importa qué está conectado con qué: mover los puntos o curvar las líneas no cambia el grafo.",
-          "Si dos aristas se cruzan en el dibujo, el cruce NO es un vértice.",
           "Grafo simple: cada arista une dos vértices distintos y entre dos vértices hay como mucho una arista."
         ],
         dibujo: {
-          ancho: 300, alto: 160,
+          ancho: 200, alto: 160,
           vertices: { A: [30, 25], B: [170, 25], C: [30, 125], D: [170, 125] },
-          aristas: [["A", "B"], ["C", "D"], ["A", "D"], ["B", "C"]],
-          notas: [{ x: 180, y: 79, texto: "cruce: NO es vértice", flecha: [106, 75] }],
+          aristas: [["A", "B"], ["A", "C"], ["B", "D"], ["C", "D"], ["A", "D"]],
           texto: [
             "A ------- B",
-            "  \\     /",
-            "    \\ /",
-            "     X    <- cruce: NO es vértice",
-            "    / \\",
-            "  /     \\",
+            "| \\       |",
+            "|   \\     |",
+            "|     \\   |",
             "C ------- D"
           ]
         }
@@ -3141,10 +3137,10 @@ function medirEscena() {
   const alto = Math.min(Math.max(g.width * 1.5, 150), 300, vh * 0.45);
   const s = alto / SSJ.h;
   const [ax, ay] = SSJ.ancla;
-  const ext = espejo ? [(SSJ.w - ax) * s, ax * s] : [ax * s, (SSJ.w - ax) * s]; // cuánto ocupa a cada lado del ancla
+  const ext = (espejo ? [SSJ.w - ax, ax] : [ax, SSJ.w - ax]).map((l) => anchoSSJ(l) * s); // cuánto ocupa a cada lado del ancla, con el aura
   const borde = dir > 0 ? g.right : g.left;
   const x = Math.min(vw - 8 - ext[1], Math.max(8 + ext[0], borde + dir * (alto * 0.9 + 20)));
-  let y = Math.min(vh - 6, Math.max(g.bottom, 6 + ay * s));
+  let y = Math.min(vh - 6, Math.max(g.bottom, 6 + Math.max(ay, SSJ.aura.h * 1.08) * s)); // el aura crece un poco al transformarse
   // en celular el globo está al lado de Guillermo: se para más abajo para no taparlo
   const globo = guillermo.bubble.getBoundingClientRect();
   if (globo.right > x - ext[0] && globo.left < x + ext[1] && globo.bottom > y - alto) y = Math.min(vh - 6, globo.bottom + alto + 4);
@@ -3190,7 +3186,7 @@ async function escenaRescate() {
   const actor = nodoFx("ssj-actor");
   actor.style.width = `${SSJ.w * s}px`;
   actor.style.height = `${SSJ.h * s}px`;
-  actor.innerHTML = `<div class="ssj-cuerpo"><div class="ssj-aura"><div class="aura-a">${auraSVG(0)}</div><div class="aura-b">${auraSVG(1)}</div></div><div class="ssj-sprite"></div></div>`;
+  actor.innerHTML = `<div class="ssj-cuerpo">${auraSSJ()}<div class="ssj-sprite"></div></div>`;
   const cuerpo = actor.firstChild;
   const aura = cuerpo.querySelector(".ssj-aura");
   const sprite = cuerpo.querySelector(".ssj-sprite");
