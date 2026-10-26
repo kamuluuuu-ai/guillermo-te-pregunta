@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=36">
+  <link rel="stylesheet" href="styles.css?v=38">
 </head>
 <body>
   <a class="skip-link" href="#panel">Saltar al juego</a>
@@ -65,6 +65,11 @@
           <button class="btn btn-green" type="button" data-action="learn">◆ Clase: Teoría de grafos</button>
           <button class="btn btn-orange" type="button" data-action="present">📽 Presentar la clase</button>
           <button class="btn btn-violet" type="button" data-action="instructions">? Instrucciones</button>
+        </div>
+        <div class="ranking" id="ranking-inicio" hidden>
+          <h3 class="h3">🏆 Los que menos hicieron enojar a Guillermo</h3>
+          <ol class="ranking-list" id="ranking-lista"></ol>
+          <p class="ranking-estado" id="ranking-estado" aria-live="polite"></p>
         </div>
         <div class="eval-history" id="eval-history-wrap" hidden>
           <h3 class="h3">Últimas partidas en este dispositivo</h3>
@@ -194,6 +199,11 @@
         <div class="ready" id="r-ready" hidden>
           <h3 class="ready-title" id="r-ready-title"></h3>
           <ul class="ready-list" id="r-ready-list" aria-label="Resultado por tema"></ul>
+        </div>
+        <div class="ranking" id="r-ranking" hidden>
+          <h3 class="h3">🏆 Los que menos hicieron enojar a Guillermo</h3>
+          <p class="ranking-estado" id="r-ranking-estado" aria-live="polite"></p>
+          <ol class="ranking-list" id="r-ranking-lista"></ol>
         </div>
         <div class="review" id="r-review-wrap">
           <h3 class="h3">Para repasar</h3>
@@ -351,6 +361,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=36"></script>
+  <script src="script.js?v=38"></script>
 </body>
 </html>

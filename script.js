@@ -872,6 +872,19 @@ const AJUSTES = {
 };
 
 /* ---------------------------------------------------------
+   RANKING COMPARTIDO (Supabase): quién hizo enojar menos a Guillermo
+   Pegá acá la «Project URL» y la clave «anon public» del proyecto
+   (Supabase → Project Settings → API). La clave anon es pública:
+   la tabla solo deja leer y agregar (ver supabase/ranking.sql).
+   Mientras estén vacías, el ranking no aparece.
+   --------------------------------------------------------- */
+const RANKING = {
+  url: "https://sepjaagggjfcfmfonlxc.supabase.co",
+  clave: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNlcGphYWdnZ2pmY2ZtZm9ubHhjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5Njk1MDYsImV4cCI6MjEwODU0NTUwNn0.hw5Fd_PB_ikR_G_Fe7gW63OZNtvhmmu3KHbGZOc0TFw",
+  mostrar: 10   // cuántos puestos se ven
+};
+
+/* ---------------------------------------------------------
    FRASES DE GUILLERMO
    --------------------------------------------------------- */
 const FRASES = {
@@ -2088,6 +2101,7 @@ function goHome() {
   stopChallenge();
   updateRecords();
   renderEvalHistory();
+  mostrarRanking();
   show("start");
   guillermo.say(FRASES.bienvenida, "espera");
 }
@@ -2299,7 +2313,8 @@ function showResults() {
   $("#r-streak").textContent = quiz.bestStreak;
   $("#r-record").hidden = !isRecord;
   const ready = quiz.lesson === "examen" ? renderReadiness(Math.round((quiz.correct / total) * 100))
-    : quiz.lesson === "eval" ? renderEval(total) : null;
+    : quiz.lesson === "eval" ? renderEval(total, comido) : null;
+  if (quiz.lesson !== "eval") $("#r-ranking").hidden = true;
   $("#r-ready").hidden = !ready;
 
   const list = $("#r-review");
@@ -2821,6 +2836,85 @@ const COMODINES = {
   rappi: { label: "🛵 Llamar a Rappi" }
 };
 
+/* ---------- ranking compartido: quién hizo enojar menos a Guillermo ---------- */
+// orden: menos errores, mejor nota, menos comodines, quién llegó primero
+const ranking = {
+  activo: () => !!(RANKING.url && RANKING.clave),
+  orden: "errores.asc,nota.desc,comodines.asc,creado.asc",
+  async pedir(consulta, opciones = {}) {
+    const r = await fetch(`${RANKING.url.replace(/\/+$/, "")}/rest/v1/ranking${consulta}`, {
+      ...opciones,
+      headers: { apikey: RANKING.clave, Authorization: `Bearer ${RANKING.clave}`, "Content-Type": "application/json", ...opciones.headers }
+    });
+    if (!r.ok) throw new Error(`ranking: ${r.status}`);
+    return r.json();
+  },
+  top() {
+    return this.pedir(`?select=id,nombre,errores,nota,comodines,comido&order=${this.orden}&limit=${RANKING.mostrar}`);
+  },
+  // agrega el resultado y devuelve su id y en qué puesto quedó
+  async anotar(fila) {
+    const [nueva] = await this.pedir("", { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify(fila) });
+    const ids = await this.pedir(`?select=id&order=${this.orden}&limit=1000`);
+    return { id: nueva.id, puesto: ids.findIndex((x) => x.id === nueva.id) + 1 };
+  }
+};
+
+function pintarRanking(list, filas, propio) {
+  list.innerHTML = "";
+  filas.forEach((f, k) => {
+    const li = document.createElement("li");
+    li.className = [f.id === propio && "propio", k < 3 && "podio"].filter(Boolean).join(" ");
+    li.innerHTML = `<span class="rk-pos"></span><span class="rk-nombre"></span><span class="rk-dato"></span>`;
+    li.querySelector(".rk-pos").textContent = ["🥇", "🥈", "🥉"][k] || `${k + 1}.`;
+    li.querySelector(".rk-nombre").textContent = f.nombre;
+    li.querySelector(".rk-dato").textContent = [
+      f.errores === 0 ? "No lo enojó" : `${f.errores} ${f.errores === 1 ? "error" : "errores"}`,
+      `nota ${f.nota}`,
+      f.comido && "se comió el panel"
+    ].filter(Boolean).join(" · ");
+    list.appendChild(li);
+  });
+}
+
+// el ranking del inicio
+async function mostrarRanking() {
+  const box = $("#ranking-inicio");
+  box.hidden = !ranking.activo();
+  if (box.hidden) return;
+  const estado = $("#ranking-estado");
+  estado.textContent = "Cargando…";
+  try {
+    const filas = await ranking.top();
+    pintarRanking($("#ranking-lista"), filas);
+    estado.textContent = filas.length ? "" : "Todavía no hay nadie. ¡Jugá y estrenalo!";
+  } catch {
+    estado.textContent = "No se pudo cargar el ranking. Revisá la conexión.";
+  }
+}
+
+// al terminar la evaluación: anota el resultado (si hay nombre) y muestra el ranking
+async function anotarEnRanking(fila) {
+  const box = $("#r-ranking");
+  box.hidden = !ranking.activo();
+  if (box.hidden) return;
+  const estado = $("#r-ranking-estado");
+  const list = $("#r-ranking-lista");
+  list.innerHTML = "";
+  let propio = null;
+  try {
+    if (fila.nombre) {
+      estado.textContent = "Anotándote en el ranking…";
+      const r = await ranking.anotar(fila);
+      propio = r.id;
+      estado.textContent = r.puesto ? `Quedaste en el puesto ${r.puesto} de los que menos hicieron enojar a Guillermo.` : "Ya estás en el ranking.";
+    } else estado.textContent = "Para entrar al ranking, poné tu nombre antes de empezar.";
+    pintarRanking(list, await ranking.top(), propio);
+  } catch {
+    estado.textContent = "No se pudo guardar en el ranking. Revisá la conexión.";
+  }
+}
+
 function renderEvalHistory() {
   const items = store.get("evaluaciones", []);
   const list = $("#eval-history");
@@ -3004,7 +3098,7 @@ async function llamarRappi() {
   renderLifelines();
 }
 
-function renderEval(total) {
+function renderEval(total, comido) {
   const nota = Math.max(1, Math.round((quiz.correct / total) * 12));
   const aprobado = nota >= 6;
   const usados = Object.keys(COMODINES).filter((k) => !quiz.comodines[k]).map((k) => COMODINES[k].label.replace(/^\S+\s/, ""));
@@ -3014,6 +3108,8 @@ function renderEval(total) {
   const hist = store.get("evaluaciones", []);
   hist.push({ nombre: quiz.alumno, nota, correctas: quiz.correct, total, fecha });
   store.set("evaluaciones", hist.slice(-50));
+  // errores: las respuestas incorrectas (Kamil calma a Guillermo, pero no las borra)
+  anotarEnRanking({ nombre: (quiz.alumno || "").replace(/\s+/g, " ").trim().slice(0, 24), errores: quiz.mistakes.length, total, nota, comodines: usados.length, comido: !!comido });
 
   $("#r-ready").className = "ready " + (aprobado ? "ready-ok" : "ready-no");
   $("#r-ready-title").textContent = `${quiz.alumno ? quiz.alumno + " · " : ""}Nota orientativa: ${nota}/12 · ${aprobado ? "✔ Aprobado" : "✘ A reforzar"}`;
@@ -4226,6 +4322,7 @@ renderSoundButton();
 updateRecords();
 guillermo.set("espera");
 guillermo.startBlinking();
+mostrarRanking();
 piel.init();
 $("#rappi-rider").innerHTML = pixelSVG(RAPPI_SPRITE, RAPPI_PALETA);
 // retrato del botón: la cabeza del mismo dibujo (filas 0 a 17, columnas 18 a 35)
