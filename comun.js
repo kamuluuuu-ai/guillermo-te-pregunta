@@ -44,15 +44,17 @@ function pickSin(list) {
 const fill = (text, data) => text.replace(/\{(\w+)\}/g, (_, k) => data[k]);
 
 /* ---------- localStorage (con protección por si está bloqueado) ---------- */
+// cada materia (window.MATERIA.clave) guarda récords y avances aparte; el sonido es el mismo para todas
+const claveStore = (key) => "gtp." + (key !== "sound" && window.MATERIA && window.MATERIA.clave ? window.MATERIA.clave + "." : "") + key;
 const store = {
   get(key, fallback) {
     try {
-      const raw = localStorage.getItem("gtp." + key);
+      const raw = localStorage.getItem(claveStore(key));
       return raw === null ? fallback : JSON.parse(raw);
     } catch (e) { return fallback; }
   },
   set(key, value) {
-    try { localStorage.setItem("gtp." + key, JSON.stringify(value)); } catch (e) { /* sin almacenamiento */ }
+    try { localStorage.setItem(claveStore(key), JSON.stringify(value)); } catch (e) { /* sin almacenamiento */ }
   }
 };
 

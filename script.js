@@ -19,6 +19,10 @@
      explicacion → se muestra después de responder
    Las opciones se mezclan solas en cada partida.
    --------------------------------------------------------- */
+// Otra materia (p. ej. relaciones.html) puede traer sus propios temas, examen y frases en window.MATERIA.
+// Sin MATERIA, todo queda como está: la página de grafos.
+const MAT = window.MATERIA || null;
+
 const PREGUNTAS = [
   // Qué es un grafo
   {
@@ -205,7 +209,7 @@ const AFIRMACIONES = [
      clase           → ideas para explicarlo frente a la clase
      preguntas       → igual que PREGUNTAS (sin "categoria")
    --------------------------------------------------------- */
-const CLASE = {
+const CLASE = MAT ? MAT.clase : {
   fuente: "Referencia: Rosen, K. H., «Matemática discreta y sus aplicaciones», 5.ª ed., McGraw-Hill: cap. 8, sección 8.1 «Introducción a los grafos» (págs. 503, 504 y 506) y sección 8.2 «Terminología en teoría de grafos» (págs. 511–512).",
   temas: [
     {
@@ -557,7 +561,7 @@ const CLASE = {
    tema → posición del tema en CLASE.temas (0 a 3), para
           mostrar el resultado separado por tema.
    --------------------------------------------------------- */
-const EXAMEN = {
+const EXAMEN = MAT ? MAT.examen : {
   aprobado: 85,   // % para «¡Estás listo!»
   casi: 60,       // % para «Casi listo»
   preguntas: [
@@ -979,8 +983,18 @@ const FRASES = {
   desafioAcierto: ["¡Bien!", "¡Eso!", "¡Sí!", "¡Joya!"],
   desafioError: ["¡Ups! Seguí, seguí.", "No pasa nada, ¡dale!", "¡A la próxima!"],
   desafioFin: "¡Tiempo! Mirá cómo te fue.",
-  desafioSinMas: "¡Me dejaste sin afirmaciones! Sos una máquina."
+  desafioSinMas: "¡Me dejaste sin afirmaciones! Sos una máquina.",
+  // la clase y los resultados por tema ({n}: total, {c}: correctas, {pct}: porcentaje)
+  claseIntro: "Esto es teoría de grafo, léelo y después te hago unas preguntitas",
+  presentarIntro: "¡Hoy les presentamos teoría de grafos! Presten atención, que después les pregunto.",
+  teachTitulo: "Para explicarlo en la clase",
+  temaPerfecto: "¡{n} de {n}! Este tema lo tenés dominado: ya lo podés explicar en la clase.",
+  temaBien: "¡Bien ahí! {c} de {n}. Repasá las que fallaste y ya estás para explicarlo.",
+  temaFlojo: "{c} de {n}. Volvé a leer el tema con calma y probá de nuevo. ¡Así se aprende!",
+  listoTitulo: "✔ ¡Estás listo para dar la clase! ({pct} %)",
+  listoMensaje: "¡Bien ahí! Sacaste {pct} %. Estás pronto para dar la clase."
 };
+if (MAT) Object.assign(FRASES, MAT.frases);
 
 /* =========================================================
    A partir de acá está la lógica. No hace falta tocarla
@@ -1738,7 +1752,8 @@ function show(name, focusEl) {
 
 function updateRecords() {
   const notas = store.get("evaluaciones", []).map((e) => e.nota);
-  $("#best-quiz").textContent = notas.length ? Math.max(...notas) : "–";
+  const examen = store.get("claseExamen", null);
+  $("#best-quiz").textContent = MAT ? (examen === null ? "–" : examen + " %") : notas.length ? Math.max(...notas) : "–";
   $("#best-challenge").textContent = store.get("bestChallenge", 0);
   $("#c-best-intro").textContent = store.get("bestChallenge", 0);
 }
@@ -1766,7 +1781,13 @@ function goHome() {
 const quiz = { deck: [], index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, answered: false, hintUsed: false, mistakes: [], lesson: null, porTema: {},
   reserve: [], comodines: {}, busy: false, alumno: "", personaje: null };
 
-const prepareQuestion = (q) => ({ ...q, mezcla: shuffle(q.opciones.map((texto, i) => ({ texto, ok: i === q.correcta }))) });
+// en otra materia, un ejercicio generado ({ gen }) se arma con datos nuevos cada vez
+const prepareQuestion = (q) => {
+  if (MAT && q.gen && !q.pregunta) q = MAT.armar(q, quiz.firmas);
+  return q.ej ? q : { ...q, mezcla: shuffle(q.opciones.map((texto, i) => ({ texto, ok: i === q.correcta }))) };
+};
+// los comodines Rappi y Elías: en la evaluación, y en otra materia también al estudiar
+const conComodines = () => quiz.lesson === "eval" || !!MAT;
 
 // lesson: null = partida normal; un número = preguntas de ese tema de la clase;
 // "todo" = repaso de toda la clase; "examen" = ¿estoy listo para dar la clase?; "eval" = evaluación con comodines
@@ -1780,11 +1801,13 @@ function startQuiz(lesson = null) {
   else if (lesson === "eval") { pool = EVALUACION.preguntas; total = EVALUACION.cantidad; }
   else if (lesson !== null) { pool = CLASE.temas[lesson].preguntas; total = pool.length; }
   const mixed = shuffle(pool);
+  quiz.firmas = new Set(); // los datos de los ejercicios generados no se repiten en la ronda
   quiz.deck = mixed.slice(0, Math.min(total, pool.length)).map(prepareQuestion);
-  quiz.reserve = lesson === "eval" ? mixed.slice(total) : [];
+  quiz.reserve = lesson === "eval" ? mixed.slice(total) : MAT ? MAT.reserva(quiz.deck) : [];
   // mini retos de grafos entre las preguntas: en la evaluación reemplazan preguntas (siguen siendo 12);
   // en el repaso y en la partida normal se suman, y en la práctica de un tema va el reto de ese tema
-  if (lesson === "eval") quiz.reserve.push(...meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, AJUSTES.retosPorEvaluacion), true));
+  if (MAT) { /* esta materia trae sus propios ejercicios en el mazo */ }
+  else if (lesson === "eval") quiz.reserve.push(...meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, AJUSTES.retosPorEvaluacion), true));
   else if (lesson === "todo" || lesson === null) meterRetos(quiz.deck, shuffle(TIPOS_RETO).slice(0, 2), false);
   else if (RETO_DEL_TEMA[lesson]) meterRetos(quiz.deck, [RETO_DEL_TEMA[lesson]], false);
   quiz.comodines = { rappi: true, cambio: true, ssj: true }; // el Rescate SSJ está en todos los modos con mordiscos
@@ -1793,7 +1816,7 @@ function startQuiz(lesson = null) {
   rescate.estado = "disponible";
   Object.assign(quiz, { index: 0, score: 0, streak: 0, bestStreak: 0, correct: 0, mistakes: [], porTema: {}, busy: false, terminado: false });
   $("#hint-btn").hidden = lesson === "eval";
-  $("#life-help").hidden = lesson !== "eval";
+  $("#life-help").hidden = !conComodines();
   $("#q-score").textContent = "0";
   $("#q-streak").textContent = "0";
   sound.play("start");
@@ -1801,6 +1824,7 @@ function startQuiz(lesson = null) {
   enojoIniciar(limitePara(quiz.deck.length));
   renderQuestion(lesson === "eval"
     ? `Arrancamos${quiz.alumno ? ", " + quiz.alumno : ""}! Tenés 3 comodines: Rappi, ${ELIAS.nombre} (cambia la pregunta) y Kamil. Usalos bien.`
+    : MAT ? `${pick(FRASES.arranque)} Tenés 3 comodines para esta ronda: Rappi, ${ELIAS.nombre} y Kamil.`
     : pick(FRASES.arranque));
 }
 
@@ -1834,9 +1858,11 @@ function renderQuestion(intro) {
     b.addEventListener("click", () => answerQuestion(i));
     box.appendChild(b);
   });
-  box.hidden = !!q.reto;
+  box.hidden = !!q.reto || !!q.ej;
   $("#q-reto").hidden = true;
   if (q.reto) renderReto(q);
+  if (MAT) $("#q-ej").hidden = !q.ej;
+  if (q.ej) MAT.pintar(q);
 
   quiz.busy = false;
   $("#rappi-rider").hidden = true;
@@ -1902,7 +1928,7 @@ function cerrarPregunta(ok, elegida, correcta, respuesta) {
     quiz.streak = 0;
     quiz.mistakes.push({ pregunta: q.pregunta, elegida, correcta, explicacion: q.explicacion });
     fb.className = "feedback bad";
-    $("#q-feedback-title").textContent = q.reto ? "✘ No era así" : "✘ Esta no era";
+    $("#q-feedback-title").textContent = q.reto || q.ej ? "✘ No era así" : "✘ Esta no era";
     $("#q-feedback-answer").textContent = respuesta || `La respuesta correcta es: ${correcta}`;
     sound.play("bad");
     // la respuesta ya quedó contada; el mordisco es solo la reacción y no frena el juego
@@ -1996,9 +2022,10 @@ function showResults() {
   let msg;
   if (ready) msg = ready.mensaje;
   else if (quiz.lesson !== null) {
-    if (ratio === 1) msg = `¡${total} de ${total}! Este tema lo tenés dominado: ya lo podés explicar en la clase.`;
-    else if (ratio >= 0.7) msg = `¡Bien ahí! ${quiz.correct} de ${total}. Repasá las que fallaste y ya estás para explicarlo.`;
-    else msg = `${quiz.correct} de ${total}. Volvé a leer el tema con calma y probá de nuevo. ¡Así se aprende!`;
+    const datos = { n: total, c: quiz.correct };
+    if (ratio === 1) msg = fill(FRASES.temaPerfecto, datos);
+    else if (ratio >= 0.7) msg = fill(FRASES.temaBien, datos);
+    else msg = fill(FRASES.temaFlojo, datos);
   }
   else if (ratio === 1) msg = `¡Perfecto! ¡${total} de ${total}! Los grafos no tienen secretos para vos.`;
   else if (ratio >= 0.7) msg = `¡Bien ahí! ${quiz.correct} de ${total}. Repasá las que fallaste y vas por el récord.`;
@@ -2027,7 +2054,7 @@ function challengeIntro() {
 function startChallenge() {
   stopChallenge();
   Object.assign(ch, {
-    running: true, deck: shuffle(AFIRMACIONES), index: 0, score: 0, streak: 0, bestStreak: 0,
+    running: true, deck: MAT ? MAT.mazoDesafio() : shuffle(AFIRMACIONES), index: 0, score: 0, streak: 0, bestStreak: 0,
     correct: 0, answered: 0, locked: false, exhausted: false,
     endAt: performance.now() + AJUSTES.segundosDesafio * 1000, lastSecond: AJUSTES.segundosDesafio
   });
@@ -2155,7 +2182,7 @@ function finishChallenge() {
 /* =========================================================
    CLASE: TEORÍA DE GRAFOS
    ========================================================= */
-CLASE.temas.forEach((t) => t.preguntas.forEach((p) => { p.categoria = "Grafos · " + t.titulo; }));
+CLASE.temas.forEach((t) => t.preguntas.forEach((p) => { p.categoria = (MAT ? MAT.nombre : "Grafos") + " · " + t.titulo; }));
 EXAMEN.preguntas.forEach((p) => { p.categoria = "Examen · " + CLASE.temas[p.tema].titulo; });
 
 // presentar: se está mostrando la clase frente a todos (sección «Presentar la clase»)
@@ -2190,7 +2217,7 @@ function showLearn() {
   const bestExam = store.get("claseExamen", null);
   $("#exam-best").textContent = bestExam === null ? "Todavía no lo hiciste." : `Tu mejor resultado: ${bestExam} %.`;
   show("learn");
-  guillermo.say("Esto es teoría de grafo, léelo y después te hago unas preguntitas", "pensando");
+  guillermo.say(FRASES.claseIntro, "pensando");
 }
 
 /* ---------- apuntes: un resumen corto de cada tema para copiar ---------- */
@@ -2236,7 +2263,7 @@ function pintarApuntes(i) {
   });
   const fig = $("#apuntes-dibujo");
   fig.hidden = !a.dibujo;
-  fig.innerHTML = a.dibujo ? dibujoApuntes(a.dibujo) : "";
+  fig.innerHTML = a.dibujo ? a.dibujo.svg || dibujoApuntes(a.dibujo) : ""; // otra materia puede traer el dibujo ya hecho
 }
 
 function toggleApuntes() {
@@ -2283,7 +2310,7 @@ function showPresent() {
   armarTemas($("#present-list"));
   $("#present-fuente").textContent = CLASE.fuente;
   show("present");
-  guillermo.say("¡Hoy les presentamos teoría de grafos! Presten atención, que después les pregunto.", "alegria");
+  guillermo.say(FRASES.presentarIntro, "alegria");
 }
 
 // volver a los temas: a la clase o a la presentación, según de dónde se vino
@@ -2309,17 +2336,20 @@ function openLesson(i) {
   pintarApuntes(i);
   // las ideas para explicarlo son solo de la clase: al presentar no se muestran
   $("#lesson-teach").hidden = lesson.presentar;
-  $("#lesson-teach").innerHTML = `<h3>Para explicarlo en la clase</h3><ul>${t.clase.map(() => "<li></li>").join("")}</ul>`;
+  $("#lesson-teach").innerHTML = `<h3>${FRASES.teachTitulo}</h3><ul>${t.clase.map(() => "<li></li>").join("")}</ul>`;
   $("#lesson-teach").querySelectorAll("li").forEach((li, k) => { li.textContent = t.clase[k]; });
   $("#lesson-quiz-btn").textContent = lesson.presentar
     ? `✔ Preguntale a la clase (${t.preguntas.length})`
     : `✔ ¿Lo entendí? Preguntame (${t.preguntas.length})`;
   $("#lesson-prev").disabled = i === 0;
   $("#lesson-next").disabled = i === CLASE.temas.length - 1;
-  lesson.showDegrees = t.modo === "grado";
-  $("#graph-degrees").checked = lesson.showDegrees;
-  $("#graph-example").value = t.ejemplo;
-  loadGraph(t.ejemplo);
+  if (MAT) MAT.lab($("#rel-lab"), t); // el ejemplo interactivo de esa materia
+  else {
+    lesson.showDegrees = t.modo === "grado";
+    $("#graph-degrees").checked = lesson.showDegrees;
+    $("#graph-example").value = t.ejemplo;
+    loadGraph(t.ejemplo);
+  }
   show("lesson", $("#lesson-title"));
   window.scrollTo({ top: 0, behavior: "auto" });
   const titulo = `Tema ${i + 1}: ${t.titulo}${/[?!.]$/.test(t.titulo) ? "" : "."}`;
@@ -2340,8 +2370,8 @@ function renderReadiness(pct) {
   let nivel, titulo, mensaje;
   if (pct >= EXAMEN.aprobado) {
     nivel = "ok";
-    titulo = `✔ ¡Estás listo para dar la clase! (${pct} %)`;
-    mensaje = `¡Bien ahí! Sacaste ${pct} %. Estás pronto para dar la clase.`;
+    titulo = fill(FRASES.listoTitulo, { pct });
+    mensaje = fill(FRASES.listoMensaje, { pct });
   } else if (pct >= EXAMEN.casi) {
     nivel = "casi";
     titulo = `◐ Casi listo (${pct} %)`;
@@ -2390,7 +2420,7 @@ function validarGrafo(key) {
     vistos.add(par);
   });
 }
-Object.keys(GRAFOS_EJEMPLO).forEach(validarGrafo);
+if (!MAT) Object.keys(GRAFOS_EJEMPLO).forEach(validarGrafo);
 
 // dónde va el nombre del vértice: arriba o abajo según la altura, salvo que el grafo diga otra cosa en «lados»
 function etiquetaVertice(g, name) {
@@ -2512,14 +2542,16 @@ function describeGraph() {
   info.innerHTML = lines.map((l) => `<span>${l}</span>`).join("");
 }
 
-$("#graph-example").innerHTML = Object.entries(GRAFOS_EJEMPLO).map(([k, g]) => `<option value="${k}">${g.nombre}</option>`).join("");
-$("#graph-example").addEventListener("change", (e) => loadGraph(e.target.value));
-$("#graph-degrees").addEventListener("change", (e) => { lesson.showDegrees = e.target.checked; drawGraph(); describeGraph(); });
+if (!MAT) {
+  $("#graph-example").innerHTML = Object.entries(GRAFOS_EJEMPLO).map(([k, g]) => `<option value="${k}">${g.nombre}</option>`).join("");
+  $("#graph-example").addEventListener("change", (e) => loadGraph(e.target.value));
+  $("#graph-degrees").addEventListener("change", (e) => { lesson.showDegrees = e.target.checked; drawGraph(); describeGraph(); });
+}
 
 /* =========================================================
    EVALUACIÓN PARA LOS ALUMNOS (con comodines)
    ========================================================= */
-EVALUACION.preguntas.forEach((p) => { p.categoria = "Evaluación · " + CLASE.temas[p.tema].titulo; });
+if (!MAT) EVALUACION.preguntas.forEach((p) => { p.categoria = "Evaluación · " + CLASE.temas[p.tema].titulo; });
 
 const COMODINES = {
   rappi: { label: "🛵 Llamar a Rappi" }
@@ -2527,6 +2559,7 @@ const COMODINES = {
 
 // el ranking del inicio
 async function mostrarRanking() {
+  if (MAT) return; // el ranking es de la evaluación de grafos
   const box = $("#ranking-inicio");
   box.hidden = !ranking.activo();
   if (box.hidden) return;
@@ -2564,6 +2597,7 @@ async function anotarEnRanking(fila) {
 }
 
 function renderEvalHistory() {
+  if (MAT) return; // el historial es de la evaluación de grafos
   const items = store.get("evaluaciones", []);
   const list = $("#eval-history");
   list.innerHTML = "";
@@ -2655,7 +2689,7 @@ async function startEval() {
 
 function renderLifelines() {
   const box = $("#lifelines");
-  const evaluacion = quiz.lesson === "eval";
+  const evaluacion = conComodines();
   box.hidden = false;
   renderRescate();
   $(".elias-comodin").hidden = !evaluacion;
@@ -2666,7 +2700,8 @@ function renderLifelines() {
   const used = !quiz.comodines.rappi;
   $("#rappi-usos").textContent = used ? "Usado" : "1 uso";
   b.classList.toggle("used", used);
-  b.disabled = used || quiz.answered || quiz.busy || disparo.enEscena || !!quiz.deck[quiz.index].reto;
+  const q = quiz.deck[quiz.index];
+  b.disabled = used || quiz.answered || quiz.busy || disparo.enEscena || !!q.reto || (!!q.ej && !MAT.distractores(q).length);
 }
 
 // Rappi siempre se anima (aunque el sistema pida menos movimiento): es el chiste del comodín.
@@ -2688,7 +2723,8 @@ function runOver(i, cruce = 0.4) {
 }
 
 // Una pasada de izquierda a derecha por una fila de opciones: atropella las marcadas y salta las demás.
-function rappiPass(row, targets, card, rider) {
+// els: los elementos de la fila (opciones o, en otra materia, las casillas de un ejercicio); pisar: qué pasa al atropellar uno
+function rappiPass(row, targets, card, rider, els = $("#q-options").children, pisar = runOver) {
   rider.style.transform = "translate(-9999px, 0)";
   rider.hidden = false; // visible antes de medirla
   const cardBox = card.getBoundingClientRect();
@@ -2698,7 +2734,7 @@ function rappiPass(row, targets, card, rider) {
   const front = w * RAPPI.ruedaDelantera;
   const rear = w * RAPPI.ruedaTrasera;
   const boxes = row.map((i) => {
-    const r = $("#q-options").children[i].getBoundingClientRect();
+    const r = els[i].getBoundingClientRect();
     return { i, left: r.left - cardBox.left, right: r.right - cardBox.left, top: r.top - cardBox.top, height: r.height };
   });
   const ground = Math.max(...boxes.map((o) => o.top + o.height * 0.78)) - h; // las ruedas van arriba de la opción
@@ -2745,13 +2781,13 @@ function rappiPass(row, targets, card, rider) {
 
   return new Promise((resolve) => {
     rider.hidden = false;
-    const timers = hits.map((t) => setTimeout(() => runOver(t.i, t.cruce), timeAt(t.x)));
+    const timers = hits.map((t) => setTimeout(() => pisar(t.i, t.cruce), timeAt(t.x)));
     let done = false;
     const end = () => {
       if (done) return;
       done = true;
       timers.forEach(clearTimeout);
-      hits.forEach((t) => runOver(t.i, 0.15));
+      hits.forEach((t) => pisar(t.i, 0.15));
       rider.hidden = true;
       resolve();
     };
@@ -2763,15 +2799,19 @@ function rappiPass(row, targets, card, rider) {
 }
 
 async function llamarRappi() {
-  if (quiz.lesson !== "eval" || !quiz.comodines.rappi || quiz.answered || quiz.busy || quiz.deck[quiz.index].reto) return;
+  const actual = quiz.deck[quiz.index];
+  if (!conComodines() || !quiz.comodines.rappi || quiz.answered || quiz.busy || actual.reto || (actual.ej && !MAT.distractores(actual).length)) return;
   quiz.comodines.rappi = false;
   clase.mandar("comodin", { comodin: "rappi" });
   quiz.busy = true;
   renderLifelines();
 
   const q = quiz.deck[quiz.index];
-  const wrong = shuffle(q.mezcla.map((o, i) => (o.ok || o.eliminada ? -1 : i)).filter((i) => i >= 0)).slice(0, 2);
-  const buttons = [...$("#q-options").children];
+  // en un ejercicio de marcar, Rappi atropella casillas u opciones que no van
+  const ej = q.ej ? MAT.paraRappi(q) : null;
+  const pisar = ej ? ej.pisar : runOver;
+  const wrong = ej ? ej.objetivo : shuffle(q.mezcla.map((o, i) => (o.ok || o.eliminada ? -1 : i)).filter((i) => i >= 0)).slice(0, 2);
+  const buttons = ej ? ej.els : [...$("#q-options").children];
   // agrupa las opciones por fila (2 columnas en compu, 1 en celular)
   const rows = [];
   buttons.forEach((b, i) => {
@@ -2791,12 +2831,12 @@ async function llamarRappi() {
   for (const row of passes) {
     if (current !== "quiz") break;
     sound.play("moto");
-    await rappiPass(row, wrong, card, rider);
+    await rappiPass(row, wrong, card, rider, buttons, pisar);
   }
-  wrong.forEach((i) => runOver(i, 0.15));
+  wrong.forEach((i) => pisar(i, 0.15));
   rider.hidden = true;
   quiz.busy = false;
-  guillermo.say("¡Rappi atropelló dos opciones incorrectas! Quedan dos: elegí bien.", "alegria", "jump");
+  guillermo.say(ej ? ej.mensaje : "¡Rappi atropelló dos opciones incorrectas! Quedan dos: elegí bien.", "alegria", "jump");
   renderLifelines();
 }
 
@@ -3052,6 +3092,15 @@ function comprobarReto() {
     : [bien.length && `✓ bien: ${nombres(bien)}`, deMas.length && `✗ de más: ${nombres(deMas)}`, faltan.length && `! te faltó: ${nombres(faltan)}`].filter(Boolean).join(" · ");
   dibujarReto();
   cerrarPregunta(ok, nombres([...r.marcados]), nombres(r.correctas), q.respuesta);
+}
+
+// ejercicio de otra materia (relaciones): se corrige una sola vez, al tocar Comprobar
+function comprobarEjercicio() {
+  const q = current === "quiz" && quiz.deck[quiz.index];
+  if (!q || !q.ej || quiz.answered || quiz.busy || q.ej.listo || !q.ej.marcados.size) return;
+  quiz.answered = true;
+  const r = MAT.comprobar(q); // marca lo que estuvo bien, lo que sobró y lo que faltó
+  cerrarPregunta(r.ok, r.elegida, r.correcta, q.respuesta);
 }
 
 /* =========================================================
@@ -3391,6 +3440,7 @@ const TEMA_DEL_RETO = { maximo: 3, gradoK: 3, vecinos: 1, aristas: 2 };
 function elegirReemplazo() {
   const q = quiz.deck[quiz.index];
   if (!q) return null;
+  if (MAT) return MAT.reemplazo(q, quiz); // mismo tema; un ejercicio se arma de nuevo con otros datos
   if (q.reto) { // otro ejercicio interactivo del mismo tema, con otro grafo o de otro tipo
     const usados = new Set(quiz.deck.filter((x) => x.reto).map((x) => x.reto.tipo + "|" + x.reto.g.key));
     const opciones = [];
@@ -3406,7 +3456,7 @@ function elegirReemplazo() {
 }
 
 function cambioDisponible() {
-  return current === "quiz" && quiz.lesson === "eval" && quiz.comodines.cambio && !disparo.enEscena &&
+  return current === "quiz" && conComodines() && quiz.comodines.cambio && !disparo.enEscena &&
     !quiz.answered && !quiz.busy && !quiz.terminado && !enojo.final &&
     !mordida.corriendo && !mordida.actuando && !rescateEnEscena() && !!elegirReemplazo();
 }
@@ -3449,7 +3499,10 @@ function cortarDisparo() {
 // pone la pregunta nueva en el mazo (misma posición: el número de pregunta no cambia)
 function ponerReemplazo() {
   const r = disparo.reemplazo;
-  quiz.deck[quiz.index] = r.reto ? armarReto(r.reto[0], r.reto[1]) : prepareQuestion(r.pregunta);
+  const antes = quiz.deck[quiz.index];
+  quiz.deck[quiz.index] = r.generar ? prepareQuestion(r.generar)
+    : r.reto ? armarReto(r.reto[0], r.reto[1])
+    : prepareQuestion(MAT ? { ...r.pregunta, categoria: antes.categoria } : r.pregunta);
   disparo.reemplazo = null;
 }
 
@@ -3730,7 +3783,8 @@ const actions = {
   "quit-challenge": challengeIntro,
   "answer-true": () => answerStatement(true),
   "answer-false": () => answerStatement(false),
-  "reto-check": comprobarReto
+  "reto-check": comprobarReto,
+  "ej-check": comprobarEjercicio
 };
 
 document.addEventListener("click", (e) => {
@@ -3738,7 +3792,7 @@ document.addEventListener("click", (e) => {
   if (!btn || btn.disabled) return;
   const fn = actions[btn.dataset.action];
   if (!fn) return;
-  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-cambio", "life-ssj", "reto-check"].includes(btn.dataset.action)) sound.play("click");
+  if (!["hint", "next", "answer-true", "answer-false", "start-quiz", "retry-quiz", "lesson-quiz", "lesson-review", "lesson-exam", "start-challenge", "start-eval", "life-rappi", "life-cambio", "life-ssj", "reto-check", "ej-check"].includes(btn.dataset.action)) sound.play("click");
   fn();
 });
 
@@ -3756,7 +3810,9 @@ document.addEventListener("keydown", (e) => {
     } else if (key === "enter" && !onButton) {
       e.preventDefault();
       const q = retoActual();
+      const ej = quiz.deck[quiz.index] && quiz.deck[quiz.index].ej;
       if (q && !quiz.answered) comprobarReto(); // en un mini reto, Enter comprueba
+      else if (ej && !quiz.answered) comprobarEjercicio(); // en un ejercicio de otra materia, también
       else nextQuestion();
     }
   } else if (current === "challenge") {
@@ -3799,7 +3855,7 @@ document.querySelectorAll(".personaje .avatar").forEach((a) => { a.innerHTML = a
   if (radio) radio.checked = true;
 }
 hojaSSJ(); // precarga las poses del Rescate SSJ
-{
+if ($("#sala-codigo")) {
   const deLaUrl = normalizarSala(new URLSearchParams(location.search).get("sala"));
   $("#sala-codigo").value = deLaUrl || normalizarSala(store.get("sala", ""));
 }

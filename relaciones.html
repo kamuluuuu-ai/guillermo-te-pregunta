@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="es-UY">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guillermo te pregunta · Relaciones</title>
+  <meta name="description" content="Estudiá relaciones para el escrito con Guillermo: par ordenado, producto cartesiano, relaciones, dominio, imagen, inversa, representaciones y propiedades.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=48">
+</head>
+<body>
+  <a class="skip-link" href="#panel">Saltar al juego</a>
+
+  <header class="topbar">
+    <button class="logo" type="button" data-action="home" aria-label="Guillermo te pregunta, relaciones: volver al inicio">
+      <span class="logo-small">GUILLERMO</span>
+      <span class="logo-big">TE PREGUNTA</span>
+    </button>
+    <div class="topbar-right">
+      <span class="records" aria-label="Récords guardados de relaciones">
+        <span title="Mejor resultado en «¿Estoy listo para el escrito?»">🎓 <span id="best-quiz">–</span></span>
+        <span title="Récord en El desafío de Guillermo (relaciones)">⏱ <span id="best-challenge">0</span></span>
+      </span>
+      <button id="sound-toggle" class="icon-btn" type="button" aria-pressed="true">
+        <span aria-hidden="true" id="sound-icon">🔊</span>
+        <span class="icon-btn-label" id="sound-label">Sonido: sí</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <!-- GUILLERMO: la mascota acompaña todas las pantallas -->
+    <aside class="host" aria-label="Guillermo, la mascota del juego">
+      <div class="bubble" id="bubble" role="status" aria-live="polite">
+        <p id="bubble-text">Hola, hoy estudiamos relaciones para el escrito. ¿Arrancamos?</p>
+      </div>
+      <div class="mascot-wrap">
+        <div class="mascot" id="mascot" role="img" aria-label="Guillermo, sonriendo y esperando"></div>
+      </div>
+      <p class="nametag"><span aria-hidden="true">★</span> GUILLERMO <span aria-hidden="true">★</span></p>
+      <div class="paciencia" id="paciencia" role="img" hidden>
+        <span class="paciencia-label" aria-hidden="true">Paciencia</span>
+        <span class="paciencia-dientes" id="paciencia-dientes" aria-hidden="true"></span>
+      </div>
+    </aside>
+
+    <section class="panel" id="panel" tabindex="-1">
+      <!-- capa que dibuja el panel y recibe los mordiscos (va debajo del contenido y no atrapa clics) -->
+      <canvas class="panel-skin" id="panel-skin" aria-hidden="true"></canvas>
+
+      <!-- INICIO -->
+      <div class="screen" id="screen-start" data-screen>
+        <p class="demo-badge">Relaciones · para el escrito</p>
+        <h1 class="title">Guillermo<br><span>te pregunta</span></h1>
+        <p class="lead">Estudiá relaciones con los temas de los prácticos y las diapositivas: par ordenado, producto cartesiano, relación de A en B, dominio, imagen e inversa, representaciones y propiedades. Cada tema tiene explicación, apuntes y ejercicios para practicar.</p>
+        <div class="menu">
+          <button class="btn btn-green btn-big" type="button" data-action="learn">📚 Estudiar relaciones</button>
+          <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ El desafío de Guillermo</button>
+          <button class="btn btn-orange" type="button" data-action="present">📽 Presentar los temas</button>
+          <a class="btn btn-yellow" href="index.html">▶ Jugar</a>
+        </div>
+        <p class="note">«▶ Jugar» abre la evaluación para los alumnos de siempre (la de grafos). <button class="link-btn" type="button" data-action="instructions">¿Cómo funcionan los ejercicios?</button></p>
+      </div>
+
+      <!-- INSTRUCCIONES -->
+      <div class="screen" id="screen-instructions" data-screen hidden>
+        <h2 class="h2">Cómo se juega</h2>
+        <div class="rules">
+          <div class="rule-card">
+            <h3>📚 Estudiar relaciones</h3>
+            <ul>
+              <li>Hay <strong>6 temas</strong>. Cada uno tiene la explicación, <strong>📝 Apuntes</strong> para copiar y un ejemplo para mirar como pares, diagrama sagital, dígrafo o matriz.</li>
+              <li>Con <strong>✔ ¿Lo entendí?</strong> practicás ese tema. También hay un repaso rápido y el examen <strong>¿Estoy listo para el escrito?</strong>.</li>
+              <li>Hay preguntas de 4 opciones y <strong>ejercicios para marcar</strong>: pares, casillas de una tabla o de una matriz, elementos o propiedades. Tocá para marcar y tocá de nuevo para desmarcar, en el orden que quieras.</li>
+              <li>Nada se corrige hasta que tocás <strong>✔ Comprobar</strong>. Ahí ves lo que estaba bien (✓), lo que marcaste de más (✗) y lo que te faltó (!).</li>
+              <li>Los datos de los ejercicios cambian en cada ronda, y la solución se calcula con esos datos.</li>
+            </ul>
+          </div>
+          <div class="rule-card">
+            <h3>🛵 🎯 ⚡ Comodines</h3>
+            <ul>
+              <li>Uno de cada uno por ronda. <strong>🛵 Rappi</strong> atropella dos opciones que no van: en un ejercicio para marcar, atropella pares o casillas que no se marcan.</li>
+              <li><strong>🎯 Llamar a <span data-nombre-elias>Elías</span></strong> cambia la pregunta por otra del mismo tema y tipo, sin penalización.</li>
+              <li><strong>⚡ Llamar a Kamil</strong> calma a Guillermo y restaura el panel.</li>
+            </ul>
+          </div>
+          <div class="rule-card">
+            <h3>😠 El enojo de Guillermo</h3>
+            <ul>
+              <li>Cada error lo enoja más y <strong>le arranca un mordisco al panel</strong>. Los dientes de <strong>Paciencia</strong> te muestran cuántos te quedan.</li>
+              <li>Una respuesta correcta lo calma un momento, pero lo que ya mordió no vuelve.</li>
+              <li>Si se le acaba la paciencia, <strong>se come el panel entero</strong> y termina la ronda.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="menu menu-row">
+          <button class="btn btn-green" type="button" data-action="learn">📚 Estudiar</button>
+          <button class="btn btn-ghost" type="button" data-action="home">← Volver</button>
+        </div>
+      </div>
+
+      <!-- PREGUNTAS -->
+      <div class="screen" id="screen-quiz" data-screen hidden>
+        <div class="hud" aria-label="Estado de la partida">
+          <div class="hud-item"><span class="hud-label">Pregunta</span><span class="hud-value" id="q-progress">1/10</span></div>
+          <div class="hud-item"><span class="hud-label">Puntos</span><span class="hud-value" id="q-score">0</span></div>
+          <div class="hud-item"><span class="hud-label">Racha</span><span class="hud-value" id="q-streak">0</span></div>
+        </div>
+        <div class="progress" aria-hidden="true"><div class="progress-fill" id="q-bar"></div></div>
+
+        <div class="question-card" id="q-card">
+          <div class="rappi-rider" id="rappi-rider" aria-hidden="true" hidden></div>
+          <div class="q-meta">
+            <span class="chip" id="q-category">Relaciones</span>
+          </div>
+          <h2 class="question" id="q-text" tabindex="-1">Pregunta</h2>
+          <div class="options" id="q-options" role="group" aria-label="Opciones de respuesta"></div>
+          <div class="reto" id="q-reto" hidden></div>
+          <!-- ejercicio para marcar: se marca y se desmarca libremente; se corrige con Comprobar -->
+          <div class="ej" id="q-ej" hidden>
+            <div class="ej-figura" id="ej-figura" hidden></div>
+            <div class="ej-items" id="ej-items" role="group" aria-label="Para marcar"></div>
+            <p class="reto-info" id="ej-info" aria-live="polite"></p>
+            <button class="btn btn-yellow btn-small" type="button" id="ej-check" data-action="ej-check">✔ Comprobar</button>
+          </div>
+        </div>
+
+        <div class="feedback" id="q-feedback" hidden>
+          <p class="feedback-title" id="q-feedback-title"></p>
+          <p class="feedback-answer" id="q-feedback-answer"></p>
+          <p class="feedback-expl" id="q-feedback-expl"></p>
+        </div>
+
+        <div class="lifelines" id="lifelines" role="group" aria-label="Comodines" hidden>
+          <div class="ssj-comodin rappi-comodin">
+            <button class="btn btn-orange btn-small life-ssj life-rappi" type="button" id="life-rappi" data-action="life-rappi" aria-describedby="rappi-desc">
+              <span class="ssj-retrato" id="rappi-retrato" aria-hidden="true"></span>
+              <span class="ssj-texto"><span class="ssj-nombre">🛵 Llamar a Rappi</span><span class="ssj-usos" id="rappi-usos">1 uso</span></span>
+            </button>
+            <p class="ssj-desc" id="rappi-desc">Atropella dos opciones (o casillas) que no van</p>
+          </div>
+          <div class="ssj-comodin">
+            <button class="btn btn-ssj btn-small life-ssj" type="button" id="life-ssj" data-action="life-ssj" aria-describedby="ssj-desc">
+              <img class="ssj-retrato" src="assets/rescate-ssj/retrato.png" alt="" width="40" height="40">
+              <span class="ssj-texto"><span class="ssj-nombre">⚡ Llamar a Kamil</span><span class="ssj-usos" id="ssj-usos">1 uso</span></span>
+            </button>
+            <p class="ssj-desc" id="ssj-desc">Calma a Guillermo y restaura el panel</p>
+          </div>
+          <div class="ssj-comodin elias-comodin">
+            <button class="btn btn-teal btn-small life-ssj life-elias" type="button" id="life-cambio" data-action="life-cambio" aria-describedby="cambio-desc">
+              <img class="ssj-retrato" src="assets/cambio-disparo/retrato.png" alt="" width="40" height="40">
+              <span class="ssj-texto"><span class="ssj-nombre">🎯 Llamar a <span data-nombre-elias>Elías</span></span><span class="ssj-usos" id="cambio-usos">1 uso</span></span>
+            </button>
+            <p class="ssj-desc" id="cambio-desc">Cambiar pregunta: otra del mismo tema, sin penalización</p>
+          </div>
+        </div>
+        <p class="sr-only" id="ssj-aviso" aria-live="polite"></p>
+        <details class="mini-help" id="life-help" hidden>
+          <summary>¿Qué hace cada comodín?</summary>
+          <ul>
+            <li><strong>🛵 Rappi:</strong> pasa en su moto y atropella dos opciones incorrectas. En un ejercicio para marcar, atropella dos pares o casillas que <em>no</em> van: quedan descartados, y lo que sí va lo seguís decidiendo vos.</li>
+            <li><strong>🎯 Llamar a <span data-nombre-elias>Elías</span>:</strong> le dispara a la pregunta y aparece otra del mismo tema (un ejercicio se arma de nuevo con otros datos). No suma ni resta, y no calma a Guillermo.</li>
+            <li><strong>⚡ Llamar a Kamil:</strong> llega Kamil, se transforma en Super Saiyajin y le tira un Kamehameha a Guillermo: se le pasa el enojo y el panel queda como nuevo. La pregunta sigue igual.</li>
+          </ul>
+          <p>Hay uno de cada uno por ronda.</p>
+        </details>
+
+        <div class="actions">
+          <button class="btn btn-violet" type="button" id="hint-btn" data-action="hint">💡 Pista (−25)</button>
+          <button class="btn btn-yellow" type="button" id="next-btn" data-action="next" hidden>Siguiente ▶</button>
+          <button class="btn btn-ghost btn-small" type="button" data-action="quit-quiz">Salir</button>
+        </div>
+      </div>
+
+      <!-- RESULTADOS -->
+      <div class="screen" id="screen-results" data-screen hidden>
+        <h2 class="h2">¡Ronda terminada!</h2>
+        <div class="score-board">
+          <div class="score-box"><span class="hud-label">Puntaje</span><span class="score-big" id="r-score">0</span></div>
+          <div class="score-box"><span class="hud-label">Aciertos</span><span class="score-big" id="r-correct">0/10</span></div>
+          <div class="score-box"><span class="hud-label">Mejor racha</span><span class="score-big" id="r-streak">0</span></div>
+        </div>
+        <p class="record-msg" id="r-record" hidden>★ ¡Nuevo récord! ★</p>
+        <div class="ready" id="r-ready" hidden>
+          <h3 class="ready-title" id="r-ready-title"></h3>
+          <ul class="ready-list" id="r-ready-list" aria-label="Resultado por tema"></ul>
+        </div>
+        <div class="ranking" id="r-ranking" hidden></div>
+        <div class="review" id="r-review-wrap">
+          <h3 class="h3">Para repasar</h3>
+          <ol class="review-list" id="r-review"></ol>
+        </div>
+        <div class="menu menu-row">
+          <button class="btn btn-yellow" type="button" data-action="retry-quiz">↻ Otra ronda</button>
+          <button class="btn btn-green" type="button" id="r-back-lesson" data-action="back-class" hidden>◆ Volver a los temas</button>
+          <button class="btn btn-teal" type="button" data-action="challenge-intro">⏱ Ir al desafío</button>
+          <button class="btn btn-ghost" type="button" data-action="home">Inicio</button>
+        </div>
+      </div>
+
+      <!-- DESAFÍO: INTRO -->
+      <div class="screen" id="screen-challenge-intro" data-screen hidden>
+        <p class="demo-badge demo-teal">Minijuego</p>
+        <h2 class="title title-sm">El desafío<br><span>de Guillermo</span></h2>
+        <p class="lead">Verdadero o falso sobre relaciones, contrarreloj: tenés <strong>60 segundos</strong>. Cada acierto suma y los aciertos seguidos dan bonus. Algunas afirmaciones vienen con datos nuevos cada vez. El reloj arranca solo cuando apretás «Empezar».</p>
+        <p class="lead small">Tu récord: <strong id="c-best-intro">0</strong> puntos</p>
+        <div class="menu menu-row">
+          <button class="btn btn-yellow btn-big" type="button" data-action="start-challenge">▶ Empezar</button>
+          <button class="btn btn-ghost" type="button" data-action="home">← Volver</button>
+        </div>
+      </div>
+
+      <!-- DESAFÍO: JUEGO -->
+      <div class="screen" id="screen-challenge" data-screen hidden>
+        <div class="hud" aria-label="Estado del desafío">
+          <div class="hud-item"><span class="hud-label">Tiempo</span><span class="hud-value" id="c-time">60</span></div>
+          <div class="hud-item"><span class="hud-label">Puntos</span><span class="hud-value" id="c-score">0</span></div>
+          <div class="hud-item"><span class="hud-label">Racha</span><span class="hud-value" id="c-streak">0</span></div>
+        </div>
+        <div class="progress progress-time" aria-hidden="true"><div class="progress-fill" id="c-bar"></div></div>
+
+        <div class="question-card statement-card" id="c-card">
+          <div class="q-meta"><span class="chip chip-teal">¿Verdadero o falso?</span><span class="chip chip-reto">Relaciones</span></div>
+          <p class="question" id="c-text">Afirmación</p>
+          <p class="c-flash" id="c-flash" aria-live="assertive"></p>
+        </div>
+
+        <div class="tf-buttons">
+          <button class="btn btn-tf btn-true" type="button" data-action="answer-true"><span aria-hidden="true">✔</span> Verdadero <kbd>V</kbd></button>
+          <button class="btn btn-tf btn-false" type="button" data-action="answer-false"><span aria-hidden="true">✘</span> Falso <kbd>F</kbd></button>
+        </div>
+        <div class="actions">
+          <button class="btn btn-ghost btn-small" type="button" data-action="quit-challenge">Abandonar</button>
+        </div>
+      </div>
+
+      <!-- DESAFÍO: RESULTADO -->
+      <div class="screen" id="screen-challenge-results" data-screen hidden>
+        <h2 class="h2">¡Se terminó el tiempo!</h2>
+        <div class="score-board">
+          <div class="score-box"><span class="hud-label">Puntaje</span><span class="score-big" id="cr-score">0</span></div>
+          <div class="score-box"><span class="hud-label">Aciertos</span><span class="score-big" id="cr-correct">0</span></div>
+          <div class="score-box"><span class="hud-label">Récord</span><span class="score-big" id="cr-best">0</span></div>
+        </div>
+        <p class="record-msg" id="cr-record" hidden>★ ¡Nuevo récord personal! ★</p>
+        <p class="lead small center" id="cr-detail"></p>
+        <div class="menu menu-row">
+          <button class="btn btn-yellow" type="button" data-action="start-challenge">↻ Otra vez</button>
+          <button class="btn btn-green" type="button" data-action="learn">📚 Estudiar</button>
+          <button class="btn btn-ghost" type="button" data-action="home">Inicio</button>
+        </div>
+      </div>
+
+      <!-- ESTUDIAR: LISTA DE TEMAS -->
+      <div class="screen" id="screen-learn" data-screen hidden>
+        <p class="demo-badge demo-green">Para el escrito</p>
+        <h2 class="title title-sm">Relaciones</h2>
+        <p class="lead">Leé cada tema, mirá el ejemplo de muchas formas y después dejá que Guillermo te pregunte para ver si lo entendiste. Los ejercicios cambian de datos en cada ronda.</p>
+        <ol class="topic-list" id="topic-list"></ol>
+        <div class="exam-card">
+          <div class="exam-text">
+            <h3 class="h3">¿Estoy listo para el escrito?</h3>
+            <p>Un examen de 20 preguntas nuevas sobre los 6 temas, con ejercicios para marcar. Al final Guillermo te dice qué tema tenés pronto y cuál repasar.</p>
+            <p class="exam-best" id="exam-best"></p>
+          </div>
+          <button class="btn btn-yellow btn-big" type="button" data-action="lesson-exam">🎓 Hacer el examen</button>
+        </div>
+        <div class="menu menu-row">
+          <button class="btn btn-violet" type="button" data-action="lesson-review">★ Repaso rápido (10 preguntas)</button>
+          <button class="btn btn-ghost" type="button" data-action="home">← Inicio</button>
+        </div>
+        <p class="note" id="clase-fuente"></p>
+      </div>
+
+      <!-- PRESENTAR: los mismos temas, para mostrarlos frente a todos -->
+      <div class="screen" id="screen-present" data-screen hidden>
+        <p class="demo-badge demo-orange">Presentación</p>
+        <h2 class="title title-sm">Relaciones</h2>
+        <p class="lead">Pasamos los temas en orden, miramos los ejemplos y al final de cada tema Guillermo le pregunta a la clase. Para avanzar o volver se pueden usar las flechas del teclado.</p>
+        <button class="btn btn-yellow btn-big present-start" type="button" data-action="present-start">▶ Empezar la presentación</button>
+        <ol class="topic-list" id="present-list"></ol>
+        <div class="menu menu-row">
+          <button class="btn btn-ghost" type="button" data-action="home">← Inicio</button>
+        </div>
+        <p class="note" id="present-fuente"></p>
+      </div>
+
+      <!-- UN TEMA (también se usa al presentar) -->
+      <div class="screen" id="screen-lesson" data-screen hidden>
+        <nav class="lesson-nav" aria-label="Temas">
+          <button class="btn btn-ghost btn-small" type="button" data-action="back-class">☰ Temas</button>
+          <button class="btn btn-teal btn-small" type="button" data-action="lesson-apuntes" id="lesson-apuntes-btn" aria-expanded="false" aria-controls="lesson-apuntes">📝 Apuntes</button>
+          <span class="lesson-step" id="lesson-step">Tema 1 de 6</span>
+        </nav>
+        <h2 class="h2 lesson-title" id="lesson-title" tabindex="-1">Tema</h2>
+        <p class="sr-only" id="lesson-copy-aviso" aria-live="polite"></p>
+        <section class="apuntes" id="lesson-apuntes" aria-labelledby="apuntes-titulo" hidden>
+          <div class="apuntes-head">
+            <h3 class="h3" id="apuntes-titulo">📝 Apuntes del tema</h3>
+            <button class="btn btn-yellow btn-small" type="button" data-action="apuntes-copy" id="apuntes-copy">📋 Copiar apuntes</button>
+          </div>
+          <ul class="apuntes-lista" id="apuntes-lista"></ul>
+          <figure class="apuntes-dibujo" id="apuntes-dibujo" hidden></figure>
+        </section>
+        <div class="lesson-body" id="lesson-body"></div>
+
+        <!-- ejemplo interactivo: la misma relación como pares, sagital, dígrafo o matriz -->
+        <figure class="graph-lab rel-lab" id="rel-lab" hidden></figure>
+
+        <aside class="teach-box" id="lesson-teach"></aside>
+
+        <div class="actions">
+          <button class="btn btn-yellow" type="button" data-action="lesson-quiz" id="lesson-quiz-btn">✔ ¿Lo entendí? Preguntame</button>
+          <button class="btn btn-ghost btn-small" type="button" data-action="lesson-prev" id="lesson-prev">◀ Anterior</button>
+          <button class="btn btn-ghost btn-small" type="button" data-action="lesson-next" id="lesson-next">Siguiente ▶</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Proyecto estudiantil de UTU · Prácticos y diapositivas de relaciones (Lógica y métodos discretos) · Apoyo: Rosen, «Matemática discreta y sus aplicaciones»</p>
+  </footer>
+
+  <!-- capa de efectos: Guillermo volando a morder, migas y carteles (no atrapa clics) -->
+  <div class="fx" id="fx" aria-hidden="true"></div>
+  <div class="eaten" id="eaten" role="dialog" aria-modal="true" aria-labelledby="eaten-title" hidden>
+    <div class="eaten-box">
+      <div class="eaten-guillermo" id="eaten-guillermo" role="img" aria-label="Guillermo masticando, lleno y contento"></div>
+      <h2 class="eaten-title" id="eaten-title">¡Guillermo se comió<br>todo el panel!</h2>
+      <p class="eaten-detail" id="eaten-detail"></p>
+      <button class="btn btn-yellow btn-big" type="button" id="eaten-btn" data-action="eaten-results">Ver resultados ▶</button>
+    </div>
+  </div>
+
+  <!-- relaciones.js va primero: deja window.MATERIA, que leen comun.js y script.js -->
+  <script src="relaciones.js?v=1"></script>
+  <script src="comun.js?v=48"></script>
+  <script src="script.js?v=53"></script>
+</body>
+</html>

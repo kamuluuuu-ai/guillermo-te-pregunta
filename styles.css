@@ -762,7 +762,7 @@ kbd {
 .option.run-over { position: relative; overflow: hidden; }
 .option.run-over > span:not(.skid) { position: relative; z-index: 1; }
 /* marca de la cubierta: se dibuja de izquierda a derecha mientras pasa la moto y queda */
-.option .skid {
+.option .skid, .ej-item .skid {
   position: absolute;
   left: 0;
   right: 0;
@@ -1210,3 +1210,87 @@ span.ssj-retrato svg { display: block; width: 100%; height: 100%; }
 /* la bala: una raya amarilla que nace en la boca del caño */
 .elias-bala { height: 4px; transform-origin: 0 50%; background: linear-gradient(90deg, #fff6c2, var(--yellow)); box-shadow: 0 0 0 1px #00000066; z-index: 2; }
 .pixeles { z-index: 1; }
+
+/* =========================================================
+   RELACIONES (relaciones.html): ejercicios para marcar,
+   dibujos de relaciones y el ejemplo interactivo
+   ========================================================= */
+a.btn { text-decoration: none; }
+.link-btn { padding: 0; border: 0; background: none; color: var(--teal); font: inherit; font-weight: 800; text-decoration: underline; cursor: pointer; }
+
+.ej { margin-top: 4px; }
+.ej-figura { margin: 0 0 12px; }
+.ej-items { margin: 0; }
+.ej-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.ej-item {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  min-width: 64px;
+  padding: 8px 12px;
+  border: 0;
+  background: var(--panel-2);
+  color: var(--text);
+  font-family: var(--font-read);
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 3px var(--line), inset 0 -5px 0 #0d1440;
+  transition: transform 0.06s;
+}
+.ej-item > span:not(.skid) { position: relative; z-index: 1; }
+.ej-item:hover:not(:disabled) { box-shadow: inset 0 0 0 3px var(--teal), inset 0 -5px 0 #0d1440; }
+.ej-item:active:not(:disabled) { transform: translateY(2px); }
+.ej-item:disabled { cursor: default; }
+.ej-item .ej-mark { font-size: 13px; font-weight: 900; }
+.ej-item.on { background: var(--yellow); color: var(--ink); box-shadow: inset 0 0 0 3px var(--yellow-d), inset 0 -5px 0 var(--yellow-d); }
+.ej-item.ok { background: #13502f; box-shadow: inset 0 0 0 3px var(--good); }
+.ej-item.ok .ej-mark { color: var(--good); }
+.ej-item.mal { background: #5a1c2a; box-shadow: inset 0 0 0 3px var(--bad); }
+.ej-item.mal .ej-mark { color: var(--bad); }
+.ej-item.falta { background: var(--ink); box-shadow: inset 0 0 0 3px var(--good); outline: 2px dashed var(--good); outline-offset: -8px; }
+.ej-item.falta .ej-mark { color: var(--good); }
+.ej-item.descartado { background: #4a3f58; color: #9b8fa8; box-shadow: inset 0 0 0 3px #6b5d7a; animation: squash 0.3s steps(3) both; }
+.ej-item.descartado .ej-txt { text-decoration: line-through; }
+.ej-item.fijo { background: #0f1640; color: var(--muted); box-shadow: inset 0 0 0 2px var(--line); }
+.ej-item.fijo .ej-mark { font-size: 11px; text-transform: uppercase; color: var(--teal); }
+
+.ej-tabla-wrap { overflow-x: auto; overflow-y: hidden; max-width: 100%; }
+.ej-tabla { border-collapse: separate; border-spacing: 6px; }
+.ej-tabla th { padding: 2px 6px; font-family: var(--font-read); font-size: 15px; font-weight: 900; color: var(--yellow); white-space: nowrap; text-align: center; }
+.ej-tabla thead th:first-child { color: var(--muted); font-size: 13px; }
+.ej-tabla td { padding: 0; }
+.ej-tabla .ej-item { width: 100%; min-width: 60px; padding: 6px 8px; font-size: 15px; white-space: nowrap; }
+.ej-tabla.ej-bit .ej-item, .ej-tabla.ej-pertenece .ej-item { min-width: 52px; font-family: var(--font-retro); font-size: 13px; }
+.ej-tabla.ej-bit .ej-item.on, .ej-tabla.ej-pertenece .ej-item.on { font-size: 14px; }
+
+/* dibujos: diagrama sagital y dígrafo (SVG) y matriz de ceros y unos */
+.rel-svg { display: block; width: 100%; max-width: 360px; height: auto; max-height: 320px; margin: 0 auto; background: var(--ink); box-shadow: inset 0 0 0 2px var(--line); }
+.rel-conj { fill: none; stroke: var(--teal); stroke-width: 2.5; }
+.rel-nombre { fill: var(--teal); font: 900 15px var(--font-read); }
+.rel-elem { fill: var(--text); font: 800 15px var(--font-read); }
+.rel-flecha { fill: none; stroke: var(--yellow); stroke-width: 2; }
+.rel-punta { fill: var(--yellow); }
+.rel-nodo { fill: var(--panel-2); stroke: var(--teal); stroke-width: 2.5; }
+.rel-figura { margin: 0 0 16px; }
+.rel-matriz-wrap { margin: 0; }
+.rel-matriz { border-collapse: collapse; margin: 0 auto; font-family: var(--font-read); font-size: 16px; font-weight: 800; background: var(--ink); }
+.rel-matriz caption { padding-bottom: 6px; font-size: 13px; color: var(--muted); caption-side: top; }
+.lesson-body .rel-matriz { width: auto; min-width: 0; }
+.rel-matriz th, .rel-matriz td, .lesson-body .rel-matriz th, .lesson-body .rel-matriz td { min-width: 40px; height: 36px; padding: 4px 10px; text-align: center; border: 2px solid var(--line); }
+.rel-matriz th { color: var(--yellow); background: var(--ink); }
+.rel-matriz td.uno { color: var(--ink); background: var(--yellow); }
+.rel-producto td { white-space: nowrap; font-size: 15px; }
+.apuntes-dibujo .rel-svg { max-width: 300px; margin: 0; }
+
+/* el ejemplo interactivo de cada tema */
+.rel-lab .graph-lab-head { margin-bottom: 10px; }
+.rel-vistas { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
+.rel-vistas .btn[aria-pressed="true"] { --c: var(--yellow); --cd: var(--yellow-d); --fg: var(--ink); }
+.rel-lab .rel-figura { margin: 0; }
+.rel-pares { margin: 0; padding: 12px 14px; background: var(--ink); box-shadow: inset 0 0 0 2px var(--line); font-weight: 800; overflow-wrap: anywhere; }
+.rel-info { display: grid; gap: 6px; margin-top: 12px; overflow-wrap: anywhere; }
